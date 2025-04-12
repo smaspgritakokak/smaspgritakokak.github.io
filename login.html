@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Pendaftar - SPMB</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
+
+  <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4 text-center text-blue-700">Login Pendaftar</h2>
+    <p class="mb-6 text-sm text-center text-gray-600">Masukkan ID Registrasi untuk mengakses formulir Anda.</p>
+
+    <form id="loginForm">
+      <label class="block mb-4">
+        <span class="block text-gray-700 font-medium mb-1">ID Registrasi</span>
+        <input type="text" id="idReg" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </label>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+        Login
+      </button>
+      <p id="loginError" class="text-red-600 text-sm mt-4 hidden text-center">ID Registrasi tidak ditemukan.</p>
+    </form>
+  </div>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec";
+
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const id = document.getElementById("idReg").value.trim();
+      const errorEl = document.getElementById("loginError");
+
+      try {
+        const res = await fetch(`${BASE_URL}?func=getDataByID&id=${id}`);
+        const data = await res.json();
+
+        if (data && data.id_registrasi === id) {
+          // Redirect ke cetak.html dengan ID
+          window.location.href = `cetak.html?id=${id}`;
+        } else {
+          errorEl.classList.remove("hidden");
+        }
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = "Terjadi kesalahan saat menghubungi server.";
+        errorEl.classList.remove("hidden");
+      }
+    });
+  </script>
+
+</body>
+</html>
