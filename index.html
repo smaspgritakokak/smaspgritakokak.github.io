@@ -2,40 +2,62 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SPMB 2025/2026 - Halaman Utama</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPMB - Landing Page</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+<body class="font-sans bg-gray-100">
 
-  <!-- Header -->
-  <header class="bg-blue-700 text-white p-6">
-    <div class="container mx-auto text-center">
-      <h1 class="text-3xl font-bold">SPMB - Sistem Penerimaan Murid Baru</h1>
-      <p class="text-sm mt-2">Tahun Ajaran 2025/2026</p>
+  <!-- Navbar -->
+  <header class="bg-blue-600 text-white">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">SPMB 2025/2026</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="#" class="hover:text-blue-300">Beranda</a></li>
+          <li><a href="formulir.html" class="hover:text-blue-300">Daftar Sekarang</a></li>
+          <li><a href="login.html" class="hover:text-blue-300">Login</a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="flex-grow container mx-auto px-4 py-10">
-    <div class="bg-white shadow-xl rounded-xl p-6 text-center">
-      <h2 class="text-xl font-semibold mb-4 text-gray-700">Selamat Datang di Portal Pendaftaran SPMB</h2>
-      <p class="mb-8 text-gray-600">Silakan pilih jenis login Anda untuk melanjutkan.</p>
+  <!-- Hero Section -->
+  <section class="bg-white py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">Selamat Datang di SPMB 2025/2026</h2>
+      <p class="text-lg text-gray-600 mb-8">Sistem Penerimaan Mahasiswa Baru untuk tahun akademik 2025/2026.</p>
+      <a href="formulir.html" class="bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-blue-700 transition duration-300">Daftar Sekarang</a>
+    </div>
+  </section>
 
-      <div class="flex justify-center space-x-6">
-        <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition">
-          Login Pendaftar
-        </a>
-        <a href="admin.html" class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition">
-          Login Admin
-        </a>
+  <!-- Features Section -->
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center text-gray-800 mb-8">Keunggulan SPMB</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <h4 class="text-xl font-bold text-gray-800 mb-2">Mudah Digunakan</h4>
+          <p class="text-gray-600">Proses pendaftaran yang sederhana dan cepat.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <h4 class="text-xl font-bold text-gray-800 mb-2">Transparan</h4>
+          <p class="text-gray-600">Setiap tahap pendaftaran dapat dipantau secara real-time.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+          <h4 class="text-xl font-bold text-gray-800 mb-2">Aman</h4>
+          <p class="text-gray-600">Data pendaftar terjamin keamanannya.</p>
+        </div>
       </div>
     </div>
-  </main>
+  </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-800 text-white p-4 text-center text-sm">
-    &copy; 2025 SPMB - Dikdasmen. All rights reserved.
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2023 SPMB 2025/2026. All rights reserved.</p>
+    </div>
   </footer>
 
 </body>
