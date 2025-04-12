@@ -1,32 +1,132 @@
-const BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec"; // Ganti dengan URL Web App kamu
+// api.js
 
-async function postFormulir(data) {
-  const res = await fetch(BASE_URL, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json"
+const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec"; // Ganti dengan URL deploy Google Apps Script Anda
+
+/**
+ * Fungsi untuk mengambil semua data pendaftar dari backend.
+ * @returns {Promise<Array>} - Array objek data pendaftar.
+ */
+export async function fetchAllRegistrants() {
+  try {
+    const response = await fetch(`${API_BASE_URL}?action=getAll`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-  });
-  return await res.json();
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching registrants:", error);
+    throw error;
+  }
 }
 
-async function getDashboardData() {
-  const res = await fetch(`${BASE_URL}?func=getDashboard`);
-  return await res.json();
+/**
+ * Fungsi untuk mengirim data pendaftaran baru ke backend.
+ * @param {Object} formData - Data formulir pendaftaran.
+ * @returns {Promise<Object>} - Respons dari backend.
+ */
+export async function submitRegistration(formData) {
+  try {
+    const response = await fetch(API_BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error submitting registration:", error);
+    throw error;
+  }
 }
 
-async function getDataByID(id) {
-  const res = await fetch(`${BASE_URL}?func=getDataByID&id=${id}`);
-  return await res.json();
+/**
+ * Fungsi untuk mengambil data pendaftar berdasarkan ID.
+ * @param {string} id - ID unik pendaftar.
+ * @returns {Promise<Object>} - Data pendaftar.
+ */
+export async function fetchRegistrantById(id) {
+  try {
+    const response = await fetch(`${API_BASE_URL}?action=getById&id=${id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching registrant by ID:", error);
+    throw error;
+  }
 }
 
-async function updateStatus(id, newStatus) {
-  const res = await fetch(`${BASE_URL}?func=updateStatus&id=${id}&newStatus=${newStatus}`);
-  return await res.json();
+/**
+ * Fungsi untuk memperbarui status verifikasi pendaftar.
+ * @param {string} id - ID unik pendaftar.
+ * @param {string} status - Status baru (misalnya "Terverifikasi").
+ * @returns {Promise<Object>} - Respons dari backend.
+ */
+export async function updateVerificationStatus(id, status) {
+  try {
+    const response = await fetch(`${API_BASE_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "updateStatus",
+        id: id,
+        status: status,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error updating verification status:", error);
+    throw error;
+  }
 }
 
-async function generatePDF(id) {
-  const res = await fetch(`${BASE_URL}?func=generatePDF&id=${id}`);
-  return await res.json();
+/**
+ * Fungsi untuk menghasilkan PDF individu berdasarkan ID.
+ * @param {string} id - ID unik pendaftar.
+ * @returns {Promise<string>} - URL PDF yang dihasilkan.
+ */
+export async function generateIndividualPDF(id) {
+  try {
+    const response = await fetch(`${API_BASE_URL}?action=generatePDF&id=${id}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.pdfUrl; // URL file PDF
+  } catch (error) {
+    console.error("Error generating individual PDF:", error);
+    throw error;
+  }
+}
+
+/**
+ * Fungsi untuk menghasilkan PDF semua pendaftar.
+ * @returns {Promise<string>} - URL PDF yang dihasilkan.
+ */
+export async function generateAllPDF() {
+  try {
+    const response = await fetch(`${API_BASE_URL}?action=generateAllPDF`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.pdfUrl; // URL file PDF
+  } catch (error) {
+    console.error("Error generating all PDF:", error);
+    throw error;
+  }
 }
