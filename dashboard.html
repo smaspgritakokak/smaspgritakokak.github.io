@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard SPMB</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 p-4">
+
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-2xl font-bold text-center text-blue-700 mb-6">Dashboard SPMB 2025/2026</h1>
+
+    <!-- Statistik Grafik -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="font-semibold mb-2 text-center">Statistik Verifikasi</h2>
+        <canvas id="verifikasiChart"></canvas>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="font-semibold mb-2 text-center">Statistik Jenis Kelamin</h2>
+        <canvas id="genderChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Tabel Asal Sekolah -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-semibold mb-4 text-center">Tabel Asal Sekolah Pendaftar</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="px-4 py-2 text-left">No</th>
+              <th class="px-4 py-2 text-left">Asal Sekolah</th>
+              <th class="px-4 py-2 text-left">Tanggal Registrasi</th>
+              <th class="px-4 py-2 text-left">Status Verifikasi</th>
+            </tr>
+          </thead>
+          <tbody id="schoolTableBody" class="divide-y divide-gray-200"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec";
+
+    fetch(BASE_URL + "?action=read")
+      .then(res => res.json())
+      .then(data => {
+        const pendaftar = data;
+        let verifikasiCount = { terverifikasi: 0, belum: 0 };
+        let genderCount = { L: 0, P: 0 };
+        const asalSekolahData = [];
+
+        pendaftar.forEach((d, i) => {
+          // Verifikasi
+          if (d.status_verifikasi === "Terverifikasi") verifikasiCount.terverifikasi++;
+          else verifikasiCount.belum++;
+
+          // Gender
+          if (d.jenis_kelamin === "L") genderCount.L++;
+          else if (d.jenis_kelamin === "P") genderCount.P++;
+
+          // Tabel sekolah
+          asalSekolahData.push(`
+            <tr>
+              <td class="px-4 py-2">${i + 1}</td>
+              <td class="px-4 py-2">${d.asal_sekolah}</td>
+              <td class="px-4 py-2">${d.tanggal_registrasi}</td>
+              <td class="px-4 py-2">${d.status_verifikasi}</td>
+            </tr>
+          `);
+        });
+
+        document.getElementById("schoolTableBody").innerHTML = asalSekolahData.join("");
+
+        // Chart Verifikasi
+        new Chart(document.getElementById("verifikasiChart"), {
+          type: "doughnut",
+          data: {
+            labels: ["Terverifikasi", "Belum Verifikasi"],
+            datasets: [{
+              data: [verifikasiCount.terverifikasi, verifikasiCount.belum],
+              backgroundColor: ["#16a34a", "#f97316"]
+            }]
+          }
+        });
+
+        // Chart Gender
+        new Chart(document.getElementById("genderChart"), {
+          type: "pie",
+          data: {
+            labels: ["Laki-laki", "Perempuan"],
+            datasets: [{
+              data: [genderCount.L, genderCount.P],
+              backgroundColor: ["#3b82f6", "#ec4899"]
+            }]
+          }
+        });
+
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Gagal mengambil data dashboard.");
+      });
+  </script>
+</body>
+</html>
