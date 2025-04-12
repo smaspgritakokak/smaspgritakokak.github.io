@@ -2,80 +2,109 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cetak Formulir Registrasi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPMB - Cetak Formulir</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white p-6">
+<body class="font-sans bg-gray-100">
 
-  <div class="max-w-4xl mx-auto border p-6 rounded-xl shadow-md bg-white" id="printArea">
-    <div class="text-center mb-6">
-      <h2 class="text-2xl font-bold text-blue-800">Formulir Registrasi SPMB</h2>
-      <p class="text-sm text-gray-600" id="idInfo">ID Registrasi: ...</p>
+  <!-- Navbar -->
+  <header class="bg-blue-600 text-white">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">SPMB 2025/2026</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:text-blue-300">Beranda</a></li>
+          <li><a href="formulir.html" class="hover:text-blue-300">Daftar Sekarang</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <div id="formData" class="grid grid-cols-2 gap-4 text-sm">
-      <!-- Data siswa akan ditampilkan di sini -->
+  <!-- Hero Section -->
+  <section class="bg-white py-8">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">Cetak Formulir Pendaftaran</h2>
+      <p class="text-gray-600 mb-8">Silakan periksa data Anda sebelum mencetak.</p>
     </div>
+  </section>
 
-    <div class="mt-6 text-center">
-      <button onclick="window.print()" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
-        Cetak PDF
-      </button>
+  <!-- Data Section -->
+  <section class="py-8">
+    <div class="container mx-auto px-4 max-w-2xl bg-white shadow-lg rounded-lg p-8">
+      <div id="registrant-data">
+        <!-- Data akan dimuat secara dinamis oleh JavaScript -->
+        <p class="text-gray-600 text-center">Memuat data...</p>
+      </div>
+
+      <!-- Cetak Button -->
+      <div class="mt-6 text-center">
+        <button id="print-button"
+          class="bg-green-600 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-green-700 transition duration-300">
+          Cetak Formulir
+        </button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec";
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2023 SPMB 2025/2026. All rights reserved.</p>
+    </div>
+  </footer>
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
+  <!-- JavaScript -->
+  <script type="module">
+    import { fetchRegistrantById } from "/js/api.js";
 
-    document.getElementById("idInfo").textContent = "ID Registrasi: " + id;
+    document.addEventListener("DOMContentLoaded", async () => {
+      const registrationId = localStorage.getItem("registrationId");
 
-    fetch(`${BASE_URL}?id=${id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data || !data.id_registrasi) {
-          alert("Data tidak ditemukan.");
-          return;
-        }
+      if (!registrationId) {
+        alert("ID Registrasi tidak ditemukan. Silakan login kembali.");
+        window.location.href = "login.html";
+        return;
+      }
 
-        const formDataDiv = document.getElementById("formData");
+      try {
+        const registrant = await fetchRegistrantById(registrationId);
 
-        const fields = {
-          "NISN": data.nisn,
-          "NIK": data.nik,
-          "Nama Lengkap": data.nama,
-          "Tempat Lahir": data.tempat_lahir,
-          "Tanggal Lahir": data.tanggal_lahir,
-          "Alamat": data.alamat,
-          "No. HP Siswa": data.hp_siswa,
-          "Nama Ayah": data.ayah,
-          "Nama Ibu": data.ibu,
-          "No. HP Ortu": data.hp_ortu,
-          "Asal Sekolah": data.asal_sekolah,
-          "Tahun Lulus": data.tahun_lulus,
-          "Tanggal Registrasi": data.tanggal_registrasi,
-          "Status Verifikasi": data.status_verifikasi
-        };
-
-        for (const [label, value] of Object.entries(fields)) {
-          const container = document.createElement("div");
-          container.innerHTML = `
-            <div class="font-medium text-gray-700">${label}</div>
-            <div class="text-gray-900">${value || "-"}</div>
+        if (registrant && registrant.status !== "error") {
+          // Tampilkan data pendaftar
+          const dataContainer = document.getElementById("registrant-data");
+          dataContainer.innerHTML = `
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Data Pendaftaran</h3>
+            <p><strong>NISN:</strong> ${registrant["NISN"]}</p>
+            <p><strong>NIK:</strong> ${registrant["NIK"]}</p>
+            <p><strong>Nama Lengkap:</strong> ${registrant["Nama Lengkap"]}</p>
+            <p><strong>Tempat, Tanggal Lahir:</strong> ${registrant["Tempat Lahir"]}, ${registrant["Tanggal Lahir"]}</p>
+            <p><strong>Alamat:</strong> ${registrant["Alamat"]}</p>
+            <p><strong>No. HP Siswa:</strong> ${registrant["No HP"]}</p>
+            <p><strong>Nama Ayah:</strong> ${registrant["Nama Ayah"]}</p>
+            <p><strong>Nama Ibu:</strong> ${registrant["Nama Ibu"]}</p>
+            <p><strong>No. HP Ortu:</strong> ${registrant["No HP Ortu"]}</p>
+            <p><strong>Asal Sekolah:</strong> ${registrant["Asal Sekolah"]}</p>
+            <p><strong>Tahun Lulus:</strong> ${registrant["Tahun Lulus"]}</p>
+            <p><strong>Status Verifikasi:</strong> ${registrant["Status Verifikasi"]}</p>
+            <p><strong>ID Registrasi:</strong> ${registrant["ID Registrasi"]}</p>
           `;
-          formDataDiv.appendChild(container);
+        } else {
+          alert("Data pendaftar tidak ditemukan. Silakan login kembali.");
+          window.location.href = "login.html";
         }
+      } catch (error) {
+        console.error("Error fetching registrant data:", error);
+        alert("Gagal memuat data pendaftar. Silakan coba lagi.");
+        window.location.href = "login.html";
+      }
+    });
 
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Terjadi kesalahan saat memuat data.");
-      });
+    // Handle Print Button
+    document.getElementById("print-button").addEventListener("click", () => {
+      window.print(); // Trigger browser print dialog
+    });
   </script>
-
 </body>
 </html>
-
