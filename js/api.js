@@ -1,6 +1,6 @@
 // api.js
 
-const API_BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec"; // Ganti dengan URL deploy Google Apps Script Anda
+const API_BASE_URL = "https://script.google.com/macros/s/AKfycbyLbzVLn963aoDdWaDj0G30D5vvMCk3ik1_wHcxD7G0EzzhY8LhrV2ZnmlG3MV83SqW/exec"; // Ganti dengan URL deploy Google Apps Script Anda
 
 /**
  * Fungsi untuk mengambil semua data pendaftar dari backend.
