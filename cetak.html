@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cetak Formulir Registrasi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-white p-6">
+
+  <div class="max-w-4xl mx-auto border p-6 rounded-xl shadow-md bg-white" id="printArea">
+    <div class="text-center mb-6">
+      <h2 class="text-2xl font-bold text-blue-800">Formulir Registrasi SPMB</h2>
+      <p class="text-sm text-gray-600" id="idInfo">ID Registrasi: ...</p>
+    </div>
+
+    <div id="formData" class="grid grid-cols-2 gap-4 text-sm">
+      <!-- Data siswa akan ditampilkan di sini -->
+    </div>
+
+    <div class="mt-6 text-center">
+      <button onclick="window.print()" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+        Cetak PDF
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    document.getElementById("idInfo").textContent = "ID Registrasi: " + id;
+
+    fetch(`${BASE_URL}?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data || !data.id_registrasi) {
+          alert("Data tidak ditemukan.");
+          return;
+        }
+
+        const formDataDiv = document.getElementById("formData");
+
+        const fields = {
+          "NISN": data.nisn,
+          "NIK": data.nik,
+          "Nama Lengkap": data.nama,
+          "Tempat Lahir": data.tempat_lahir,
+          "Tanggal Lahir": data.tanggal_lahir,
+          "Alamat": data.alamat,
+          "No. HP Siswa": data.hp_siswa,
+          "Nama Ayah": data.ayah,
+          "Nama Ibu": data.ibu,
+          "No. HP Ortu": data.hp_ortu,
+          "Asal Sekolah": data.asal_sekolah,
+          "Tahun Lulus": data.tahun_lulus,
+          "Tanggal Registrasi": data.tanggal_registrasi,
+          "Status Verifikasi": data.status_verifikasi
+        };
+
+        for (const [label, value] of Object.entries(fields)) {
+          const container = document.createElement("div");
+          container.innerHTML = `
+            <div class="font-medium text-gray-700">${label}</div>
+            <div class="text-gray-900">${value || "-"}</div>
+          `;
+          formDataDiv.appendChild(container);
+        }
+
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan saat memuat data.");
+      });
+  </script>
+
+</body>
+</html>
+
