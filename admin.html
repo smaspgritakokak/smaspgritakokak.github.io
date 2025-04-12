@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Admin - SPMB</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+
+  <!-- Form Login Admin -->
+  <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-center text-blue-800 mb-6">Login Admin</h2>
+    <form id="adminLoginForm" class="space-y-4">
+      <div>
+        <label for="adminUsername" class="block font-medium">Username</label>
+        <input type="text" id="adminUsername" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
+      </div>
+      <div>
+        <label for="adminPassword" class="block font-medium">Password</label>
+        <input type="password" id="adminPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Login</button>
+    </form>
+  </div>
+
+  <!-- Panel Admin (hidden by default) -->
+  <div id="adminPanel" class="hidden mt-10">
+    <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-bold text-blue-800">Panel Admin SPMB</h2>
+      <button id="logoutButton" class="bg-red-600 text-white py-2 px-6 rounded-md hover:bg-red-700">Logout</button>
+    </div>
+
+    <div class="mt-6">
+      <h3 class="font-semibold mb-4 text-center">Verifikasi dan Validasi Data Pendaftar</h3>
+      <div id="registrantsList" class="overflow-x-auto"></div>
+    </div>
+  </div>
+
+<!-- Form Pencarian Pendaftar -->
+<div class="mt-6">
+  <label for="searchInput" class="block mb-2">Cari Pendaftar</label>
+  <input id="searchInput" type="text" class="input w-full" placeholder="Masukkan nama atau ID registrasi" onkeyup="searchRegistrants()">
+</div>
+
+<!-- Tabel Hasil Pencarian -->
+<div id="searchResults" class="mt-6"></div>
+
+<!-- Tabel Pendaftar dan tombol cetak PDF -->
+<div class="mt-6">
+  <h3 class="font-semibold mb-4 text-center">Verifikasi dan Validasi Data Pendaftar</h3>
+  <div id="registrantsList" class="overflow-x-auto"></div>
+
+  <!-- Tombol Cetak PDF -->
+  <div class="mt-4 text-center">
+    <button id="printAllButton" class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700">Cetak PDF Semua Pendaftar</button>
+  </div>
+</div>
+
+<!-- Tabel Pendaftar dan tombol verifikasi -->
+<div class="mt-6">
+  <h3 class="font-semibold mb-4 text-center">Verifikasi dan Validasi Data Pendaftar</h3>
+  <div id="registrantsList" class="overflow-x-auto"></div>
+
+  <!-- Tombol Verifikasi dan Validasi Pendaftar -->
+  <div id="actionButtons" class="mt-4 text-center hidden">
+    <button id="verifyButton" class="bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700">Verifikasi</button>
+    <button id="validateButton" class="bg-yellow-600 text-white py-2 px-6 rounded-md hover:bg-yellow-700">Validasi</button>
+  </div>
+</div>
+
+<script>
+// Fungsi untuk mencetak seluruh pendaftar
+document.getElementById("printAllButton").addEventListener("click", function() {
+  fetch(BASE_URL + "?action=generatePDFAll")
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        window.open(data.pdfUrl, '_blank'); // Membuka PDF di tab baru
+      } else {
+        alert("Gagal menghasilkan PDF.");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Gagal menghubungi server.");
+    });
+});
+
+// Fungsi untuk mencetak PDF individu
+function printIndividual(id) {
+  fetch(`${BASE_URL}?action=generatePDF&id=${id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        window.open(data.pdfUrl, '_blank'); // Membuka PDF individu
+      } else {
+        alert("Gagal menghasilkan PDF individu.");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Gagal menghubungi server.");
+    });
+}
+</script>
+
+<script>
+  // Fungsi untuk memverifikasi pendaftar
+function verifyRegistrant(id) {
+  fetch(`${BASE_URL}?action=verify&id=${id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        alert("Data pendaftar berhasil diverifikasi.");
+        loadRegistrantData(); // Refresh data
+      } else {
+        alert("Gagal memverifikasi data.");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Gagal menghubungi server.");
+    });
+}
+
+// Fungsi untuk memvalidasi pendaftar
+function validateRegistrant(id) {
+  fetch(`${BASE_URL}?action=validate&id=${id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        alert("Data pendaftar berhasil divalidasi.");
+        loadRegistrantData(); // Refresh data
+      } else {
+        alert("Gagal memvalidasi data.");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Gagal menghubungi server.");
+    });
+}
+</script>
+
+<script>
+function searchRegistrants() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const registrants = document.querySelectorAll(".registrantRow");
+  
+  registrants.forEach((row) => {
+    const name = row.querySelector(".registrantName").innerText.toLowerCase();
+    const id = row.querySelector(".registrantID").innerText.toLowerCase();
+    
+    if (name.includes(query) || id.includes(query)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+</script>
+
+  <script>
+    const BASE_URL = "https://script.google.com/macros/s/AKfycbxHz_-u1sWm2fQ-XFEfTRxQHHeag82vtp-6gH-_iE40TH1CIS7hfnpuQUnZ1otvRLSZ/exec";
+
+    // Form login
+    document.getElementById("adminLoginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const username = document.getElementById("adminUsername").value;
+      const password = document.getElementById("adminPassword").value;
+
+      // Simple validation (username: admin, password: password123)
+      if (username === "admin" && password === "password123") {
+        document.getElementById("adminLoginForm").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+        loadRegistrants();
+      } else {
+        alert("Username atau password salah.");
+      }
+    });
+
+    // Logout function
+    document.getElementById("logoutButton").addEventListener("click", function() {
+      document.getElementById("adminLoginForm").classList.remove("hidden");
+      document.getElementById("adminPanel").classList.add("hidden");
+    });
+
+    // Load registrants data
+    function loadRegistrants() {
+      fetch(BASE_URL + "?action=read")
+        .then(res => res.json())
+        .then(data => {
+          const registrantsList = document.getElementById("registrantsList");
+          const table = `
+            <table class="min-w-full text-sm border-collapse">
+              <thead class="bg-blue-600 text-white">
+                <tr>
+                  <th class="px-4 py-2 text-left">No</th>
+                  <th class="px-4 py-2 text-left">Nama Lengkap</th>
+                  <th class="px-4 py-2 text-left">Asal Sekolah</th>
+                  <th class="px-4 py-2 text-left">Status Verifikasi</th>
+                  <th class="px-4 py-2 text-left">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.map((d, i) => `
+                  <tr>
+                    <td class="px-4 py-2">${i + 1}</td>
+                    <td class="px-4 py-2">${d.nama}</td>
+                    <td class="px-4 py-2">${d.asal_sekolah}</td>
+                    <td class="px-4 py-2">${d.status_verifikasi}</td>
+                    <td class="px-4 py-2">
+                      <button onclick="verifyStudent('${d.id_registrasi}', '${d.status_verifikasi}')" class="bg-green-500 text-white py-1 px-4 rounded hover:bg-green-600">Verifikasi</button>
+                      <button onclick="validateStudent('${d.id_registrasi}', '${d.status_verifikasi}')" class="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600">Validasi</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+          registrantsList.innerHTML = table;
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Gagal memuat data pendaftar.");
+        });
+    }
+
+    // Verifikasi student
+    function verifyStudent(id, currentStatus) {
+      const newStatus = currentStatus === "Terverifikasi" ? "Belum Terverifikasi" : "Terverifikasi";
+      fetch(`${BASE_URL}?action=updateStatus&id=${id}&status=${newStatus}`)
+        .then(() => {
+          alert("Status berhasil diperbarui.");
+          loadRegistrants(); // Reload registrants data
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Gagal memperbarui status.");
+        });
+    }
+
+    // Validasi student
+    function validateStudent(id, currentStatus) {
+      const newStatus = currentStatus === "Tervalidasi" ? "Belum Tervalidasi" : "Tervalidasi";
+      fetch(`${BASE_URL}?action=updateStatus&id=${id}&status=${newStatus}`)
+        .then(() => {
+          alert("Status berhasil divalidasi.");
+          loadRegistrants(); // Reload registrants data
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Gagal melakukan validasi.");
+        });
+    }
+
+  </script>
+
+</body>
+</html>
