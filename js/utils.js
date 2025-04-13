@@ -68,6 +68,15 @@ export function generateUniqueId() {
 }
 
 /**
+ * Fungsi untuk menghasilkan Gender.
+ * @param {string} gender - Gender.
+ * @returns {boolean} - Silakan pilih jenis kelamin yang valid.
+ */
+export function validateGender(gender) {
+  return gender === "Laki-laki" || gender === "Perempuan";
+}
+
+/**
  * Fungsi untuk menampilkan pesan kesalahan pada elemen DOM tertentu.
  * @param {HTMLElement} element - Elemen DOM tempat pesan akan ditampilkan.
  * @param {string} message - Pesan kesalahan.
