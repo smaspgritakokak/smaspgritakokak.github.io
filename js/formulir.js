@@ -75,10 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
       isValid = false;
     }
 
-    // Ensure a gender is selected
-    const selectedGender = Array.from(genderInputs).find((input) => input.checked);
-    if (!selectedGender) {
-      alert("Silakan pilih jenis kelamin.");
+    if (!validateGender(selectedGender)) {
+      showError(genderError, "Silakan pilih jenis kelamin yang valid.");
       isValid = false;
     }
 
