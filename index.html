@@ -1277,7 +1277,7 @@
 
   <script>
 
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxa83F2p-RdtJGkIhArGNlgEO64OR2UY-5h769C3J7Ztap1RRWYQ6QgRa0H-oTMv4cHKg/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycby3bQUFDZJW-zHO4TFtZAwHLT2kKNW3Ig-ywE9nrSVMMbwFPGat8AWGJLGX4v-2nAA2XA/exec";
 
     fetch(BACKEND_URL, {
       method: "POST",
@@ -1355,122 +1355,125 @@
       showSection(page);
     };
 
-    function previewForm() {
-      const form = document.getElementById("registration-form");
-      const formData = new FormData(form);
+function previewForm() {
+  const form = document.getElementById("registration-form");
+  const formData = new FormData(form);
 
-      let previewHtml = `
-        <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--primary-dark);">
-          <i class="fas fa-user-check"></i> Data Pendaftaran
-        </h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+  let previewHtml = `
+    <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--primary-dark);">
+      <i class="fas fa-user-check"></i> Data Pendaftaran
+    </h4>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+  `;
+
+  const formEntries = Array.from(formData.entries());
+
+  const fieldOrder = [
+    "jenis_pendaftaran",
+    "nisn",
+    "nik",
+    "nama",
+    "jenis_kelamin",
+    "tempat_lahir",
+    "tanggal_lahir",
+    "agama",
+    "whatsapp",
+    "alamat",
+    "nama_ayah",
+    "pekerjaan_ayah",
+    "nama_ibu",
+    "pekerjaan_ibu",
+    "whatsapp_ortu",
+    "asal_sekolah",
+    "tahun_lulus",
+  ];
+
+  formEntries.sort((a, b) => fieldOrder.indexOf(a[0]) - fieldOrder.indexOf(b[0]));
+
+  formEntries.forEach(([key, value]) => {
+    const label = document.querySelector(`label[for="${key}"]`).textContent;
+    previewHtml += `
+      <div style="margin-bottom: 0.5rem;">
+        <strong style="font-size: 0.85rem; color: var(--gray);">${label.replace(" *", "")}:</strong>
+        <p style="margin-top: 0.25rem;">${value || "-"}</p>
+      </div>
+    `;
+  });
+
+  previewHtml += "</div>";
+
+  document.getElementById("preview-content").innerHTML = previewHtml;
+  document.getElementById("preview-section").classList.remove("hidden");
+  form.classList.add("hidden");
+  document.getElementById("preview-section").focus();
+}
+
+function editForm() {
+  document.getElementById("preview-section").classList.add("hidden");
+  document.getElementById("registration-form").classList.remove("hidden");
+  document.getElementById("registration-form").focus();
+}
+
+async function submitForm() {
+  const submitBtn = document.getElementById("submit-btn");
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
+  submitBtn.disabled = true;
+
+  const form = document.getElementById("registration-form");
+  const formData = new FormData(form);
+  formData.append("action", "submitForm"); // tambahkan action agar Apps Script tahu maksud request-nya
+
+  try {
+    const response = await fetch(BACKEND_URL, {
+      method: "POST",
+      body: formData, // otomatis menjadi application/x-www-form-urlencoded
+    });
+
+    const resultText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(resultText);
+    } catch {
+      throw new Error("Respon tidak bisa dibaca sebagai JSON: " + resultText);
+    }
+
+    if (result.success) {
+      const successHtml = `
+        <div class="alert alert-success">
+          <h4 style="margin-bottom: 0.5rem;">
+            <i class="fas fa-check-circle"></i> Pendaftaran Berhasil!
+          </h4>
+          <p>Nomor Pendaftaran Anda: <strong>${result.nomorPendaftaran}</strong></p>
+          <p class="mt-2">Silakan simpan nomor pendaftaran ini untuk mengecek status pendaftaran.</p>
+        </div>
+        <div class="action-buttons mt-3">
+          <button onclick="window.print()" class="btn btn-secondary" aria-label="Cetak Bukti Pendaftaran">
+            <i class="fas fa-print"></i> Cetak Bukti
+          </button>
+          <button onclick="showCheckStatus('${result.nomorPendaftaran}')" class="btn btn-primary" aria-label="Cek Status Pendaftaran">
+            <i class="fas fa-search"></i> Cek Status
+          </button>
+          <button onclick="showSection('landing')" class="btn btn-outline" aria-label="Kembali ke Beranda">
+            <i class="fas fa-home"></i> Kembali ke Beranda
+          </button>
+        </div>
       `;
-
-      const formEntries = Array.from(formData.entries());
-
-      const fieldOrder = [
-        "jenis_pendaftaran",
-        "nisn",
-        "nik",
-        "nama",
-        "jenis_kelamin",
-        "tempat_lahir",
-        "tanggal_lahir",
-        "agama",
-        "whatsapp",
-        "alamat",
-        "nama_ayah",
-        "pekerjaan_ayah",
-        "nama_ibu",
-        "pekerjaan_ibu",
-        "whatsapp_ortu",
-        "asal_sekolah",
-        "tahun_lulus",
-      ];
-
-      formEntries.sort((a, b) => {
-        return fieldOrder.indexOf(a[0]) - fieldOrder.indexOf(b[0]);
-      });
-
-      formEntries.forEach(([key, value]) => {
-        const label = document.querySelector(`label[for="${key}"]`).textContent;
-        previewHtml += `
-          <div style="margin-bottom: 0.5rem;">
-            <strong style="font-size: 0.85rem; color: var(--gray);">${label.replace(" *", "")}:</strong>
-            <p style="margin-top: 0.25rem;">${value || "-"}</p>
-          </div>
-        `;
-      });
-
-      previewHtml += "</div>";
-
-      document.getElementById("preview-content").innerHTML = previewHtml;
-      document.getElementById("preview-section").classList.remove("hidden");
-      form.classList.add("hidden");
+      document.getElementById("preview-section").innerHTML = successHtml;
+      form.reset();
       document.getElementById("preview-section").focus();
+    } else {
+      alert("Gagal submit: " + result.message);
+      editForm();
     }
-
-    function editForm() {
-      document.getElementById("preview-section").classList.add("hidden");
-      document.getElementById("registration-form").classList.remove("hidden");
-      document.getElementById("registration-form").focus();
-    }
-
-    async function submitForm() {
-      const submitBtn = document.getElementById("submit-btn");
-      const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
-      submitBtn.disabled = true;
-
-      const form = document.getElementById("registration-form");
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData);
-
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "submitForm", formData: data }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          const successHtml = `
-            <div class="alert alert-success">
-              <h4 style="margin-bottom: 0.5rem;">
-                <i class="fas fa-check-circle"></i> Pendaftaran Berhasil!
-              </h4>
-              <p>Nomor Pendaftaran Anda: <strong>${result.nomorPendaftaran}</strong></p>
-              <p class="mt-2">Silakan simpan nomor pendaftaran ini untuk mengecek status pendaftaran.</p>
-            </div>
-            <div class="action-buttons mt-3">
-              <button onclick="window.print()" class="btn btn-secondary" aria-label="Cetak Bukti Pendaftaran">
-                <i class="fas fa-print"></i> Cetak Bukti
-              </button>
-              <button onclick="showCheckStatus('${result.nomorPendaftaran}')" class="btn btn-primary" aria-label="Cek Status Pendaftaran">
-                <i class="fas fa-search"></i> Cek Status
-              </button>
-              <button onclick="showSection('landing')" class="btn btn-outline" aria-label="Kembali ke Beranda">
-                <i class="fas fa-home"></i> Kembali ke Beranda
-              </button>
-            </div>
-          `;
-
-          document.getElementById("preview-section").innerHTML = successHtml;
-          form.reset();
-          document.getElementById("preview-section").focus();
-        } else {
-          alert("Gagal submit: " + result.message);
-          editForm();
-        }
-      } catch (error) {
-        alert("Terjadi kesalahan: " + error.message);
-        editForm();
-      } finally {
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      }
-    }
+  } catch (error) {
+    alert("Terjadi kesalahan: " + error.message);
+    editForm();
+  } finally {
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
+  }
+}
 
     function showCheckStatus(nomor) {
       showSection("check");
