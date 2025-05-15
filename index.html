@@ -1277,7 +1277,28 @@
 
   <script>
 
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxXTao6gDBnfYdPcYWo1W3vr5HBZ9zB0JhihYPjOJNbMbNHNJo21GRzD8TRbYbkOQ1Yrg/exec";
+    const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxa83F2p-RdtJGkIhArGNlgEO64OR2UY-5h769C3J7Ztap1RRWYQ6QgRa0H-oTMv4cHKg/exec";
+
+    fetch(BACKEND_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        action: "submitForm",
+        formData: {
+          nama: "Nama Lengkap",
+          email: "email@example.com"
+        }
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("RESPONS:", data);
+    })
+    .catch(error => {
+      console.error("GAGAL:", error);
+    });
 
     const validSections = ["landing", "info", "form", "check", "dashboard"];
 
