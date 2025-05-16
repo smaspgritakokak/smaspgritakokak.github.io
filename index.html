@@ -1174,29 +1174,53 @@
     
     // Daftar section yang valid
     const validSections = ['landing', 'info', 'form', 'check', 'dashboard'];
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        action: 'checkStatus',
+        nomor: 'SMAPTA-ABC123',
+        nisn: '1234567890'
+      })
+    })
     
     // Load tahun ajaran saat form dibuka
-    function loadAcademicYear() {
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'getCurrentAcademicYear'
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data) {
-          document.getElementById('tahun_ajaran').value = data;
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showErrorAlert('Gagal memuat tahun ajaran');
-      });
+function loadAcademicYear() {
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      action: 'getCurrentAcademicYear'
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    return response.json();
+  })
+  .then(data => {
+    if (data) {
+      const tahunAjaranInput = document.getElementById('tahun_ajaran');
+      if (tahunAjaranInput) {
+        // Jika data adalah objek, sesuaikan properti berikut
+        const yearValue = typeof data === 'string' ? data : data.year || '';
+        tahunAjaranInput.value = yearValue;
+      } else {
+        console.warn('Element #tahun_ajaran tidak ditemukan');
+      }
+    } else {
+      console.warn('Data tahun ajaran kosong');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showErrorAlert('Gagal memuat tahun ajaran');
+  });
+}
     
     // Tampilkan halaman berdasarkan parameter URL saat halaman dimuat
     window.onload = function() {
@@ -1370,54 +1394,67 @@
       formData.forEach((value, key) => formObject[key] = value);
       
       // Kirim data ke Google Apps Script
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'submitForm',
-          formData: formObject
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Tampilkan SweetAlert sukses
-          Swal.fire({
-            title: 'Pendaftaran Berhasil!',
-            html: `
-              <div style="text-align: left;">
-                <p><strong>Nomor Pendaftaran:</strong> ${data.nomorPendaftaran}</p>
-                <p><strong>Tahun Ajaran:</strong> ${data.tahun_ajaran}</p>
-                <p class="mt-3">Silakan simpan nomor pendaftaran ini untuk mengecek status pendaftaran.</p>
-              </div>
-            `,
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            },
-            buttonsStyling: false
-          }).then(() => {
-            // Reset form
-            form.reset();
-            // Tampilkan section landing
-            showSection('landing');
-          });
-        } else {
-          showErrorAlert(data.message || 'Gagal menyimpan data');
-          submitBtn.innerHTML = originalText;
-          submitBtn.disabled = false;
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showErrorAlert('Terjadi kesalahan saat mengirim data');
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      });
-    }
+fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    action: 'submitForm',
+    formData: formObject
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  if (data.success) {
+    Swal.fire({
+      title: 'Pendaftaran Berhasil!',
+      html: `
+        <div style="text-align: left;">
+          <p><strong>Nomor Pendaftaran:</strong> ${escapeHtml(data.nomorPendaftaran)}</p>
+          <p><strong>Tahun Ajaran:</strong> ${escapeHtml(data.tahun_ajaran)}</p>
+          <p class="mt-3">Silakan simpan nomor pendaftaran ini untuk mengecek status pendaftaran.</p>
+        </div>
+      `,
+      icon: 'success',
+      confirmButtonText: 'OK',
+      customClass: {
+        confirmButton: 'btn btn-success'
+      },
+      buttonsStyling: false
+    }).then(() => {
+      form.reset();
+      showSection('landing');
+    });
+  } else {
+    handleSubmitError(data.message || 'Gagal menyimpan data');
+  }
+})
+.catch(error => {
+  console.error('Error:', error);
+  handleSubmitError('Terjadi kesalahan saat mengirim data');
+});
+
+function handleSubmitError(message) {
+  showErrorAlert(message);
+  submitBtn.innerHTML = originalText;
+  submitBtn.disabled = false;
+}
+
+// Fungsi sederhana escape html agar aman jika data mengandung karakter khusus
+function escapeHtml(text) {
+  if (!text) return '';
+  return text.replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+}
     
     // Fungsi untuk langsung ke cek status dengan nomor tertentu
     function showCheckStatus(nomor) {
@@ -1444,111 +1481,144 @@
       }
       
       // Kirim permintaan ke Google Apps Script
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'checkStatus',
-          nomor: nomor,
-          nisn: nisn
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        const resultDiv = document.getElementById('check-result');
-        
-        if (data.success && data.found) {
-          let statusClass = '';
-          if (data.data.status_verifikasi === 'Diverifikasi') {
-            statusClass = 'status-verified';
-          } else if (data.data.status_verifikasi === 'Ditolak') {
-            statusClass = 'status-rejected';
-          } else {
-            statusClass = 'status-pending';
-          }
-          
-          resultDiv.innerHTML = `
-            <div class="card">
-              <h4 style="margin-bottom: 1rem; color: var(--primary-dark);">
-                <i class="fas fa-user-graduate"></i> Status Pendaftaran
-              </h4>
-              
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                <div>
-                  <strong style="font-size: 0.85rem; color: var(--gray);">Nomor Pendaftaran:</strong>
-                  <p style="margin-top: 0.25rem;">${data.data.nomor}</p>
-                </div>
-                <div>
-                  <strong style="font-size: 0.85rem; color: var(--gray);">Nama:</strong>
-                  <p style="margin-top: 0.25rem;">${data.data.nama}</p>
-                </div>
-                <div>
-                  <strong style="font-size: 0.85rem; color: var(--gray);">Asal Sekolah:</strong>
-                  <p style="margin-top: 0.25rem;">${data.data.asal_sekolah}</p>
-                </div>
-                <div>
-                  <strong style="font-size: 0.85rem; color: var(--gray);">Tanggal Daftar:</strong>
-                  <p style="margin-top: 0.25rem;">${data.data.timestamp}</p>
-                </div>
-                <div>
-                  <strong style="font-size: 0.85rem; color: var(--gray);">Status:</strong>
-                  <p style="margin-top: 0.25rem;" class="${statusClass}">
-                    <i class="fas fa-${data.data.status_verifikasi === 'Diverifikasi' ? 'check-circle' : 
-                      data.data.status_verifikasi === 'Ditolak' ? 'times-circle' : 'clock'}"></i>
-                    ${data.data.status_verifikasi}
-                  </p>
-                </div>
-              </div>
-              
-              ${data.data.status_verifikasi === 'Diverifikasi' ? `
-                <div class="alert alert-success mt-3">
-                  <strong><i class="fas fa-check-circle"></i> Selamat!</strong> 
-                  Anda diterima di SMAS PGRI TAKOKAK. Silakan lakukan daftar ulang sesuai jadwal.
-                </div>
-              ` : data.data.status_verifikasi === 'Ditolak' ? `
-                <div class="alert alert-danger mt-3">
-                  <strong><i class="fas fa-times-circle"></i> Maaf</strong>, 
-                  Anda belum diterima di SMAS PGRI TAKOKAK.
-                </div>
-              ` : `
-                <div class="alert alert-info mt-3">
-                  <strong><i class="fas fa-info-circle"></i> Proses Verifikasi</strong> 
-                  Pendaftaran Anda sedang dalam proses verifikasi. Silakan cek kembali beberapa hari lagi.
-                </div>
-              `}
-              
-              <div class="action-buttons mt-3">
-                <button onclick="window.print()" class="btn btn-secondary">
-                  <i class="fas fa-print"></i> Cetak
-                </button>
-                <button onclick="showSection('landing')" class="btn btn-primary">
-                  <i class="fas fa-home"></i> Kembali
-                </button>
-              </div>
-            </div>
-          `;
-        } else {
-          resultDiv.innerHTML = `
-            <div class="alert alert-danger">
-              <strong><i class="fas fa-exclamation-triangle"></i> Data tidak ditemukan</strong>
-              <p class="mt-2">Nomor pendaftaran atau NISN yang Anda masukkan tidak valid. Silakan coba lagi.</p>
-            </div>
-          `;
-        }
-        
-        resultDiv.classList.remove('hidden');
-        checkBtn.innerHTML = originalText;
-        checkBtn.disabled = false;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showErrorAlert('Terjadi kesalahan saat memeriksa status');
-        checkBtn.innerHTML = originalText;
-        checkBtn.disabled = false;
-      });
+fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    action: 'checkStatus',
+    nomor: nomor,
+    nisn: nisn
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  const resultDiv = document.getElementById('check-result');
+  if (!resultDiv) {
+    console.warn('#check-result element tidak ditemukan');
+    return;
+  }
+
+  const checkBtn = document.getElementById('check-btn');
+  if (!checkBtn) {
+    console.warn('#check-btn element tidak ditemukan');
+  }
+
+  if (data.success && data.found && data.data) {
+    const status = data.data.status_verifikasi;
+    let statusClass = '';
+    switch (status) {
+      case 'Diverifikasi':
+        statusClass = 'status-verified';
+        break;
+      case 'Ditolak':
+        statusClass = 'status-rejected';
+        break;
+      default:
+        statusClass = 'status-pending';
     }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+    }
+
+    function getStatusIcon(status) {
+      if (status === 'Diverifikasi') return 'check-circle';
+      if (status === 'Ditolak') return 'times-circle';
+      return 'clock';
+    }
+
+    resultDiv.innerHTML = `
+      <div class="card">
+        <h4 style="margin-bottom: 1rem; color: var(--primary-dark);">
+          <i class="fas fa-user-graduate"></i> Status Pendaftaran
+        </h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          <div>
+            <strong style="font-size: 0.85rem; color: var(--gray);">Nomor Pendaftaran:</strong>
+            <p style="margin-top: 0.25rem;">${escapeHtml(data.data.nomor)}</p>
+          </div>
+          <div>
+            <strong style="font-size: 0.85rem; color: var(--gray);">Nama:</strong>
+            <p style="margin-top: 0.25rem;">${escapeHtml(data.data.nama)}</p>
+          </div>
+          <div>
+            <strong style="font-size: 0.85rem; color: var(--gray);">Asal Sekolah:</strong>
+            <p style="margin-top: 0.25rem;">${escapeHtml(data.data.asal_sekolah)}</p>
+          </div>
+          <div>
+            <strong style="font-size: 0.85rem; color: var(--gray);">Tanggal Daftar:</strong>
+            <p style="margin-top: 0.25rem;">${escapeHtml(data.data.timestamp)}</p>
+          </div>
+          <div>
+            <strong style="font-size: 0.85rem; color: var(--gray);">Status:</strong>
+            <p style="margin-top: 0.25rem;" class="${statusClass}">
+              <i class="fas fa-${getStatusIcon(status)}"></i> ${escapeHtml(status)}
+            </p>
+          </div>
+        </div>
+        ${
+          status === 'Diverifikasi' ? `
+          <div class="alert alert-success mt-3">
+            <strong><i class="fas fa-check-circle"></i> Selamat!</strong> 
+            Anda diterima di SMAS PGRI TAKOKAK. Silakan lakukan daftar ulang sesuai jadwal.
+          </div>` 
+          : status === 'Ditolak' ? `
+          <div class="alert alert-danger mt-3">
+            <strong><i class="fas fa-times-circle"></i> Maaf</strong>, 
+            Anda belum diterima di SMAS PGRI TAKOKAK.
+          </div>` 
+          : `
+          <div class="alert alert-info mt-3">
+            <strong><i class="fas fa-info-circle"></i> Proses Verifikasi</strong> 
+            Pendaftaran Anda sedang dalam proses verifikasi. Silakan cek kembali beberapa hari lagi.
+          </div>`
+        }
+        <div class="action-buttons mt-3">
+          <button onclick="window.print()" class="btn btn-secondary">
+            <i class="fas fa-print"></i> Cetak
+          </button>
+          <button onclick="showSection('landing')" class="btn btn-primary">
+            <i class="fas fa-home"></i> Kembali
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    resultDiv.innerHTML = `
+      <div class="alert alert-danger">
+        <strong><i class="fas fa-exclamation-triangle"></i> Data tidak ditemukan</strong>
+        <p class="mt-2">Nomor pendaftaran atau NISN yang Anda masukkan tidak valid. Silakan coba lagi.</p>
+      </div>
+    `;
+  }
+
+  if (checkBtn) {
+    checkBtn.innerHTML = originalText;
+    checkBtn.disabled = false;
+  }
+})
+.catch(error => {
+  console.error('Error:', error);
+  showErrorAlert('Terjadi kesalahan saat memeriksa status');
+  
+  const checkBtn = document.getElementById('check-btn');
+  if (checkBtn) {
+    checkBtn.innerHTML = originalText;
+    checkBtn.disabled = false;
+  }
+});
     
     // Fungsi Login Admin
     function adminLogin() {
@@ -1568,182 +1638,243 @@
       }
       
       // Kirim permintaan login ke Google Apps Script
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'adminLogin',
-          username: username,
-          password: password
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Jika login berhasil, load dashboard admin
-          loadAdminDashboard();
-          document.getElementById('login-form').classList.add('hidden');
-          document.getElementById('admin-content').classList.remove('hidden');
-          
-          // Tampilkan notifikasi sukses
-          showSuccessAlert('Login berhasil!');
-        } else {
-          showErrorAlert(data.message || 'Login gagal. Periksa kembali username dan password Anda.');
-        }
-        loginBtn.innerHTML = originalText;
-        loginBtn.disabled = false;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showErrorAlert('Terjadi kesalahan saat login');
-        loginBtn.innerHTML = originalText;
-        loginBtn.disabled = false;
-      });
-    }
+fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    action: 'adminLogin',
+    username: username,
+    password: password
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  const loginBtn = document.getElementById('login-btn');
+  const loginForm = document.getElementById('login-form');
+  const adminContent = document.getElementById('admin-content');
+
+  if (data.success) {
+    loadAdminDashboard();
+    
+    if (loginForm) loginForm.classList.add('hidden');
+    if (adminContent) adminContent.classList.remove('hidden');
+    
+    showSuccessAlert('Login berhasil!');
+  } else {
+    showErrorAlert(data.message || 'Login gagal. Periksa kembali username dan password Anda.');
+  }
+
+  if (loginBtn) {
+    loginBtn.innerHTML = originalText;
+    loginBtn.disabled = false;
+  }
+})
+.catch(error => {
+  console.error('Error:', error);
+  showErrorAlert('Terjadi kesalahan saat login');
+
+  const loginBtn = document.getElementById('login-btn');
+  if (loginBtn) {
+    loginBtn.innerHTML = originalText;
+    loginBtn.disabled = false;
+  }
+});
     
     // Fungsi Load Admin Dashboard
     function loadAdminDashboard() {
       // Kirim permintaan untuk mendapatkan data pendaftaran
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'getAllRegistrations'
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        const adminContent = document.getElementById('admin-content');
-        
-        if (data.success) {
-          // Buat tabel data pendaftar
-          let tableHtml = `
-            <div class="info-section">
-            <div class="table-responsive">
-                <table id="admin-registrations-tab" class="info-table">
-                  <thead>
-                    <tr>
-                      <th>No. Pendaftaran</th>
-                      <th>Nama</th>
-                      <th>Asal Sekolah</th>
-                      <th>Tanggal Daftar</th>
-                      <th>Status</th>
-                      <th>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-          `;
-          
-          data.data.forEach(reg => {
-            let statusClass = '';
-            if (reg.status_verifikasi === 'Diverifikasi') {
-              statusClass = 'status-verified';
-            } else if (reg.status_verifikasi === 'Ditolak') {
-              statusClass = 'status-rejected';
-            } else {
-              statusClass = 'status-pending';
-            }
-            
-            tableHtml += `
+fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    action: 'getAllRegistrations'
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  const adminContent = document.getElementById('admin-content');
+  if (!adminContent) {
+    console.warn('#admin-content element tidak ditemukan');
+    return;
+  }
+
+  if (data.success && Array.isArray(data.data)) {
+    const escapeHtml = (text) => {
+      if (!text) return '';
+      return text.replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+    };
+
+    let tableHtml = `
+      <div class="info-section">
+        <div class="table-responsive">
+          <table id="admin-registrations-tab" class="info-table">
+            <thead>
               <tr>
-                <td>${reg.nomor}</td>
-                <td>${reg.nama}</td>
-                <td>${reg.asal_sekolah}</td>
-                <td>${reg.timestamp}</td>
-                <td class="${statusClass}">${reg.status_verifikasi}</td>
-                <td>
-                  <select onchange="updateStatus('${reg.nomor}', this.value)" 
-                    style="padding: 0.25rem; border-radius: 4px; border: 1px solid var(--light-gray);">
-                    <option value="Belum Diverifikasi" ${reg.status_verifikasi === 'Belum Diverifikasi' ? 'selected' : ''}>
-                      Belum Diverifikasi
-                    </option>
-                    <option value="Diverifikasi" ${reg.status_verifikasi === 'Diverifikasi' ? 'selected' : ''}>
-                      Diverifikasi
-                    </option>
-                    <option value="Ditolak" ${reg.status_verifikasi === 'Ditolak' ? 'selected' : ''}>
-                      Ditolak
-                    </option>
-                  </select>
-                </td>
+                <th>No. Pendaftaran</th>
+                <th>Nama</th>
+                <th>Asal Sekolah</th>
+                <th>Tanggal Daftar</th>
+                <th>Status</th>
+                <th>Aksi</th>
               </tr>
-            `;
-          });
-          
-          tableHtml += `
-                </tbody>
-              </table>
-            </div>
-            <div class="action-buttons mt-3">
-              <button onclick="exportToExcel()" class="btn btn-outline">
-                <i class="fas fa-file-excel"></i> Export ke Excel
-              </button>         
-              <button onclick="showSection('landing')" class="btn btn-danger">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </button>       
-            </div>
-          `;
-          
-          adminContent.innerHTML = tableHtml;
-        } else {
-          adminContent.innerHTML = `
-            <div class="alert alert-danger">
-              <strong>Gagal memuat data:</strong> ${data.message}
-            </div>
-          `;
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('admin-content').innerHTML = `
-          <div class="alert alert-danger">
-            <strong>Terjadi kesalahan saat memuat data</strong>
-          </div>
-        `;
+            </thead>
+            <tbody>
+    `;
+
+    data.data.forEach(reg => {
+      let statusClass = '';
+      if (reg.status_verifikasi === 'Diverifikasi') {
+        statusClass = 'status-verified';
+      } else if (reg.status_verifikasi === 'Ditolak') {
+        statusClass = 'status-rejected';
+      } else {
+        statusClass = 'status-pending';
+      }
+
+      tableHtml += `
+        <tr>
+          <td>${escapeHtml(reg.nomor)}</td>
+          <td>${escapeHtml(reg.nama)}</td>
+          <td>${escapeHtml(reg.asal_sekolah)}</td>
+          <td>${escapeHtml(reg.timestamp)}</td>
+          <td class="${statusClass}">${escapeHtml(reg.status_verifikasi)}</td>
+          <td>
+            <select data-nomor="${escapeHtml(reg.nomor)}" class="status-select" style="padding: 0.25rem; border-radius: 4px; border: 1px solid var(--light-gray);">
+              <option value="Belum Diverifikasi" ${reg.status_verifikasi === 'Belum Diverifikasi' ? 'selected' : ''}>Belum Diverifikasi</option>
+              <option value="Diverifikasi" ${reg.status_verifikasi === 'Diverifikasi' ? 'selected' : ''}>Diverifikasi</option>
+              <option value="Ditolak" ${reg.status_verifikasi === 'Ditolak' ? 'selected' : ''}>Ditolak</option>
+            </select>
+          </td>
+        </tr>
+      `;
+    });
+
+    tableHtml += `
+            </tbody>
+          </table>
+        </div>
+        <div class="action-buttons mt-3">
+          <button id="export-excel-btn" class="btn btn-outline">
+            <i class="fas fa-file-excel"></i> Export ke Excel
+          </button>         
+          <button id="logout-btn" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>       
+        </div>
+      </div>
+    `;
+
+    adminContent.innerHTML = tableHtml;
+
+    // Pasang event listener untuk select status
+    const selects = adminContent.querySelectorAll('.status-select');
+    selects.forEach(select => {
+      select.addEventListener('change', (e) => {
+        const nomor = e.target.getAttribute('data-nomor');
+        const newStatus = e.target.value;
+        updateStatus(nomor, newStatus);
       });
+    });
+
+    // Event listener tombol Export ke Excel
+    const exportBtn = document.getElementById('export-excel-btn');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', exportToExcel);
     }
+
+    // Event listener tombol Logout
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => showSection('landing'));
+    }
+
+  } else {
+    adminContent.innerHTML = `
+      <div class="alert alert-danger">
+        <strong>Gagal memuat data:</strong> ${escapeHtml(data.message || 'Tidak ada data')}
+      </div>
+    `;
+  }
+})
+.catch(error => {
+  console.error('Error:', error);
+  const adminContent = document.getElementById('admin-content');
+  if (adminContent) {
+    adminContent.innerHTML = `
+      <div class="alert alert-danger">
+        <strong>Terjadi kesalahan saat memuat data</strong>
+      </div>
+    `;
+  }
+});
+
     
     // Fungsi Update Status
     function updateStatus(nomor, status) {
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'updateStatus',
-          nomor: nomor,
-          status: status
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Tampilkan notifikasi sukses
-          Swal.fire({
-            title: 'Berhasil!',
-            text: 'Status pendaftaran berhasil diperbarui',
-            icon: 'success',
-            confirmButtonText: 'OK',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            },
-            buttonsStyling: false,
-            timer: 2000,
-            timerProgressBar: true
-          });
-        } else {
-          showErrorAlert('Gagal memperbarui status: ' + (data.message || 'Unknown error'));
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showErrorAlert('Terjadi kesalahan saat memperbarui status');
-      });
+function updateStatus(nomor, status) {
+  if (!nomor || !status) {
+    showErrorAlert('Nomor pendaftaran dan status harus diisi');
+    return;
+  }
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      action: 'updateStatus',
+      nomor: nomor,
+      status: status
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      Swal.fire({
+        title: 'Berhasil!',
+        text: 'Status pendaftaran berhasil diperbarui',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-success'
+        },
+        buttonsStyling: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
+    } else {
+      showErrorAlert('Gagal memperbarui status: ' + (data.message || 'Unknown error'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showErrorAlert('Terjadi kesalahan saat memperbarui status');
+  });
+}
     
     // Fungsi Export ke Excel
     function exportToExcel() {
