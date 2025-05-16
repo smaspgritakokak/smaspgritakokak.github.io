@@ -1,8 +1,18 @@
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPDwfC_hXybFzSTiQzxmOUGjtEjNiRjBta_X54zh6N55aaK67PdLGBaGHQ1OaoeoWq/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw1V-Bbi0Dtt2wUx0g5eRPhDhugnKg4WbaKB9Xvny2syROhjBINTBXUun6WMa-XGU9D/exec';
     
     // Daftar section yang valid
     const validSections = ['landing', 'info', 'form', 'check', 'dashboard'];
-    
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        action: 'checkStatus',
+        nomor: 'SMAPTA-ABC123',
+        nisn: '1234567890'
+      })
+    })
+
     // Load tahun ajaran saat form dibuka
     function loadAcademicYear() {
       fetch(SCRIPT_URL, {
