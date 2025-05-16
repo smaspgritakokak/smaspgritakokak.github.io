@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SPMB | SMAS PGRI TAKOKAK</title>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- SweetAlert CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <style>
+    /* Base Styles */
     :root {
       --primary: #2563eb;
       --primary-dark: #1e40af;
@@ -37,13 +34,13 @@
       --radius-lg: 10px;
       --transition: all 0.3s ease;
     }
-
+    
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
+    
     body {
       font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
@@ -52,21 +49,18 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
-
+    
+    /* Container */
     .container {
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 1rem;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
-
+    
+    /* Header */
     header {
       background-color: var(--primary);
       color: var(--white);
@@ -75,27 +69,24 @@
       border-radius: 0 0 var(--radius-lg) var(--radius-lg);
       box-shadow: var(--shadow-md);
       position: relative;
-      user-select: none;
     }
-
+    
     .logo {
       font-size: 2rem;
       margin-bottom: 0.5rem;
     }
-
+    
     h1 {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
-      font-weight: 700;
     }
-
+    
     .header-subtitle {
       font-size: 1rem;
       opacity: 0.9;
       margin-bottom: 1rem;
-      font-weight: 500;
     }
-
+    
     .btn-group {
       display: flex;
       justify-content: center;
@@ -103,7 +94,8 @@
       margin-top: 1rem;
       flex-wrap: wrap;
     }
-
+    
+    /* Buttons */
     .btn {
       padding: 0.75rem 1.5rem;
       border-radius: var(--radius-md);
@@ -116,68 +108,68 @@
       justify-content: center;
       gap: 0.5rem;
       font-size: 0.9rem;
-      user-select: none;
     }
-
+    
     .btn i {
       font-size: 1rem;
     }
-
+    
     .btn-primary {
       background-color: var(--white);
       color: var(--primary);
     }
-
+    
     .btn-primary:hover {
       background-color: var(--primary-light);
     }
-
+    
     .btn-secondary {
       background-color: var(--secondary);
       color: var(--white);
     }
-
+    
     .btn-secondary:hover {
       background-color: var(--primary);
     }
-
+    
     .btn-success {
       background-color: var(--success);
       color: var(--white);
     }
-
+    
     .btn-success:hover {
       background-color: var(--success-dark);
     }
-
+    
     .btn-warning {
       background-color: var(--warning);
       color: var(--white);
     }
-
+    
     .btn-warning:hover {
       background-color: var(--warning-dark);
     }
-
+    
     .btn-danger {
       background-color: var(--danger);
       color: var(--white);
     }
-
+    
     .btn-danger:hover {
       background-color: var(--danger-dark);
     }
-
+    
     .btn-outline {
       background-color: transparent;
       border: 1px solid var(--primary);
       color: var(--primary);
     }
-
+    
     .btn-outline:hover {
       background-color: var(--primary-light);
     }
 
+    /* Admin Dashboard Styles */
     .admin-panel {
       background-color: var(--white);
       border-radius: var(--radius-md);
@@ -185,78 +177,79 @@
       margin-top: 1.5rem;
       box-shadow: var(--shadow-sm);
     }
-
+    
     .admin-toolbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
     }
-
+    
     .info-section {
       background-color: var(--light);
       padding: 1rem;
       border-radius: var(--radius-md);
       margin-bottom: 1.5rem;
     }
-
+  
     .section-title {
       color: var(--primary-dark);
       margin-bottom: 1rem;
       font-size: 1.1rem;
-      font-weight: 600;
     }
-
+  
     .info-table {
       width: 100%;
       border-collapse: collapse;
     }
-
+  
     .info-table th {
       background-color: var(--primary);
       color: white;
       padding: 0.75rem;
-      font-weight: 600;
-      text-align: left;
     }
-
+  
     .info-table td {
-      padding: 0.5rem 0.75rem;
-      border-bottom: 1px solid var(--light-gray);
+     padding: 0.5rem 0.75rem;
+     border-bottom: 1px solid var(--light-gray);
     }
-
+  
     .active-event {
       background-color: #e3f2fd !important;
       font-weight: 500;
     }
-
+  
     .mandatory-fee {
       background-color: #fff8e1;
     }
-
+  
     .required-icon {
       color: var(--danger);
       font-size: 0.7rem;
     }
-
+  
     .error-log {
       background-color: #ffebee;
     }
-
+  
+    .admin-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
     .search-box {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
     }
-
+  
     .search-box input {
       padding: 0.5rem;
       border: 1px solid var(--light-gray);
       border-radius: var(--radius-sm) 0 0 var(--radius-sm);
       width: 250px;
-      font-size: 0.9rem;
     }
-
+  
     .search-box button {
       padding: 0.5rem 0.75rem;
       background-color: var(--primary);
@@ -264,29 +257,18 @@
       border: none;
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
       cursor: pointer;
-      font-size: 0.9rem;
     }
-
+  
     .pagination {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 1rem;
-      margin-top: 1rem;
     }
-
+  
     .pagination button {
       padding: 0.25rem 0.5rem;
       min-width: 30px;
-      cursor: pointer;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--light-gray);
-      background-color: var(--white);
-      transition: var(--transition);
-    }
-
-    .pagination button:hover {
-      background-color: var(--primary-light);
     }
 
     .tabs {
@@ -294,7 +276,7 @@
       border-bottom: 1px solid var(--light-gray);
       margin-bottom: 1rem;
     }
-
+    
     .tab-btn {
       padding: 0.75rem 1.5rem;
       background: none;
@@ -305,16 +287,16 @@
       color: var(--gray);
       transition: var(--transition);
     }
-
+    
     .tab-btn:hover {
       color: var(--primary);
     }
-
+    
     .tab-btn.active {
       color: var(--primary);
       border-bottom-color: var(--primary);
     }
-
+    
     .status-badge {
       display: inline-block;
       padding: 0.25rem 0.5rem;
@@ -322,27 +304,28 @@
       font-size: 0.8rem;
       font-weight: 500;
     }
-
+    
     .status-pending {
       background-color: #fef3c7;
       color: var(--warning-dark);
     }
-
+    
     .status-verified {
       background-color: #d1fae5;
       color: var(--success-dark);
     }
-
+    
     .status-rejected {
       background-color: #fee2e2;
       color: var(--danger-dark);
     }
 
+    /* Main Content */
     .main-content {
       padding: 1.5rem 0;
-      flex-grow: 1;
     }
-
+    
+    /* Cards */
     .card {
       background-color: var(--white);
       border-radius: var(--radius-md);
@@ -351,252 +334,218 @@
       box-shadow: var(--shadow-sm);
       transition: var(--transition);
     }
-
+    
     .card:hover {
       box-shadow: var(--shadow-md);
     }
-
+    
     .card-title {
       font-size: 1.25rem;
       margin-bottom: 1rem;
       color: var(--primary-dark);
       font-weight: 600;
     }
-
+    
     .card-highlight {
       background-color: var(--primary);
       color: var(--white);
     }
-
+    
     .card-highlight .card-title {
       color: var(--white);
     }
-
+    
+    /* Features Grid */
     .features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.25rem;
       margin-bottom: 1.5rem;
     }
-
+    
     .feature-card {
       background-color: var(--light);
       padding: 1.25rem;
       border-radius: var(--radius-md);
       text-align: center;
       transition: var(--transition);
-      user-select: none;
     }
-
+    
     .feature-card:hover {
       transform: translateY(-5px);
       box-shadow: var(--shadow-sm);
     }
-
+    
     .feature-icon {
       font-size: 2rem;
       margin-bottom: 0.75rem;
       color: var(--primary);
     }
-
+    
     .feature-title {
       font-weight: 600;
       margin-bottom: 0.5rem;
-      user-select: text;
     }
-
+    
     .feature-desc {
       font-size: 0.85rem;
       color: var(--gray);
-      user-select: text;
     }
-
+    
+    /* Form Styles */
     .form-group {
       margin-bottom: 1rem;
-      user-select: text;
     }
-
+    
     label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
       font-size: 0.9rem;
-      user-select: text;
     }
-
-    input,
-    select,
-    textarea {
+    
+    input, select, textarea {
       width: 100%;
       padding: 0.75rem;
       border: 1px solid var(--light-gray);
       border-radius: var(--radius-sm);
       font-size: 0.9rem;
       transition: var(--transition);
-      font-family: inherit;
-      user-select: text;
     }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
+    
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 2px var(--primary-light);
     }
-
+    
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
     }
-
+    
     .form-full-width {
       grid-column: 1 / -1;
     }
-
+    
     .action-buttons {
       display: flex;
       gap: 1rem;
       margin-top: 1.5rem;
       flex-wrap: wrap;
-      user-select: none;
     }
-
+    
+    /* Table Styles */
     .table-responsive {
       overflow-x: auto;
       margin-top: 1.5rem;
       border-radius: var(--radius-sm);
       box-shadow: var(--shadow-sm);
     }
-
+    
     table {
       width: 100%;
       border-collapse: collapse;
       min-width: 600px;
-      user-select: text;
     }
-
-    th,
-    td {
+    
+    th, td {
       padding: 0.75rem;
       text-align: left;
       border-bottom: 1px solid var(--light-gray);
       font-size: 0.9rem;
     }
-
+    
     th {
       background-color: var(--light);
       font-weight: 600;
       color: var(--dark);
     }
-
+    
     tr:hover {
       background-color: var(--light);
     }
-
+    
+    /* Alert */
     .alert {
       padding: 1rem;
       border-radius: var(--radius-sm);
       margin-bottom: 1rem;
       font-size: 0.9rem;
-      user-select: text;
     }
-
+    
     .alert-success {
       background-color: #ecfdf5;
       color: var(--success-dark);
       border-left: 4px solid var(--success);
     }
-
+    
     .alert-info {
       background-color: #e0f2fe;
       color: var(--primary-dark);
       border-left: 4px solid var(--primary);
     }
-
+    
     .alert-warning {
       background-color: #fef3c7;
       color: var(--warning-dark);
       border-left: 4px solid var(--warning);
     }
-
+    
     .alert-danger {
       background-color: #fee2e2;
       color: var(--danger-dark);
       border-left: 4px solid var(--danger);
     }
-
+    
+    /* Footer */
     footer {
       background-color: var(--primary);
       color: var(--white);
       text-align: center;
       padding: 1.5rem 0;
-      margin-top: auto;
+      margin-top: 2rem;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      user-select: none;
-      font-weight: 500;
     }
-
+    
     .footer-links {
       display: flex;
       justify-content: center;
       gap: 1.5rem;
       margin-bottom: 1rem;
-      flex-wrap: wrap;
     }
-
+    
     .footer-link {
       color: var(--white);
       text-decoration: none;
       transition: var(--transition);
-      cursor: pointer;
     }
-
+    
     .footer-link:hover {
       opacity: 0.8;
     }
-
+    
+    /* Utility Classes */
     .hidden {
       display: none !important;
     }
-
+    
     .text-center {
       text-align: center;
     }
-
-    .mt-2 {
-      margin-top: 0.5rem;
-    }
-
-    .mt-3 {
-      margin-top: 0.75rem;
-    }
-
-    .mt-4 {
-      margin-top: 1rem;
-    }
-
-    .mt-5 {
-      margin-top: 1.5rem;
-    }
-
-    .mb-2 {
-      margin-bottom: 0.5rem;
-    }
-
-    .mb-3 {
-      margin-bottom: 0.75rem;
-    }
-
-    .mb-4 {
-      margin-bottom: 1rem;
-    }
-
-    .mb-5 {
-      margin-bottom: 1.5rem;
-    }
-
+    
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-5 { margin-top: 1.5rem; }
+    
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-5 { margin-bottom: 1.5rem; }
+    
+    /* Mobile Navigation */
     .mobile-menu-btn {
       display: none;
       background: none;
@@ -607,128 +556,124 @@
       top: 1rem;
       right: 1rem;
       cursor: pointer;
-      user-select: none;
     }
-
+    
+    /* Loading Spinner */
     .spinner {
       display: inline-block;
       width: 1.5rem;
       height: 1.5rem;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      border: 3px solid rgba(255,255,255,0.3);
       border-radius: 50%;
       border-top-color: var(--white);
       animation: spin 1s ease-in-out infinite;
-      vertical-align: middle;
     }
-
+    
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
-
+    
+    /* Responsive Adjustments */
     @media (max-width: 768px) {
       .logo {
         font-size: 1.75rem;
       }
-
+      
       h1 {
         font-size: 1.25rem;
       }
-
+      
       .header-subtitle {
         font-size: 0.9rem;
       }
-
+      
       .btn {
         padding: 0.6rem 1rem;
         font-size: 0.85rem;
       }
-
+      
       .features {
         grid-template-columns: 1fr;
       }
-
+      
       .mobile-menu-btn {
         display: block;
       }
-
+      
       .btn-group {
         flex-direction: column;
         align-items: center;
       }
-
+      
       .btn {
         width: 100%;
         max-width: 250px;
       }
-
+      
       .action-buttons {
         flex-direction: column;
       }
-
+      
       .action-buttons .btn {
         width: 100%;
       }
-
+      
       .admin-toolbar {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
       }
-
+      
       .search-box {
         width: 100%;
       }
-
+      
       .search-box input {
         width: 100%;
       }
     }
-
+    
     @media (max-width: 480px) {
       .container {
         padding: 0 0.75rem;
       }
-
+      
       .main-content {
         padding: 1rem 0;
       }
-
+      
       .card {
         padding: 1rem;
       }
-
+      
       .footer-links {
         flex-direction: column;
         gap: 0.5rem;
       }
-
+      
       .tabs {
         overflow-x: auto;
         white-space: nowrap;
         padding-bottom: 0.5rem;
       }
     }
-
+    
+    /* Print Styles */
     @media print {
-      header,
-      footer,
-      .btn-group,
-      .action-buttons {
+      header, footer, .btn-group, .action-buttons {
         display: none !important;
       }
-
+      
       body {
         background-color: white;
         color: black;
       }
-
+      
       .container {
         padding: 0;
         max-width: 100%;
       }
-
+      
       .card {
         box-shadow: none;
         border: 1px solid #ddd;
@@ -741,16 +686,16 @@
   <div class="container">
     <!-- Header -->
     <header>
-      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu">
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
         <i class="fas fa-bars"></i>
       </button>
-      <div class="logo" aria-label="Logo Sekolah">
+      <div class="logo">
         <i class="fas fa-graduation-cap"></i>
       </div>
       <h1>SMAS PGRI TAKOKAK</h1>
       <p class="header-subtitle">Sistem Penerimaan Murid Baru Tahun 2025/2026</p>
-      <nav class="btn-group" id="main-nav" role="navigation" aria-label="Main Navigation">
-        <button onclick="showSection('landing')" class="btn btn-primary" aria-current="page">
+      <div class="btn-group" id="main-nav">
+        <button onclick="showSection('landing')" class="btn btn-primary">
           <i class="fas fa-home"></i> Beranda
         </button>
         <button onclick="showSection('form')" class="btn btn-secondary">
@@ -765,33 +710,35 @@
         <button onclick="showSection('dashboard')" class="btn btn-outline">
           <i class="fas fa-lock"></i> Admin
         </button>
-      </nav>
+      </div>
     </header>
 
-    <main class="main-content" role="main">
+    <!-- Main Content -->
+    <main class="main-content">
       <!-- Landing Page -->
       <section id="landing-section">
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info">
           <strong>Pendaftaran Gelombang 1</strong> dibuka dari 1 - 15 Juni 2025. Segera daftarkan diri Anda!
         </div>
-
+        
         <div class="card">
-          <div class="features" aria-label="Fitur Pendaftaran">
-            <div class="feature-card" tabindex="0">
+          <!-- Features Cards -->
+          <div class="features">
+            <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-check-circle"></i>
               </div>
               <h3 class="feature-title">Mudah</h3>
               <p class="feature-desc">Proses pendaftaran online yang sederhana dan cepat</p>
             </div>
-            <div class="feature-card" tabindex="0">
+            <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-lock"></i>
               </div>
               <h3 class="feature-title">Aman</h3>
               <p class="feature-desc">Data pendaftaran tersimpan dengan aman</p>
             </div>
-            <div class="feature-card" tabindex="0">
+            <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-bolt"></i>
               </div>
@@ -800,37 +747,47 @@
             </div>
           </div>
 
-          <div class="mb-5" aria-label="Alur Pendaftaran">
+          <!-- Alur Pendaftaran -->
+          <div class="mb-5">
             <h2 class="card-title text-center">Alur Pendaftaran</h2>
             <div class="form-grid mt-4">
-              <div class="feature-card" tabindex="0">
-                <div class="feature-icon"><span class="step-number">1</span></div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <span class="step-number">1</span>
+                </div>
                 <h3 class="feature-title">Isi Formulir</h3>
                 <p class="feature-desc">Lengkapi formulir pendaftaran dengan data yang valid</p>
               </div>
-              <div class="feature-card" tabindex="0">
-                <div class="feature-icon"><span class="step-number">2</span></div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <span class="step-number">2</span>
+                </div>
                 <h3 class="feature-title">Serahkan Dokumen</h3>
                 <p class="feature-desc">Fotocopy Ijazah/SKL, Akta Lahir, Kartu Keluarga, KIP</p>
               </div>
-              <div class="feature-card" tabindex="0">
-                <div class="feature-icon"><span class="step-number">3</span></div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <span class="step-number">3</span>
+                </div>
                 <h3 class="feature-title">Verifikasi</h3>
                 <p class="feature-desc">Tim akan memverifikasi data pendaftaran</p>
               </div>
-              <div class="feature-card" tabindex="0">
-                <div class="feature-icon"><span class="step-number">4</span></div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <span class="step-number">4</span>
+                </div>
                 <h3 class="feature-title">Pengumuman</h3>
                 <p class="feature-desc">Hasil seleksi diumumkan melalui WhatsApp dan Email</p>
               </div>
             </div>
           </div>
 
+          <!-- Mulai Pendaftaran -->
           <div class="card card-highlight">
             <h2 class="card-title text-center">Mulai Pendaftaran Sekarang</h2>
             <p class="text-center mt-3">Dapatkan kesempatan belajar di sekolah terbaik di daerah Anda</p>
             <div class="text-center mt-4">
-              <button onclick="showSection('form')" class="btn btn-primary" aria-label="Mulai Daftar Sekarang">
+              <button onclick="showSection('form')" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i> Daftar Sekarang
               </button>
             </div>
@@ -839,63 +796,94 @@
       </section>
 
       <!-- Informasi Section -->
-      <section id="info-section" class="hidden" tabindex="-1">
+      <section id="info-section" class="hidden">
         <div class="card">
           <h2 class="card-title">Informasi PPDB</h2>
-
-          <div class="alert alert-info" id="info-alert" role="alert">
+          
+          <div class="alert alert-info" id="info-alert">
             <i class="fas fa-info-circle"></i><strong>Perhatian:</strong> Pastikan semua dokumen yang diperlukan sudah disiapkan sebelum mendaftar.
           </div>
-
+      
+          <!-- Persyaratan -->
           <div class="info-section mt-4">
             <h3 class="section-title">
               <i class="fas fa-file-alt"></i> Persyaratan
             </h3>
             <div class="table-responsive">
-              <table id="requirement-table" class="info-table" aria-describedby="info-alert" role="table">
+              <table id="requirement-table" class="info-table">
                 <thead>
                   <tr>
                     <th>No</th>
                     <th>Persyaratan</th>
                     <th>Keterangan</th>
                   </tr>
-                </thead>
+                </thead>                
                 <tbody>
-                  <tr><td>1</td><td>Fotokopi Ijazah/SKL SMP/MTs</td><td>Telah dilegalisir sebanyak 2 lembar</td></tr>
-                  <tr><td>2</td><td>Fotokopi SKHUN</td><td>Telah dilegalisir sebanyak 2 lembar</td></tr>
-                  <tr><td>3</td><td>Fotokopi Akta Kelahiran</td><td>1 lembar, jelas dan terbaca</td></tr>
-                  <tr><td>4</td><td>Fotokopi Kartu Keluarga</td><td>1 lembar, masih berlaku dan terbaca</td></tr>
-                  <tr><td>5</td><td>Pas Foto 3x4 (2 lembar)</td><td>Berwarna, latar belakang merah</td></tr>
-                  <tr><td>6</td><td>Surat Keterangan Sehat dari Dokter</td><td>Asli, dikeluarkan oleh puskesmas atau rumah sakit</td></tr>
-                  <tr><td>7</td><td>Fotokopi Rapor Kelas 7–9</td><td>Telah dilegalisir oleh pihak sekolah</td></tr>
+                  <tr>
+                    <td>1</td>
+                    <td>Fotokopi Ijazah/SKL SMP/MTs</td>
+                    <td>Telah dilegalisir sebanyak 2 lembar</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Fotokopi SKHUN</td>
+                    <td>Telah dilegalisir sebanyak 2 lembar</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Fotokopi Akta Kelahiran</td>
+                    <td>1 lembar, jelas dan terbaca</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Fotokopi Kartu Keluarga</td>
+                    <td>1 lembar, masih berlaku dan terbaca</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Pas Foto 3x4 (2 lembar)</td>
+                    <td>Berwarna, latar belakang merah</td>
+                  </tr>
+                  <tr>
+                    <td>6</td>
+                    <td>Surat Keterangan Sehat dari Dokter</td>
+                    <td>Asli, dikeluarkan oleh puskesmas atau rumah sakit</td>
+                  </tr>
+                  <tr>
+                    <td>7</td>
+                    <td>Fotokopi Rapor Kelas 7–9</td>
+                    <td>Telah dilegalisir oleh pihak sekolah</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <div class="action-buttons mt-4">
-            <button onclick="window.print()" class="btn btn-outline" aria-label="Cetak Informasi">
-              <i class="fas fa-print"></i> Cetak Informasi
-            </button>
-            <button onclick="showSection('landing')" class="btn btn-secondary" aria-label="Kembali ke Beranda">
-              <i class="fas fa-arrow-left"></i> Kembali
-            </button>
-          </div>
+        <div class="action-buttons mt-4">
+          <button onclick="window.print()" class="btn btn-outline">
+            <i class="fas fa-print"></i> Cetak Informasi
+          </button>          
+          <button onclick="showSection('landing')" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Kembali
+          </button>
+        </div>
+
         </div>
       </section>
 
       <!-- Formulir Pendaftaran -->
-      <section id="form-section" class="hidden" tabindex="-1">
+      <section id="form-section" class="hidden">
         <div class="card">
           <h2 class="card-title">Formulir Pendaftaran</h2>
           <p class="mb-4">Silakan lengkapi formulir berikut dengan data yang valid dan benar.</p>
 
-          <form id="registration-form" onsubmit="event.preventDefault(); previewForm();" aria-label="Formulir Pendaftaran">
+          <form id="registration-form">
             <div class="form-grid">
 
+              <!-- NISN -->
               <div class="form-group">
-                <label for="jenis_pendaftaran">Jenis Pendaftaran <span aria-hidden="true" class="text-danger">*</span></label>
-                <select id="jenis_pendaftaran" name="jenis_pendaftaran" required aria-required="true">
+                <label for="jenis_pendaftaran">Jenis Pendaftaran <span class="text-danger">*</span></label>
+                <select id="jenis_pendaftaran" name="jenis_pendaftaran" required>
                   <option value="">Pilih Jenis Pendaftaran</option>
                   <option value="Siswa Baru">Siswa Baru</option>
                   <option value="Pindahan">Pindahan</option>
@@ -903,87 +891,56 @@
                 </select>
               </div>
 
+              <!-- Tahun Ajaran (auto-generated, readonly) -->
               <div class="form-group">
-                <label for="nisn">NISN <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="nisn"
-                  name="nisn"
-                  required
-                  pattern="[0-9]{10}"
-                  title="NISN harus 10 digit angka"
-                  aria-required="true"
-                  autocomplete="off"
-                  inputmode="numeric"
-                  maxlength="10"
-                />
+                <label for="tahun_ajaran">Tahun Ajaran <span class="text-danger">*</span></label>
+                <input type="text" id="tahun_ajaran" name="tahun_ajaran" readonly required>
               </div>
 
+              <!-- NISN -->
               <div class="form-group">
-                <label for="nik">NIK <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="nik"
-                  name="nik"
-                  required
-                  pattern="[0-9]{16}"
-                  title="NIK harus 16 digit angka"
-                  aria-required="true"
-                  autocomplete="off"
-                  inputmode="numeric"
-                  maxlength="16"
-                />
+                <label for="nisn">NISN <span class="text-danger">*</span></label>
+                <input type="text" id="nisn" name="nisn" required pattern="[0-9]{10}" title="NISN harus 10 digit angka">
               </div>
 
+              <!-- NIK -->
               <div class="form-group">
-                <label for="nama">Nama Lengkap <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="nama"
-                  name="nama"
-                  required
-                  aria-required="true"
-                  autocomplete="name"
-                />
+                <label for="nik">NIK <span class="text-danger">*</span></label>
+                <input type="text" id="nik" name="nik" required pattern="[0-9]{16}" title="NIK harus 16 digit angka">
               </div>
 
+              <!-- Nama Lengkap -->
               <div class="form-group">
-                <label for="jenis_kelamin">Jenis Kelamin <span aria-hidden="true" class="text-danger">*</span></label>
-                <select id="jenis_kelamin" name="jenis_kelamin" required aria-required="true">
+                <label for="nama">Nama Lengkap <span class="text-danger">*</span></label>
+                <input type="text" id="nama" name="nama" required>
+              </div>
+
+              <!-- Jenis Kelamin -->
+              <div class="form-group">
+                <label for="jenis_kelamin">Jenis Kelamin <span class="text-danger">*</span></label>
+                <select id="jenis_kelamin" name="jenis_kelamin" required>
                   <option value="">Pilih Jenis Kelamin</option>
                   <option value="Laki-laki">Laki-laki</option>
                   <option value="Perempuan">Perempuan</option>
                 </select>
               </div>
 
+              <!-- Tempat Lahir -->
               <div class="form-group">
-                <label for="tempat_lahir">Tempat Lahir <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="tempat_lahir"
-                  name="tempat_lahir"
-                  required
-                  aria-required="true"
-                  autocomplete="off"
-                />
+                <label for="tempat_lahir">Tempat Lahir <span class="text-danger">*</span></label>
+                <input type="text" id="tempat_lahir" name="tempat_lahir" required>
               </div>
 
+              <!-- Tanggal Lahir -->
               <div class="form-group">
-                <label for="tanggal_lahir">Tanggal Lahir <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="date"
-                  id="tanggal_lahir"
-                  name="tanggal_lahir"
-                  required
-                  aria-required="true"
-                  max="2010-12-31"
-                  min="1990-01-01"
-                />
+                <label for="tanggal_lahir">Tanggal Lahir <span class="text-danger">*</span></label>
+                <input type="date" id="tanggal_lahir" name="tanggal_lahir" required max="2010-12-31" min="1990-01-01">
               </div>
 
+              <!-- Agama -->
               <div class="form-group">
-                <label for="agama">Agama <span aria-hidden="true" class="text-danger">*</span></label>
-                <select id="agama" name="agama" required aria-required="true">
+                <label for="agama">Agama <span class="text-danger">*</span></label>
+                <select id="agama" name="agama" required>
                   <option value="">Pilih Agama</option>
                   <option value="Islam">Islam</option>
                   <option value="Kristen">Kristen</option>
@@ -994,50 +951,29 @@
                 </select>
               </div>
 
+              <!-- No HP Siswa -->
               <div class="form-group">
-                <label for="whatsapp">WhatsApp <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="tel"
-                  id="whatsapp"
-                  name="whatsapp"
-                  required
-                  aria-required="true"
-                  pattern="[0-9]{10,13}"
-                  title="Nomor HP 10-13 digit angka"
-                  placeholder="Contoh: 081234567890"
-                  inputmode="tel"
-                  autocomplete="tel"
-                />
+                <label for="whatsapp">WhatsApp <span class="text-danger">*</span></label>
+                <input type="tel" id="whatsapp" name="whatsapp" required pattern="[0-9]{10,13}" title="Nomor HP 10-13 digit angka">
                 <small class="text-gray">Contoh: 081234567890</small>
               </div>
 
+              <!-- Alamat -->
               <div class="form-group form-full-width">
-                <label for="alamat">Alamat Lengkap <span aria-hidden="true" class="text-danger">*</span></label>
-                <textarea
-                  id="alamat"
-                  name="alamat"
-                  rows="3"
-                  required
-                  aria-required="true"
-                  autocomplete="off"
-                ></textarea>
+                <label for="alamat">Alamat Lengkap <span class="text-danger">*</span></label>
+                <textarea id="alamat" name="alamat" rows="3" required></textarea>
               </div>
 
+              <!-- Nama Ayah -->
               <div class="form-group">
-                <label for="nama_ayah">Nama Ayah <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="nama_ayah"
-                  name="nama_ayah"
-                  required
-                  aria-required="true"
-                  autocomplete="off"
-                />
+                <label for="nama_ayah">Nama Ayah <span class="text-danger">*</span></label>
+                <input type="text" id="nama_ayah" name="nama_ayah" required>
               </div>
 
+              <!-- Pekerjaan Ayah -->
               <div class="form-group">
-                <label for="pekerjaan_ayah">Pekerjaan Ayah <span aria-hidden="true" class="text-danger">*</span></label>
-                <select id="pekerjaan_ayah" name="pekerjaan_ayah" required aria-required="true">
+                <label for="pekerjaan_ayah">Pekerjaan Ayah <span class="text-danger">*</span></label>
+                <select id="pekerjaan_ayah" name="pekerjaan_ayah" required>
                   <option value="">Pilih Pekerjaan Ayah</option>
                   <option value="Tidak bekerja">Tidak bekerja</option>
                   <option value="Nelayan">Nelayan</option>
@@ -1059,21 +995,16 @@
                 </select>
               </div>
 
+              <!-- Nama Ibu -->
               <div class="form-group">
-                <label for="nama_ibu">Nama Ibu <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="nama_ibu"
-                  name="nama_ibu"
-                  required
-                  aria-required="true"
-                  autocomplete="off"
-                />
+                <label for="nama_ibu">Nama Ibu <span class="text-danger">*</span></label>
+                <input type="text" id="nama_ibu" name="nama_ibu" required>
               </div>
 
+              <!-- Pekerjaan Ibu -->
               <div class="form-group">
-                <label for="pekerjaan_ibu">Pekerjaan Ibu <span aria-hidden="true" class="text-danger">*</span></label>
-                <select id="pekerjaan_ibu" name="pekerjaan_ibu" required aria-required="true">
+                <label for="pekerjaan_ibu">Pekerjaan Ibu <span class="text-danger">*</span></label>
+                <select id="pekerjaan_ibu" name="pekerjaan_ibu" required>
                   <option value="">Pilih Pekerjaan Ibu</option>
                   <option value="Tidak bekerja">Tidak bekerja</option>
                   <option value="Nelayan">Nelayan</option>
@@ -1095,73 +1026,52 @@
                 </select>
               </div>
 
+              <!-- No HP Orang Tua -->
               <div class="form-group">
-                <label for="whatsapp_ortu">WhatsApp Orangtua <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="tel"
-                  id="whatsapp_ortu"
-                  name="whatsapp_ortu"
-                  required
-                  aria-required="true"
-                  pattern="[0-9]{10,13}"
-                  title="Nomor HP 10-13 digit angka"
-                  inputmode="tel"
-                  autocomplete="tel"
-                />
+                <label for="whatsapp_ortu">WhatsApp Orangtua <span class="text-danger">*</span></label>
+                <input type="tel" id="whatsapp_ortu" name="whatsapp_ortu" required pattern="[0-9]{10,13}" title="Nomor HP 10-13 digit angka">
               </div>
 
+              <!-- Asal Sekolah -->
               <div class="form-group">
-                <label for="asal_sekolah">Asal Sekolah <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="text"
-                  id="asal_sekolah"
-                  name="asal_sekolah"
-                  required
-                  aria-required="true"
-                  autocomplete="off"
-                />
+                <label for="asal_sekolah">Asal Sekolah <span class="text-danger">*</span></label>
+                <input type="text" id="asal_sekolah" name="asal_sekolah" required>
               </div>
 
+              <!-- Tahun Lulus -->
               <div class="form-group">
-                <label for="tahun_lulus">Tahun Lulus <span aria-hidden="true" class="text-danger">*</span></label>
-                <input
-                  type="number"
-                  id="tahun_lulus"
-                  name="tahun_lulus"
-                  min="2000"
-                  max="2025"
-                  required
-                  aria-required="true"
-                  autocomplete="off"
-                />
+                <label for="tahun_lulus">Tahun Lulus <span class="text-danger">*</span></label>
+                <input type="number" id="tahun_lulus" name="tahun_lulus" min="2000" max="2025" required>
               </div>
             </div>
 
+            <!-- Tombol Aksi -->
             <div class="action-buttons">
-              <button type="button" onclick="previewForm()" class="btn btn-secondary" aria-label="Pratinjau Data">
+              <button type="button" onclick="previewForm()" class="btn btn-secondary">
                 <i class="fas fa-eye"></i> Pratinjau
               </button>
-              <button type="reset" class="btn btn-warning" aria-label="Reset Formulir">
+              <button type="reset" class="btn btn-warning">
                 <i class="fas fa-undo"></i> Reset
               </button>
-              <button type="button" onclick="showSection('landing')" class="btn btn-danger" aria-label="Batal Daftar">
+              <button type="button" onclick="showSection('landing')" class="btn btn-danger">
                 <i class="fas fa-times"></i> Batal
               </button>
             </div>
           </form>
 
-          <div id="preview-section" class="hidden mt-4" tabindex="-1" aria-live="polite">
+          <!-- Pratinjau -->
+          <div id="preview-section" class="hidden mt-4">
             <h3 class="card-title">Pratinjau Data</h3>
             <p>Periksa kembali data Anda sebelum submit. Pastikan semua data sudah benar.</p>
             <div id="preview-content" class="card mt-3" style="background-color: var(--light);"></div>
-            <div class="alert alert-info mt-3" role="alert">
+            <div class="alert alert-info mt-3">
               <strong>Informasi:</strong> Setelah submit, Anda akan mendapatkan nomor pendaftaran yang dapat digunakan untuk mengecek status pendaftaran.
             </div>
             <div class="action-buttons mt-4">
-              <button onclick="editForm()" class="btn btn-warning" aria-label="Edit Formulir">
+              <button onclick="editForm()" class="btn btn-warning">
                 <i class="fas fa-edit"></i> Edit
               </button>
-              <button onclick="submitForm()" class="btn btn-success" id="submit-btn" aria-label="Submit Formulir">
+              <button onclick="submitForm()" class="btn btn-success" id="submit-btn">
                 <i class="fas fa-check"></i> Konfirmasi Submit
               </button>
             </div>
@@ -1169,414 +1079,451 @@
         </div>
       </section>
 
-      <!-- Cek Status -->
-      <section id="check-section" class="hidden" tabindex="-1">
+
+      <!-- Cek Status Pendaftaran -->
+      <section id="check-section" class="hidden">
         <div class="card">
           <h2 class="card-title">Cek Status Pendaftaran</h2>
           <p>Masukkan nomor pendaftaran dan NISN untuk mengecek status pendaftaran Anda.</p>
-
+          
           <div class="form-grid mt-4">
             <div class="form-group">
               <label for="check-nomor">Nomor Pendaftaran</label>
-              <input
-                type="text"
-                id="check-nomor"
-                placeholder="Contoh: SMAPTA-16AD5U"
-                autocomplete="off"
-              />
+              <input type="text" id="check-nomor" placeholder="Contoh: SMAPTA-16AD5U">
             </div>
             <div class="form-group">
               <label for="check-nisn">NISN</label>
-              <input
-                type="text"
-                id="check-nisn"
-                placeholder="10 digit NISN"
-                autocomplete="off"
-                inputmode="numeric"
-                maxlength="10"
-              />
+              <input type="text" id="check-nisn" placeholder="10 digit NISN">
             </div>
           </div>
-
+        
           <div class="action-buttons mt-4">
-            <button onclick="checkStatus()" class="btn btn-outline" id="check-btn" aria-label="Cek Status">
+            <button onclick="checkStatus()" class="btn btn-outline" id="check-btn">
               <i class="fas fa-search"></i> Cek Status Pendaftaran
-            </button>
-            <button onclick="showSection('landing')" class="btn btn-danger" aria-label="Kembali ke Beranda">
+            </button>            
+            <button onclick="showSection('landing')" class="btn btn-danger">
               <i class="fas fa-arrow-left"></i> Kembali
             </button>
           </div>
-
-          <div id="check-result" class="hidden mt-4" aria-live="polite" aria-atomic="true"></div>
+          
+          <div id="check-result" class="hidden mt-4">
+            <!-- Hasil pencarian akan ditampilkan di sini -->
+          </div>
         </div>
       </section>
 
       <!-- Dashboard Admin -->
-      <section id="dashboard-section" class="hidden" tabindex="-1">
+      <section id="dashboard-section" class="hidden">
         <div class="card">
           <h2 class="card-title">Dashboard Admin SPMB</h2>
           <p>Fitur ini hanya tersedia untuk admin sekolah.</p>
-
+          
           <div id="login-form">
             <div class="form-grid mt-4">
               <div class="form-group">
                 <label for="admin-username">Username</label>
-                <input
-                  type="text"
-                  id="admin-username"
-                  placeholder="Masukkan username"
-                  autocomplete="username"
-                />
+                <input type="text" id="admin-username" placeholder="Masukkan username">
               </div>
               <div class="form-group">
                 <label for="admin-password">Password</label>
-                <input
-                  type="password"
-                  id="admin-password"
-                  placeholder="Masukkan password"
-                  autocomplete="current-password"
-                />
+                <input type="password" id="admin-password" placeholder="Masukkan password">
               </div>
             </div>
 
             <div class="action-buttons mt-4">
-              <button onclick="adminLogin()" class="btn btn-outline" id="admin-login-btn" aria-label="Login Admin">
+              <button onclick="adminLogin()" class="btn btn-outline" id="admin-login-btn">
                 <i class="fas fa-sign-in-alt"></i> Login
-              </button>
-              <button onclick="showSection('landing')" class="btn btn-danger" aria-label="Kembali ke Beranda">
+              </button>              
+              <button onclick="showSection('landing')" class="btn btn-danger">
                 <i class="fas fa-arrow-left"></i> Kembali
               </button>
             </div>
           </div>
-
-          <div id="admin-content" class="hidden mt-4" aria-live="polite" aria-atomic="true">
-            <!-- Konten admin akan muncul di sini -->
+          
+          <div id="admin-content" class="hidden mt-4">
+            <!-- Konten admin akan ditampilkan di sini -->
           </div>
         </div>
       </section>
     </main>
 
+    <!-- Footer -->
     <footer>
       <div class="footer-links">
-        <a href="#" class="footer-link" onclick="showSection('info')" aria-label="Informasi PPDB">
-          <i class="fas fa-info-circle"></i> Informasi
-        </a>
-        <a href="#" class="footer-link" onclick="showSection('check')" aria-label="Cek Status Pendaftaran">
-          <i class="fas fa-search"></i> Cek Status
-        </a>
-        <a href="#" class="footer-link" onclick="showSection('dashboard')" aria-label="Dashboard Admin">
-          <i class="fas fa-lock"></i> Admin
-        </a>
+        <a href="#" class="footer-link" onclick="showSection('info')">
+          <i class="fas fa-info-circle"></i> Informasi</a>
+        </button>
+        <a href="#" class="footer-link" onclick="showSection('check')">
+          <i class="fas fa-search"></i> Cek Status</a>
+        </button>
+        <a href="#" class="footer-link" onclick="showSection('dashboard')">
+          <i class="fas fa-lock"></i> Admin</a>
+        </button>
       </div>
       <p>SMAS PGRI TAKOKAK</p>
       <p>Jl. Pahlawan No. 5, Takokak, Jawa Barat</p>
       <p>Email: info@smapgritakokak.sch.id | Telp: (0266) 6482212</p>
-      <p>© 2025 SPMB Online - Hak Cipta Dilindungi</p>
+      <p>© 2025 SMPB Online - Hak Cipta Dilindungi</p>
     </footer>
   </div>
 
+  <!-- SweetAlert JS -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-
-    const BACKEND_URL = "https://script.google.com/macros/s/AKfycby3bQUFDZJW-zHO4TFtZAwHLT2kKNW3Ig-ywE9nrSVMMbwFPGat8AWGJLGX4v-2nAA2XA/exec";
-
-    fetch(BACKEND_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        action: "submitForm",
-        formData: {
-          nama: "Nama Lengkap",
-          email: "email@example.com"
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPDwfC_hXybFzSTiQzxmOUGjtEjNiRjBta_X54zh6N55aaK67PdLGBaGHQ1OaoeoWq/exec';
+    
+    // Daftar section yang valid
+    const validSections = ['landing', 'info', 'form', 'check', 'dashboard'];
+    
+    // Load tahun ajaran saat form dibuka
+    function loadAcademicYear() {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'getCurrentAcademicYear'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          document.getElementById('tahun_ajaran').value = data;
         }
       })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log("RESPONS:", data);
-    })
-    .catch(error => {
-      console.error("GAGAL:", error);
-    });
-
-    const validSections = ["landing", "info", "form", "check", "dashboard"];
-
-    window.onload = function () {
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Gagal memuat tahun ajaran');
+      });
+    }
+    
+    // Tampilkan halaman berdasarkan parameter URL saat halaman dimuat
+    window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
-      let page = urlParams.get("page") || "landing";
-
+      let page = urlParams.get('page') || 'landing';
+      
+      // Validasi section
       if (!validSections.includes(page)) {
-        page = "landing";
+        console.warn(`Invalid section: ${page}. Defaulting to landing.`);
+        page = 'landing';
+        // Update URL to reflect the default section
         const baseUrl = window.location.pathname;
-        window.history.replaceState({}, "", `${baseUrl}?page=landing`);
+        window.history.replaceState({}, '', `${baseUrl}?page=landing`);
       }
       showSection(page);
-
-      const nomor = urlParams.get("nomor");
-      if (nomor && page === "check") {
-        document.getElementById("check-nomor").value = nomor;
+      
+      // Cek jika ada parameter nomor pendaftaran (untuk deep link)
+      const nomor = urlParams.get('nomor');
+      if (nomor && page === 'check') {
+        document.getElementById('check-nomor').value = nomor;
         setTimeout(() => checkStatus(), 500);
       }
-    };
-
-    function toggleMobileMenu() {
-      const nav = document.getElementById("main-nav");
-      nav.classList.toggle("hidden");
-    }
-
-    function showSection(section) {
-      if (!validSections.includes(section)) {
-        section = "landing";
-        const baseUrl = window.location.pathname;
-        window.history.replaceState({}, "", `${baseUrl}?page=landing`);
+      
+      // Load tahun ajaran saat form pendaftaran dibuka
+      if (page === 'form') {
+        loadAcademicYear();
       }
-      document.querySelectorAll("section").forEach((s) => s.classList.add("hidden"));
+    };
+    
+    // Fungsi toggle mobile menu
+    function toggleMobileMenu() {
+      const nav = document.getElementById('main-nav');
+      nav.classList.toggle('hidden');
+    }
+    
+    // Fungsi untuk menampilkan section tanpa reload penuh
+    function showSection(section) {
+      // Validasi section
+      if (!validSections.includes(section)) {
+        console.warn(`Invalid section: ${section}. Defaulting to landing.`);
+        section = 'landing';
+        // Update URL to reflect the default section
+        const baseUrl = window.location.pathname;
+        window.history.replaceState({}, '', `${baseUrl}?page=landing`);
+      }
+    
+      // Sembunyikan semua section
+      document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+    
+      // Tampilkan section yang diminta
       const targetSection = document.getElementById(`${section}-section`);
       if (targetSection) {
-        targetSection.classList.remove("hidden");
-        targetSection.focus();
+        targetSection.classList.remove('hidden');
+        
+        // Jika form pendaftaran, load tahun ajaran
+        if (section === 'form') {
+          loadAcademicYear();
+        }
       } else {
-        document.getElementById("landing-section").classList.remove("hidden");
+        console.error(`Section element not found: ${section}-section`);
+        // Fallback ke landing jika section tidak ditemukan
+        document.getElementById('landing-section').classList.remove('hidden');
       }
-      window.history.pushState({}, "", `${window.location.pathname}?page=${section}`);
-      document.getElementById("main-nav").classList.add("hidden");
+    
+      // Sembunyikan landing jika bukan landing
+      const landingSection = document.getElementById('landing-section');
+      if (section !== 'landing' && landingSection) {
+        landingSection.classList.add('hidden');
+      }
+    
+      // Update URL tanpa reload
+      const baseUrl = window.location.pathname;
+      window.history.pushState({}, '', `${baseUrl}?page=${section}`);
+      
+      // Sembunyikan mobile menu jika terbuka
+      document.getElementById('main-nav').classList.add('hidden');
+      
+      // Scroll ke atas
       window.scrollTo(0, 0);
     }
-
-    window.onpopstate = function () {
+    
+    // Handle browser back/forward buttons
+    window.onpopstate = function() {
       const urlParams = new URLSearchParams(window.location.search);
-      let page = urlParams.get("page") || "landing";
+      let page = urlParams.get('page') || 'landing';
+      
+      // Validasi section
       if (!validSections.includes(page)) {
-        page = "landing";
+        console.warn(`Invalid section: ${page}. Defaulting to landing.`);
+        page = 'landing';
         const baseUrl = window.location.pathname;
-        window.history.replaceState({}, "", `${baseUrl}?page=landing`);
+        window.history.replaceState({}, '', `${baseUrl}?page=landing`);
       }
       showSection(page);
     };
-
-function previewForm() {
-  const form = document.getElementById("registration-form");
-  const formData = new FormData(form);
-
-  let previewHtml = `
-    <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--primary-dark);">
-      <i class="fas fa-user-check"></i> Data Pendaftaran
-    </h4>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-  `;
-
-  const formEntries = Array.from(formData.entries());
-
-  const fieldOrder = [
-    "jenis_pendaftaran",
-    "nisn",
-    "nik",
-    "nama",
-    "jenis_kelamin",
-    "tempat_lahir",
-    "tanggal_lahir",
-    "agama",
-    "whatsapp",
-    "alamat",
-    "nama_ayah",
-    "pekerjaan_ayah",
-    "nama_ibu",
-    "pekerjaan_ibu",
-    "whatsapp_ortu",
-    "asal_sekolah",
-    "tahun_lulus",
-  ];
-
-  formEntries.sort((a, b) => fieldOrder.indexOf(a[0]) - fieldOrder.indexOf(b[0]));
-
-  formEntries.forEach(([key, value]) => {
-    const label = document.querySelector(`label[for="${key}"]`).textContent;
-    previewHtml += `
-      <div style="margin-bottom: 0.5rem;">
-        <strong style="font-size: 0.85rem; color: var(--gray);">${label.replace(" *", "")}:</strong>
-        <p style="margin-top: 0.25rem;">${value || "-"}</p>
-      </div>
-    `;
-  });
-
-  previewHtml += "</div>";
-
-  document.getElementById("preview-content").innerHTML = previewHtml;
-  document.getElementById("preview-section").classList.remove("hidden");
-  form.classList.add("hidden");
-  document.getElementById("preview-section").focus();
-}
-
-function editForm() {
-  document.getElementById("preview-section").classList.add("hidden");
-  document.getElementById("registration-form").classList.remove("hidden");
-  document.getElementById("registration-form").focus();
-}
-
-async function submitForm() {
-  const submitBtn = document.getElementById("submit-btn");
-  const originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
-  submitBtn.disabled = true;
-
-  const form = document.getElementById("registration-form");
-  const formData = new FormData(form);
-  formData.append("action", "submitForm"); // tambahkan action agar Apps Script tahu maksud request-nya
-
-  try {
-    const response = await fetch(BACKEND_URL, {
-      method: "POST",
-      body: formData, // otomatis menjadi application/x-www-form-urlencoded
-    });
-
-    const resultText = await response.text();
-    let result;
-    try {
-      result = JSON.parse(resultText);
-    } catch {
-      throw new Error("Respon tidak bisa dibaca sebagai JSON: " + resultText);
-    }
-
-    if (result.success) {
-      const successHtml = `
-        <div class="alert alert-success">
-          <h4 style="margin-bottom: 0.5rem;">
-            <i class="fas fa-check-circle"></i> Pendaftaran Berhasil!
-          </h4>
-          <p>Nomor Pendaftaran Anda: <strong>${result.nomorPendaftaran}</strong></p>
-          <p class="mt-2">Silakan simpan nomor pendaftaran ini untuk mengecek status pendaftaran.</p>
-        </div>
-        <div class="action-buttons mt-3">
-          <button onclick="window.print()" class="btn btn-secondary" aria-label="Cetak Bukti Pendaftaran">
-            <i class="fas fa-print"></i> Cetak Bukti
-          </button>
-          <button onclick="showCheckStatus('${result.nomorPendaftaran}')" class="btn btn-primary" aria-label="Cek Status Pendaftaran">
-            <i class="fas fa-search"></i> Cek Status
-          </button>
-          <button onclick="showSection('landing')" class="btn btn-outline" aria-label="Kembali ke Beranda">
-            <i class="fas fa-home"></i> Kembali ke Beranda
-          </button>
-        </div>
+    
+    // Fungsi Pratinjau
+    function previewForm() {
+      const form = document.getElementById('registration-form');
+      const formData = new FormData(form);
+      
+      // Validasi form sebelum pratinjau
+      let isValid = true;
+      form.querySelectorAll('[required]').forEach(input => {
+        if (!input.value) {
+          isValid = false;
+          input.style.borderColor = 'var(--danger)';
+        } else {
+          input.style.borderColor = '';
+        }
+      });
+      
+      if (!isValid) {
+        showErrorAlert('Harap lengkapi semua field yang wajib diisi!');
+        return;
+      }
+      
+      let previewHtml = `
+        <h4 style="margin-bottom: 1rem; font-weight: 600; color: var(--primary-dark);">
+          <i class="fas fa-user-check"></i> Data Pendaftaran
+        </h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
       `;
-      document.getElementById("preview-section").innerHTML = successHtml;
-      form.reset();
-      document.getElementById("preview-section").focus();
-    } else {
-      alert("Gagal submit: " + result.message);
-      editForm();
+      
+      // Buat array dari formData untuk diurutkan
+      const formEntries = Array.from(formData.entries());
+      
+      // Urutkan berdasarkan urutan field yang diinginkan
+      const fieldOrder = [
+        'jenis_pendaftaran', 'tahun_ajaran', 'nisn', 'nik', 'nama', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir',
+        'agama', 'whatsapp', 'alamat', 'nama_ayah', 'pekerjaan_ayah', 'nama_ibu', 'pekerjaan_ibu', 'whatsapp_ortu', 'asal_sekolah', 'tahun_lulus'
+      ];
+      
+      formEntries.sort((a, b) => {
+        return fieldOrder.indexOf(a[0]) - fieldOrder.indexOf(b[0]);
+      });
+      
+      // Bangun HTML untuk pratinjau
+      formEntries.forEach(([key, value]) => {
+        const label = document.querySelector(`label[for="${key}"]`).textContent;
+        previewHtml += `
+          <div style="margin-bottom: 0.5rem;">
+            <strong style="font-size: 0.85rem; color: var(--gray);">${label.replace(' *', '')}:</strong>
+            <p style="margin-top: 0.25rem;">${value || '-'}</p>
+          </div>
+        `;
+      });
+      
+      document.getElementById('preview-content').innerHTML = previewHtml;
+      document.getElementById('preview-section').classList.remove('hidden');
+      form.classList.add('hidden');
     }
-  } catch (error) {
-    alert("Terjadi kesalahan: " + error.message);
-    editForm();
-  } finally {
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-  }
-}
-
+    
+    // Fungsi Edit
+    function editForm() {
+      document.getElementById('preview-section').classList.add('hidden');
+      document.getElementById('registration-form').classList.remove('hidden');
+    }
+    
+    // Fungsi Submit
+    function submitForm() {
+      const submitBtn = document.getElementById('submit-btn');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
+      submitBtn.disabled = true;
+      
+      // Kumpulkan data form
+      const form = document.getElementById('registration-form');
+      const formData = new FormData(form);
+      const formObject = {};
+      formData.forEach((value, key) => formObject[key] = value);
+      
+      // Kirim data ke Google Apps Script
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'submitForm',
+          formData: formObject
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Tampilkan SweetAlert sukses
+          Swal.fire({
+            title: 'Pendaftaran Berhasil!',
+            html: `
+              <div style="text-align: left;">
+                <p><strong>Nomor Pendaftaran:</strong> ${data.nomorPendaftaran}</p>
+                <p><strong>Tahun Ajaran:</strong> ${data.tahun_ajaran}</p>
+                <p class="mt-3">Silakan simpan nomor pendaftaran ini untuk mengecek status pendaftaran.</p>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
+          }).then(() => {
+            // Reset form
+            form.reset();
+            // Tampilkan section landing
+            showSection('landing');
+          });
+        } else {
+          showErrorAlert(data.message || 'Gagal menyimpan data');
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Terjadi kesalahan saat mengirim data');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      });
+    }
+    
+    // Fungsi untuk langsung ke cek status dengan nomor tertentu
     function showCheckStatus(nomor) {
-      showSection("check");
-      document.getElementById("check-nomor").value = nomor;
+      showSection('check');
+      document.getElementById('check-nomor').value = nomor;
       checkStatus();
     }
-
-    async function checkStatus() {
-      const checkBtn = document.getElementById("check-btn");
+    
+    // Fungsi Cek Status
+    function checkStatus() {
+      const checkBtn = document.getElementById('check-btn');
       const originalText = checkBtn.innerHTML;
       checkBtn.innerHTML = '<span class="spinner"></span> Mencari...';
       checkBtn.disabled = true;
-
-      const nomor = document.getElementById("check-nomor").value.trim();
-      const nisn = document.getElementById("check-nisn").value.trim();
-
+      
+      const nomor = document.getElementById('check-nomor').value.trim();
+      const nisn = document.getElementById('check-nisn').value.trim();
+      
       if (!nomor || !nisn) {
-        alert("Harap isi nomor pendaftaran dan NISN!");
+        showErrorAlert('Harap isi nomor pendaftaran dan NISN!');
         checkBtn.innerHTML = originalText;
         checkBtn.disabled = false;
         return;
       }
-
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "checkStatus", nomor: nomor, nisn: nisn }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const result = await response.json();
-        const resultDiv = document.getElementById("check-result");
-
-        if (result.success && result.found) {
-          const data = result.data;
-          let statusClass = "";
-          if (data.status_verifikasi === "Diverifikasi") {
-            statusClass = "status-verified";
-          } else if (data.status_verifikasi === "Ditolak") {
-            statusClass = "status-rejected";
+      
+      // Kirim permintaan ke Google Apps Script
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'checkStatus',
+          nomor: nomor,
+          nisn: nisn
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const resultDiv = document.getElementById('check-result');
+        
+        if (data.success && data.found) {
+          let statusClass = '';
+          if (data.data.status_verifikasi === 'Diverifikasi') {
+            statusClass = 'status-verified';
+          } else if (data.data.status_verifikasi === 'Ditolak') {
+            statusClass = 'status-rejected';
           } else {
-            statusClass = "status-pending";
+            statusClass = 'status-pending';
           }
-
+          
           resultDiv.innerHTML = `
             <div class="card">
               <h4 style="margin-bottom: 1rem; color: var(--primary-dark);">
                 <i class="fas fa-user-graduate"></i> Status Pendaftaran
               </h4>
-
+              
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
                 <div>
                   <strong style="font-size: 0.85rem; color: var(--gray);">Nomor Pendaftaran:</strong>
-                  <p style="margin-top: 0.25rem;">${data.nomor}</p>
+                  <p style="margin-top: 0.25rem;">${data.data.nomor}</p>
                 </div>
                 <div>
                   <strong style="font-size: 0.85rem; color: var(--gray);">Nama:</strong>
-                  <p style="margin-top: 0.25rem;">${data.nama}</p>
+                  <p style="margin-top: 0.25rem;">${data.data.nama}</p>
                 </div>
                 <div>
                   <strong style="font-size: 0.85rem; color: var(--gray);">Asal Sekolah:</strong>
-                  <p style="margin-top: 0.25rem;">${data.asal_sekolah}</p>
+                  <p style="margin-top: 0.25rem;">${data.data.asal_sekolah}</p>
                 </div>
                 <div>
                   <strong style="font-size: 0.85rem; color: var(--gray);">Tanggal Daftar:</strong>
-                  <p style="margin-top: 0.25rem;">${data.timestamp}</p>
+                  <p style="margin-top: 0.25rem;">${data.data.timestamp}</p>
                 </div>
                 <div>
                   <strong style="font-size: 0.85rem; color: var(--gray);">Status:</strong>
                   <p style="margin-top: 0.25rem;" class="${statusClass}">
-                    <i class="fas fa-${
-                      data.status_verifikasi === "Diverifikasi"
-                        ? "check-circle"
-                        : data.status_verifikasi === "Ditolak"
-                        ? "times-circle"
-                        : "clock"
-                    }"></i>
-                    ${data.status_verifikasi}
+                    <i class="fas fa-${data.data.status_verifikasi === 'Diverifikasi' ? 'check-circle' : 
+                      data.data.status_verifikasi === 'Ditolak' ? 'times-circle' : 'clock'}"></i>
+                    ${data.data.status_verifikasi}
                   </p>
                 </div>
               </div>
-
-              ${
-                data.status_verifikasi === "Diverifikasi"
-                  ? `<div class="alert alert-success mt-3" role="alert">
-                      <strong><i class="fas fa-check-circle"></i> Selamat!</strong> 
-                      Anda diterima di SMA Contoh Takokak. Silakan lakukan daftar ulang sesuai jadwal.
-                    </div>`
-                  : data.status_verifikasi === "Ditolak"
-                  ? `<div class="alert alert-danger mt-3" role="alert">
-                      <strong><i class="fas fa-times-circle"></i> Maaf</strong>, 
-                      Anda belum diterima di SMA Contoh Takokak.
-                    </div>`
-                  : `<div class="alert alert-info mt-3" role="alert">
-                      <strong><i class="fas fa-info-circle"></i> Proses Verifikasi</strong> 
-                      Pendaftaran Anda sedang dalam proses verifikasi. Silakan cek kembali beberapa hari lagi.
-                    </div>`
-              }
-
+              
+              ${data.data.status_verifikasi === 'Diverifikasi' ? `
+                <div class="alert alert-success mt-3">
+                  <strong><i class="fas fa-check-circle"></i> Selamat!</strong> 
+                  Anda diterima di SMAS PGRI TAKOKAK. Silakan lakukan daftar ulang sesuai jadwal.
+                </div>
+              ` : data.data.status_verifikasi === 'Ditolak' ? `
+                <div class="alert alert-danger mt-3">
+                  <strong><i class="fas fa-times-circle"></i> Maaf</strong>, 
+                  Anda belum diterima di SMAS PGRI TAKOKAK.
+                </div>
+              ` : `
+                <div class="alert alert-info mt-3">
+                  <strong><i class="fas fa-info-circle"></i> Proses Verifikasi</strong> 
+                  Pendaftaran Anda sedang dalam proses verifikasi. Silakan cek kembali beberapa hari lagi.
+                </div>
+              `}
+              
               <div class="action-buttons mt-3">
-                <button onclick="window.print()" class="btn btn-secondary" aria-label="Cetak Status">
+                <button onclick="window.print()" class="btn btn-secondary">
                   <i class="fas fa-print"></i> Cetak
                 </button>
-                <button onclick="showSection('landing')" class="btn btn-primary" aria-label="Kembali ke Beranda">
+                <button onclick="showSection('landing')" class="btn btn-primary">
                   <i class="fas fa-home"></i> Kembali
                 </button>
               </div>
@@ -1584,72 +1531,100 @@ async function submitForm() {
           `;
         } else {
           resultDiv.innerHTML = `
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger">
               <strong><i class="fas fa-exclamation-triangle"></i> Data tidak ditemukan</strong>
               <p class="mt-2">Nomor pendaftaran atau NISN yang Anda masukkan tidak valid. Silakan coba lagi.</p>
             </div>
           `;
         }
-        resultDiv.classList.remove("hidden");
-        resultDiv.focus();
-      } catch (error) {
-        alert("Terjadi kesalahan saat pengecekan status: " + error.message);
-      } finally {
+        
+        resultDiv.classList.remove('hidden');
         checkBtn.innerHTML = originalText;
         checkBtn.disabled = false;
-      }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Terjadi kesalahan saat memeriksa status');
+        checkBtn.innerHTML = originalText;
+        checkBtn.disabled = false;
+      });
     }
-
-    async function adminLogin() {
-      const loginBtn = document.getElementById("admin-login-btn");
+    
+    // Fungsi Login Admin
+    function adminLogin() {
+      const loginBtn = document.getElementById('admin-login-btn');
       const originalText = loginBtn.innerHTML;
       loginBtn.innerHTML = '<span class="spinner"></span> Memverifikasi...';
       loginBtn.disabled = true;
-
-      const username = document.getElementById("admin-username").value;
-      const password = document.getElementById("admin-password").value;
-
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "adminLogin", username: username, password: password }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          loadAdminDashboard();
-          document.getElementById("admin-content").classList.remove("hidden");
-          document.getElementById("login-form").classList.add("hidden");
-          document.getElementById("admin-content").focus();
-        } else {
-          alert("Username atau password salah!");
-        }
-      } catch (error) {
-        alert("Terjadi kesalahan saat login: " + error.message);
-      } finally {
+      
+      const username = document.getElementById('admin-username').value;
+      const password = document.getElementById('admin-password').value;
+      
+      if (!username || !password) {
+        showErrorAlert('Harap isi username dan password!');
         loginBtn.innerHTML = originalText;
         loginBtn.disabled = false;
+        return;
       }
+      
+      // Kirim permintaan login ke Google Apps Script
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'adminLogin',
+          username: username,
+          password: password
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Jika login berhasil, load dashboard admin
+          loadAdminDashboard();
+          document.getElementById('login-form').classList.add('hidden');
+          document.getElementById('admin-content').classList.remove('hidden');
+          
+          // Tampilkan notifikasi sukses
+          showSuccessAlert('Login berhasil!');
+        } else {
+          showErrorAlert(data.message || 'Login gagal. Periksa kembali username dan password Anda.');
+        }
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Terjadi kesalahan saat login');
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+      });
     }
-
-    async function loadAdminDashboard() {
-      const adminContent = document.getElementById("admin-content");
-      adminContent.innerHTML = "<p>Memuat data pendaftar...</p>";
-
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "getAllRegistrations" }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const result = await response.json();
-
-        if (result.success) {
+    
+    // Fungsi Load Admin Dashboard
+    function loadAdminDashboard() {
+      // Kirim permintaan untuk mendapatkan data pendaftaran
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'getAllRegistrations'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const adminContent = document.getElementById('admin-content');
+        
+        if (data.success) {
+          // Buat tabel data pendaftar
           let tableHtml = `
             <div class="info-section">
-              <div class="table-responsive">
-                <table id="admin-registrations-tab" class="info-table" role="table" aria-label="Data Pendaftar">
+            <div class="table-responsive">
+                <table id="admin-registrations-tab" class="info-table">
                   <thead>
                     <tr>
                       <th>No. Pendaftaran</th>
@@ -1662,17 +1637,17 @@ async function submitForm() {
                   </thead>
                   <tbody>
           `;
-
-          result.data.forEach((reg) => {
-            let statusClass = "";
-            if (reg.status_verifikasi === "Diverifikasi") {
-              statusClass = "status-verified";
-            } else if (reg.status_verifikasi === "Ditolak") {
-              statusClass = "status-rejected";
+          
+          data.data.forEach(reg => {
+            let statusClass = '';
+            if (reg.status_verifikasi === 'Diverifikasi') {
+              statusClass = 'status-verified';
+            } else if (reg.status_verifikasi === 'Ditolak') {
+              statusClass = 'status-rejected';
             } else {
-              statusClass = "status-pending";
+              statusClass = 'status-pending';
             }
-
+            
             tableHtml += `
               <tr>
                 <td>${reg.nomor}</td>
@@ -1682,20 +1657,14 @@ async function submitForm() {
                 <td class="${statusClass}">${reg.status_verifikasi}</td>
                 <td>
                   <select onchange="updateStatus('${reg.nomor}', this.value)" 
-                    style="padding: 0.25rem; border-radius: 4px; border: 1px solid var(--light-gray);" aria-label="Ubah status pendaftaran nomor ${reg.nomor}">
-                    <option value="Belum Diverifikasi" ${
-                      reg.status_verifikasi === "Belum Diverifikasi" ? "selected" : ""
-                    }>
+                    style="padding: 0.25rem; border-radius: 4px; border: 1px solid var(--light-gray);">
+                    <option value="Belum Diverifikasi" ${reg.status_verifikasi === 'Belum Diverifikasi' ? 'selected' : ''}>
                       Belum Diverifikasi
                     </option>
-                    <option value="Diverifikasi" ${
-                      reg.status_verifikasi === "Diverifikasi" ? "selected" : ""
-                    }>
+                    <option value="Diverifikasi" ${reg.status_verifikasi === 'Diverifikasi' ? 'selected' : ''}>
                       Diverifikasi
                     </option>
-                    <option value="Ditolak" ${
-                      reg.status_verifikasi === "Ditolak" ? "selected" : ""
-                    }>
+                    <option value="Ditolak" ${reg.status_verifikasi === 'Ditolak' ? 'selected' : ''}>
                       Ditolak
                     </option>
                   </select>
@@ -1703,82 +1672,151 @@ async function submitForm() {
               </tr>
             `;
           });
-
+          
           tableHtml += `
-                  </tbody>
-                </table>
-              </div>
-              <div class="action-buttons mt-3">
-                <button onclick="exportToExcel()" class="btn btn-outline" aria-label="Export data ke Excel">
-                  <i class="fas fa-file-excel"></i> Export ke Excel
-                </button>
-                <button onclick="logoutAdmin()" class="btn btn-danger" aria-label="Logout Admin">
-                  <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-              </div>
+                </tbody>
+              </table>
+            </div>
+            <div class="action-buttons mt-3">
+              <button onclick="exportToExcel()" class="btn btn-outline">
+                <i class="fas fa-file-excel"></i> Export ke Excel
+              </button>         
+              <button onclick="showSection('landing')" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>       
             </div>
           `;
-
+          
           adminContent.innerHTML = tableHtml;
         } else {
-          adminContent.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+          adminContent.innerHTML = `
+            <div class="alert alert-danger">
+              <strong>Gagal memuat data:</strong> ${data.message}
+            </div>
+          `;
         }
-      } catch (error) {
-        adminContent.innerHTML = `<div class="alert alert-danger">Terjadi kesalahan: ${error.message}</div>`;
-      }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('admin-content').innerHTML = `
+          <div class="alert alert-danger">
+            <strong>Terjadi kesalahan saat memuat data</strong>
+          </div>
+        `;
+      });
     }
-
-    async function updateStatus(nomor, status) {
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "updateStatus", nomor: nomor, status: status }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          const alertDiv = document.createElement("div");
-          alertDiv.className = "alert alert-success";
-          alertDiv.innerHTML = `<strong><i class="fas fa-check-circle"></i> Status diperbarui!</strong>`;
-          document.getElementById("admin-content").prepend(alertDiv);
-
-          setTimeout(() => alertDiv.remove(), 3000);
-
-          loadAdminDashboard();
+    
+    // Fungsi Update Status
+    function updateStatus(nomor, status) {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'updateStatus',
+          nomor: nomor,
+          status: status
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Tampilkan notifikasi sukses
+          Swal.fire({
+            title: 'Berhasil!',
+            text: 'Status pendaftaran berhasil diperbarui',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false,
+            timer: 2000,
+            timerProgressBar: true
+          });
         } else {
-          alert("Gagal memperbarui status: " + result.message);
+          showErrorAlert('Gagal memperbarui status: ' + (data.message || 'Unknown error'));
         }
-      } catch (error) {
-        alert("Terjadi kesalahan saat update status: " + error.message);
-      }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Terjadi kesalahan saat memperbarui status');
+      });
     }
-
-    async function exportToExcel() {
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "exportData" }),
-          headers: { "Content-Type": "application/json" },
-        });
-        const result = await response.json();
-
-        if (result.success) {
-          window.open(result.downloadUrl, "_blank");
+    
+    // Fungsi Export ke Excel
+    function exportToExcel() {
+      Swal.fire({
+        title: 'Sedang memproses...',
+        html: 'Mempersiapkan file Excel untuk diunduh',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'exportData'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            title: 'Berhasil!',
+            html: 'File Excel siap diunduh',
+            icon: 'success',
+            confirmButtonText: 'Unduh Sekarang',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            },
+            buttonsStyling: false
+          }).then(() => {
+            // Buka URL download di tab baru
+            window.open(data.downloadUrl, '_blank');
+          });
         } else {
-          alert("Gagal export data: " + result.message);
+          showErrorAlert('Gagal mengekspor data: ' + (data.message || 'Unknown error'));
         }
-      } catch (error) {
-        alert("Terjadi kesalahan saat export data: " + error.message);
-      }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Terjadi kesalahan saat mengekspor data');
+      });
     }
-
-    function logoutAdmin() {
-      document.getElementById("admin-content").classList.add("hidden");
-      document.getElementById("login-form").classList.remove("hidden");
-      document.getElementById("admin-username").value = "";
-      document.getElementById("admin-password").value = "";
-      showSection("landing");
+    
+    // Fungsi untuk menampilkan alert sukses
+    function showSuccessAlert(message) {
+      Swal.fire({
+        title: 'Berhasil!',
+        text: message,
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-success'
+        },
+        buttonsStyling: false
+      });
+    }
+    
+    // Fungsi untuk menampilkan alert error
+    function showErrorAlert(message) {
+      Swal.fire({
+        title: 'Error!',
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      });
     }
   </script>
 </body>
