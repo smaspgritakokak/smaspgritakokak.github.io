@@ -1170,10 +1170,31 @@
   <!-- SweetAlert JS -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPDwfC_hXybFzSTiQzxmOUGjtEjNiRjBta_X54zh6N55aaK67PdLGBaGHQ1OaoeoWq/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxuCT18tda69b_G2hERi2kwwble2oXRDVzeOpLIZDpmI2LhvjkCLGvh0ecNFahc1i9/exec';
     
     // Daftar section yang valid
     const validSections = ['landing', 'info', 'form', 'check', 'dashboard'];
+
+    async function callGoogleAppsScript() {
+      try {
+        const response = await fetch('YOUR_WEB_APP_URL', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'submitForm',
+            formData: { ... } // data Anda
+          })
+        });
+    
+        if (!response.ok) throw new Error('Network error');
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
     
     // Load tahun ajaran saat form dibuka
     function loadAcademicYear() {
