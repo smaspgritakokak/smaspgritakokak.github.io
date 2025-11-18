@@ -1,48 +1,445 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cek Data | SMAPTA 2024/2025</title>
-  <link rel="icon" href="https://smapgritakokak.sch.id/media_library/images/favicon.png" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="Portal Aplikasi Sekolah - Platform digital terpadu untuk pengelolaan administrasi, akademik, dan informasi sekolah." />
+  <meta name="keywords" content="portal sekolah, aplikasi sekolah, sistem informasi sekolah, pendidikan digital, e-learning" />
+  <meta name="author" content="Tim Pengembang" />
+  <meta name="theme-color" content="#4f46e5" />
+
+  <title>Portal Aplikasi Sekolah</title>
+  <link rel="icon" href="https://www.google.com/s2/favicons?domain=google.com&sz=128" type="image/png">
+  <link rel="apple-touch-icon" href="https://www.google.com/s2/favicons?domain=google.com&sz=192">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: sans-serif;
+    /* Custom CSS for base styles and animations */
+    body {
+      font-family: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
-    .iframe-container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
+    
+    /* Custom spinner animation */
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: #4f46e5;
+      animation: spin 1s ease-in-out infinite;
     }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
-    .loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.2rem;
-      color: #666;
-      z-index: 10;
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+    
+    /* Animation for app cards */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in-up {
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    
+    /* Search highlight */
+    .highlight {
+      background-color: #fef3cd;
+      padding: 0 2px;
+      border-radius: 2px;
     }
   </style>
 </head>
-<body>
-  <div class="iframe-container">
-    <div class="loader" id="loader">Loading app...</div>
-    <iframe 
-      src="https://script.google.com/macros/s/AKfycbwzAl1YlRFQAV2oWgdF3cL6sjiMXWNWY3tq-pv-Y9llMVTD_G82akFLWErTu5O7IMs/exec" 
-      title="Cek Data | SMAPTA 2024/2025"
-      onload="document.getElementById('loader').style.display='none';"
-      allowfullscreen>
-    </iframe>
+<body class="bg-gray-100">
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-white flex flex-col justify-center items-center z-[9999] transition-opacity duration-500">
+    <div class="text-center">
+      <div class="w-20 h-20 bg-indigo-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <span class="material-icons-outlined" style="font-size: 40px;">school</span>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-800">SMAPTA Apps</h1>
+      <p class="text-gray-500 mt-1">Sistem Informasi dan Manajemen Terpadu</p>
+    </div>
+    <div class="spinner mt-8"></div>
+    <p id="loadingText" class="text-gray-600 mt-4">Memuat sistem...</p>
   </div>
+  
+  <!-- Error Message -->
+  <div id="errorMessage" class="fixed inset-0 bg-gray-100 flex-col justify-center items-center text-center p-6 z-[10000] hidden">
+    <span class="material-icons-outlined text-red-500" style="font-size: 48px;">error_outline</span>
+    <h2 class="text-2xl font-bold text-red-600 mt-4">Gagal Memuat Konten</h2>
+    <p class="mt-2 text-gray-600 max-w-md">Terjadi kendala saat memuat konten. Pastikan Anda terhubung ke internet dan coba lagi.</p>
+    <button id="retryButton" class="mt-6 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105 flex items-center gap-2">
+      <span class="material-icons-outlined">refresh</span>
+      Coba Lagi
+    </button>
+  </div>
+  
+  <!-- Connection Status -->
+  <div id="connectionStatus" class="fixed bottom-5 right-5 px-4 py-2 rounded-full text-sm font-medium text-white shadow-lg flex items-center gap-2 z-[1000] hidden">
+    <span class="material-icons-outlined" id="connectionIcon" style="font-size: 18px;"></span>
+    <span id="connectionText"></span>
+  </div>
+
+  <!-- Violation Notice -->
+  <div id="violationNotice" class="fixed bottom-20 md:bottom-5 right-5 bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg text-sm flex items-center gap-2 z-[1000] opacity-0 transition-opacity duration-300 hidden">
+    <span class="material-icons-outlined" style="font-size: 18px;">info</span>
+    Izin akses penuh diberikan ke aplikasi ini.
+  </div>
+  
+  <!-- Main Application Container -->
+  <div id="appContainer" class="min-h-screen">
+    
+    <!-- Portal View (s.id style) -->
+    <main id="portalView" class="w-full min-h-screen bg-gradient-to-br from-indigo-50 via-white to-violet-50 hidden">
+      <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- Header Profile -->
+        <header class="text-center py-10">
+          <div class="w-24 h-24 bg-indigo-600 text-white rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+            <span class="material-icons-outlined" style="font-size: 48px;">school</span>
+          </div>
+          <h1 class="text-3xl font-bold text-gray-900 mt-5">SMAPTA Apps</h1>
+          <p class="text-gray-600 mt-2">Sistem Informasi dan Manajemen Terpadu</p>
+          
+          <!-- Search Bar -->
+          <div class="mt-6 max-w-md mx-auto">
+            <div class="relative">
+              <span class="material-icons-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">search</span>
+              <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Cari aplikasi..." 
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              >
+              <button id="clearSearch" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
+                <span class="material-icons-outlined">close</span>
+              </button>
+            </div>
+          </div>
+        </header>
+        
+        <!-- Links Container -->
+        <section id="linksContainer" class="space-y-4">
+          <!-- App links will be generated by JavaScript here -->
+        </section>
+        
+        <!-- No Results Message -->
+        <div id="noResults" class="text-center py-10 hidden">
+          <span class="material-icons-outlined text-gray-400" style="font-size: 64px;">search_off</span>
+          <h3 class="text-xl font-medium text-gray-600 mt-4">Aplikasi tidak ditemukan</h3>
+          <p class="text-gray-500 mt-2">Coba gunakan kata kunci lain atau lihat semua aplikasi.</p>
+          <button id="showAllApps" class="mt-4 bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 transition">
+            Tampilkan Semua Aplikasi
+          </button>
+        </div>
+
+         <!-- Footer -->
+         <footer class="text-center py-8 mt-6">
+            <p class="text-gray-500 text-sm">&copy; 2025 Tim Pengembang Sekolah. All Rights Reserved.</p>
+        </footer>
+      </div>
+    </main>
+    
+    <!-- Iframe View -->
+    <div id="iframeView" class="fixed inset-0 bg-white z-[9000] hidden">
+       <button id="backButton" class="absolute top-4 left-4 bg-white/70 backdrop-blur-sm w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-gray-200 transition z-20">
+        <span class="material-icons-outlined text-gray-700">arrow_back</span>
+      </button>
+      <div id="iframeLoader" class="absolute inset-0 bg-white flex flex-col justify-center items-center z-10">
+          <div class="spinner"></div>
+          <p class="text-indigo-600 font-medium mt-4">Memuat aplikasi...</p>
+      </div>
+      <iframe id="contentFrame" src="" class="w-full h-full border-none relative z-0"></iframe>
+    </div>
+  </div>
+
+  <script>
+    // --- DOM Elements ---
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    const errorMessage = document.getElementById('errorMessage');
+    const retryButton = document.getElementById('retryButton');
+    const portalView = document.getElementById('portalView');
+    const iframeView = document.getElementById('iframeView');
+    const contentFrame = document.getElementById('contentFrame');
+    const backButton = document.getElementById('backButton');
+    const iframeLoader = document.getElementById('iframeLoader');
+    const connectionStatus = document.getElementById('connectionStatus');
+    const connectionIcon = document.getElementById('connectionIcon');
+    const connectionText = document.getElementById('connectionText');
+    const violationNotice = document.getElementById('violationNotice');
+    const linksContainer = document.getElementById('linksContainer');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const noResults = document.getElementById('noResults');
+    const showAllApps = document.getElementById('showAllApps');
+
+    // --- Global Variables ---
+    let isOnline = navigator.onLine;
+    const fullPermissions = "autoplay; camera; encrypted-media; geolocation; microphone; midi; payment; usb; accelerometer; gyroscope; magnetometer; screen-wake-lock; clipboard-read; clipboard-write; web-share; fullscreen";
+
+    // Data aplikasi yang akan ditampilkan
+    const appData = [];
+    
+    const specialAppsData = [
+        { id: 'dapodik', name: 'Datadik PD', desc: 'Verval Peserta Didik', icon: 'school', url: "https://script.google.com/macros/s/AKfycbxeJaVjE6c0CNopRd8ztQXq356kt7t9eL194oPEBMxmmKxELjG9R46ElRyeIzu6ZZ32/exec" },
+        { id: 'erapor', name: 'e-Rapor Merdeka', desc: 'Akses Sistem Rapor Digital', icon: 'local_library', url: "https://script.google.com/macros/s/AKfycbzcx7wViBV__5GMGVMWPR3axyHoIjxMz5JZph3yhskrA45hh3fRZ-lgfwo7cwzCHWdpcw/exec" },
+        { id: 'cbt', name: 'Computer Based Test', desc: 'Platform Evaluasi Pembelajaran', icon: 'cast_for_education', url: "https://script.google.com/macros/s/AKfycbwg4JPHyceJ2YPyJpse8hF12CXnvyIwwiw0dUkuy3K-g77oW6ZCQlL3MKOxzd4dDHJF2Q/exec" },
+        { id: 'kka', name: 'Koding & KA', desc: 'Bahan Ajar Koding & KA', icon: 'grading', url: "https://script.google.com/macros/s/AKfycbw9IMArSeZ08zZuz8wXpMKvRaMToUV8xl4qUO9TfAZhuPCaf72aBJhOlhrKTo_2jgE-/exec" },
+        { id: 'files', name: 'Manajemen File', desc: 'Platform Manajemen File', icon: 'menu_book', url: "https://script.google.com/macros/s/AKfycbyyqkb_x_9mJ4_oXd8hsAHupp6WnqKanypJpTYJUTbIzBO33Cl_lSnecdwNRFSJzzbS-w/exec" },
+    ];
+
+    // Convert array to object for easier URL lookup
+    const appUrls = appData.reduce((acc, app) => {
+        acc[app.id] = { url: app.url, allow: fullPermissions };
+        return acc;
+    }, {});
+    
+    // --- Functions ---
+
+    // Fungsi untuk membuat elemen aplikasi dengan animasi
+    function createAppLink(app, index) {
+        const linkElement = document.createElement('a');
+        linkElement.href = '#';
+        linkElement.className = 'app-link bg-white p-4 rounded-xl shadow-sm hover:shadow-lg border border-gray-200 flex items-center space-x-4 transition-all duration-200 transform hover:scale-[1.02] fade-in-up';
+        linkElement.dataset.app = app.id;
+        linkElement.style.animationDelay = `${index * 0.1}s`;
+        
+        linkElement.innerHTML = `
+          <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+            <span class="material-icons-outlined">${app.icon}</span>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-gray-800">${app.name}</h3>
+            <p class="text-sm text-gray-500">${app.desc}</p>
+          </div>
+          <span class="material-icons-outlined text-gray-400">arrow_forward_ios</span>
+        `;
+
+        linkElement.addEventListener('click', (e) => {
+            e.preventDefault();
+            const appId = linkElement.getAttribute('data-app');
+            openApp(appId);
+        });
+
+        return linkElement;
+    }
+
+    // Fungsi untuk merender aplikasi dengan animasi bertahap
+    function renderApps(apps) {
+        linksContainer.innerHTML = '';
+        
+        if (apps.length === 0) {
+            noResults.classList.remove('hidden');
+            return;
+        }
+        
+        noResults.classList.add('hidden');
+        
+        apps.forEach((app, index) => {
+            const link = createAppLink(app, index);
+            linksContainer.appendChild(link);
+        });
+    }
+
+    // Fungsi untuk mencari aplikasi
+    function searchApps(query) {
+        const allApps = [...appData, ...specialAppsData];
+        const filteredApps = allApps.filter(app => 
+            app.name.toLowerCase().includes(query.toLowerCase()) || 
+            app.desc.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        renderApps(filteredApps);
+        
+        // Tampilkan tombol clear search jika ada query
+        if (query) {
+            clearSearch.classList.remove('hidden');
+        } else {
+            clearSearch.classList.add('hidden');
+        }
+    }
+
+    // Fungsi untuk merender semua aplikasi
+    function renderAllApps() {
+        const allApps = [...appData, ...specialAppsData];
+        renderApps(allApps);
+        searchInput.value = '';
+        clearSearch.classList.add('hidden');
+    }
+
+    // Fungsi untuk menambahkan aplikasi khusus ke appUrls
+    function addSpecialAppsToUrls() {
+        specialAppsData.forEach(app => {
+            appUrls[app.id] = {
+                url: app.url,
+                allow: fullPermissions
+            };
+        });
+    }
+
+    function hideInitialLoading() {
+      setTimeout(() => {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+          portalView.style.display = 'block';
+          updateConnectionStatus();
+        }, 500);
+      }, 300);
+    }
+    
+    function showError() {
+      loadingOverlay.style.display = 'none';
+      iframeView.style.display = 'none';
+      portalView.style.display = 'none';
+      errorMessage.style.display = 'flex';
+    }
+    
+    function updateConnectionStatus() {
+      isOnline = navigator.onLine;
+      connectionStatus.style.display = 'flex';
+
+      if (isOnline) {
+        connectionStatus.className = 'fixed bottom-5 right-5 px-4 py-2 rounded-full text-sm font-medium text-white shadow-lg flex items-center gap-2 z-[1000] bg-green-500';
+        connectionIcon.textContent = 'wifi';
+        connectionText.textContent = 'Terhubung';
+        
+        setTimeout(() => {
+          if (isOnline) {
+            connectionStatus.style.display = 'none';
+          }
+        }, 3000);
+      } else {
+        connectionStatus.className = 'fixed bottom-5 right-5 px-4 py-2 rounded-full text-sm font-medium text-white shadow-lg flex items-center gap-2 z-[1000] bg-red-500';
+        connectionIcon.textContent = 'wifi_off';
+        connectionText.textContent = 'Tidak terhubung';
+      }
+    }
+    
+    function openApp(appId) {
+      if (!isOnline && appUrls[appId]?.url !== "about:blank") {
+          console.warn("Tidak ada koneksi internet untuk membuka aplikasi ini.");
+          return;
+      }
+      
+      iframeLoader.style.display = 'flex';
+      contentFrame.style.opacity = '0';
+      
+      contentFrame.allow = appUrls[appId]?.allow || "fullscreen";
+      contentFrame.src = appUrls[appId]?.url || 'about:blank';
+      
+      portalView.style.display = 'none';
+      iframeView.style.display = 'block';
+      
+      showViolationNotice();
+    }
+    
+    function hideIframeLoading() {
+      iframeLoader.style.display = 'none';
+      contentFrame.style.opacity = '1';
+    }
+    
+    function backToPortal() {
+      contentFrame.src = 'about:blank';
+      contentFrame.removeAttribute('allow');
+      iframeView.style.display = 'none';
+      portalView.style.display = 'block';
+      hideViolationNotice();
+    }
+    
+    function showViolationNotice() {
+      violationNotice.style.display = 'flex';
+      setTimeout(() => {
+        violationNotice.style.opacity = '1';
+      }, 10);
+      
+      setTimeout(hideViolationNotice, 4000);
+    }
+    
+    function hideViolationNotice() {
+      violationNotice.style.opacity = '0';
+      setTimeout(() => {
+        violationNotice.style.display = 'none';
+      }, 300);
+    }
+        
+    // --- Event Listeners & Initializers ---
+
+    window.addEventListener('load', () => {
+      addSpecialAppsToUrls();
+      renderAllApps();
+      setTimeout(hideInitialLoading, 2000); 
+    });
+
+    // Event listener untuk pencarian
+    searchInput.addEventListener('input', (e) => {
+      searchApps(e.target.value);
+    });
+
+    // Event listener untuk tombol clear search
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.focus();
+      renderAllApps();
+    });
+
+    // Event listener untuk tombol tampilkan semua aplikasi
+    showAllApps.addEventListener('click', renderAllApps);
+
+    // Event listener untuk menekan Enter di search input
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+    });
+
+    contentFrame.addEventListener('load', hideIframeLoading);
+
+    contentFrame.addEventListener('error', () => {
+      iframeLoader.style.display = 'none';
+      showError();
+    });
+    
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    
+    backButton.addEventListener('click', backToPortal);
+    retryButton.addEventListener('click', () => window.location.reload());
+    
+  </script>
 </body>
 </html>
