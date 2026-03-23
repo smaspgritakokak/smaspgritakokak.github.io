@@ -3,576 +3,780 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="theme-color" content="#4f46e5">
-    <title>EduPortal Enterprise v3.5 — Integrated Ecosystem</title>
+    <meta name="theme-color" content="#7c3aed">
+    <title>EduPortal Enterprise v5.0</title>
+
+    <!-- Favicon dinamis dari Google -->
+    <link rel="icon" href="https://www.google.com/s2/favicons?domain=google.com&sz=128" type="image/png" />
     
-    <!-- Premium CDN -->
+    <!-- TECH STACK & CDN INJECTION ARSENAL -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
+    <!-- TAILWIND CONFIGURATION -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    fontFamily: { sans: ['"Outfit"', 'sans-serif'] },
                     colors: {
-                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
-                        dark: { base: '#0a0c10', panel: '#11161f', border: '#262e3c', hover: '#1e293b' }
+                        brand: { 50: '#f5f3ff', 100: '#ede9fe', 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95' },
+                        dark: { base: '#0B0F19', panel: '#111827', border: '#1F2937' }
                     },
                     animation: {
-                        'float': 'float 5s ease-in-out infinite',
-                        'fade-in-up': 'fadeInUp 0.4s ease-out forwards',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-in': 'slideIn 0.4s ease-out forwards'
                     },
                     keyframes: {
-                        float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-6px)' } },
-                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideIn: {
+                            '0%': { opacity: '0', transform: 'translateX(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' }
+                        }
                     }
                 }
             }
         }
     </script>
     
+    <!-- OMNI-SPA STYLES -->
     <style>
         * { -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: #fafcff; transition: background 0.2s ease; }
-        .dark body { background: #0a0c10; }
+        body { font-family: 'Outfit', sans-serif; -webkit-font-smoothing: antialiased; }
         
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 12px; }
-        .dark ::-webkit-scrollbar-thumb { background: #334155; }
-        
-        .glass-modern {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-        .dark .glass-modern {
-            background: rgba(17, 22, 31, 0.8);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .card-hover { transition: all 0.25s cubic-bezier(0.2, 0, 0, 1); }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1); }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        .dark .stat-card {
-            background: rgba(17, 22, 31, 0.6);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        [v-cloak] { display: none; }
-        
-        .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
-        .fade-enter-from, .fade-leave-to { opacity: 0; }
-        
-        .app-list-enter-active, .app-list-leave-active { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        .app-list-enter-from, .app-list-leave-to { opacity: 0; transform: translateY(20px) scale(0.96); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* ========================================================= */
-        /* PURE CSS GPU-ACCELERATED MARQUEE                          */
-        /* ========================================================= */
-        .animate-marquee {
-            display: inline-block;
-            padding-left: 100%; /* Memulai teks dari luar kanan parent */
-            animation: marquee-scroll 25s linear infinite;
+        
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
         }
-        /* Berhenti saat hover agar teks yang panjang bisa dibaca */
-        .animate-marquee:hover {
-            animation-play-state: paused;
-        }
-        @keyframes marquee-scroll {
-            0%   { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
+        .dark .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
         }
 
-        /* ========================================================= */
-        /* SWEETALERT2 ENTERPRISE THEME OVERRIDES                    */
-        /* ========================================================= */
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease, transform 0.3s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(10px); }
+        .slide-fade-enter-active { transition: all 0.4s ease-out; }
+        .slide-fade-leave-active { transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1); }
+        .slide-fade-enter-from, .slide-fade-leave-to { transform: translateY(15px); opacity: 0; }
+        
+        .app-list-move, .app-list-enter-active, .app-list-leave-active { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .app-list-enter-from, .app-list-leave-to { opacity: 0; transform: translateY(20px) scale(0.95); }
+        .app-list-leave-active { position: absolute; }
+        
+        [v-cloak] { display: none; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* Pure CSS Marquee */
+        .animate-marquee { display: inline-block; padding-left: 100%; animation: marquee-scroll 25s linear infinite; }
+        .animate-marquee:hover { animation-play-state: paused; }
+        @keyframes marquee-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* SWEETALERT2 ENTERPRISE THEME OVERRIDES */
         .swal2-popup.swal2-toast {
             background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(16px);
             border: 1px solid rgba(0, 0, 0, 0.05) !important;
             border-radius: 1rem !important;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-            color: #1f2937 !important;
+            color: #0f172a !important;
         }
         .dark .swal2-popup.swal2-toast {
-            background: rgba(17, 22, 31, 0.95) !important;
-            border-color: rgba(255, 255, 255, 0.05) !important;
-            color: #f3f4f6 !important;
+            background: rgba(17, 24, 39, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            color: #f8fafc !important;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5) !important;
         }
 
         .swal2-popup:not(.swal2-toast) {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
             border-radius: 1.5rem !important; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-            color: #1f2937 !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+            color: #0f172a !important;
+            padding-bottom: 1.5rem !important;
+            font-family: 'Outfit', sans-serif !important;
         }
         .dark .swal2-popup:not(.swal2-toast) {
-            background: rgba(17, 22, 31, 0.95) !important;
-            border-color: rgba(255, 255, 255, 0.05) !important;
-            color: #f3f4f6 !important;
+            background: rgba(17, 24, 39, 0.98) !important;
+            border-color: rgba(31, 41, 55, 1) !important;
+            color: #f8fafc !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
         }
 
-        .swal2-title {
-            font-family: 'Inter', sans-serif !important;
-            font-weight: 800 !important;
-            font-size: 1.25rem !important;
-        }
-        .swal2-html-container {
-            font-family: 'Inter', sans-serif !important;
-            font-size: 0.875rem !important;
-        }
-
+        .swal2-title { font-weight: 800 !important; font-size: 1.5rem !important; }
+        .swal2-html-container { font-size: 0.875rem !important; }
         .swal2-actions { gap: 0.75rem; margin-top: 1.5rem !important; }
+        
         .swal2-confirm {
-            background-color: #4f46e5 !important; 
-            border-radius: 0.75rem !important; 
-            font-weight: 700 !important;
-            padding: 0.625rem 1.25rem !important;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3) !important;
-            transition: all 0.2s !important;
+            background-color: #7c3aed !important; border-radius: 0.75rem !important; font-weight: 600 !important;
+            padding: 0.625rem 1.25rem !important; box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.3) !important; transition: all 0.2s !important;
         }
-        .swal2-confirm:hover { background-color: #4338ca !important; transform: translateY(-1px); }
+        .swal2-confirm:hover { background-color: #6d28d9 !important; transform: translateY(-1px); }
+        
         .swal2-cancel {
-            background-color: #f3f4f6 !important;
-            color: #1f2937 !important;
-            border-radius: 0.75rem !important;
-            font-weight: 700 !important;
-            padding: 0.625rem 1.25rem !important;
-            transition: all 0.2s !important;
+            background-color: #f1f5f9 !important; color: #334155 !important; border-radius: 0.75rem !important;
+            font-weight: 600 !important; padding: 0.625rem 1.25rem !important; transition: all 0.2s !important;
         }
-        .dark .swal2-cancel { background-color: #1e293b !important; color: #f3f4f6 !important; }
-        .swal2-cancel:hover { background-color: #e5e7eb !important; }
-        .dark .swal2-cancel:hover { background-color: #334155 !important; }
+        .dark .swal2-cancel { background-color: #1F2937 !important; color: #f8fafc !important; }
+        .swal2-cancel:hover { background-color: #e2e8f0 !important; }
+        .dark .swal2-cancel:hover { background-color: #374151 !important; }
 
         .swal2-input, .swal2-select, .swal2-textarea {
-            border-radius: 0.75rem !important;
-            border: 1px solid #e5e7eb !important;
-            background: #f9fafb !important;
-            color: #1f2937 !important;
-            font-size: 0.875rem !important;
-            box-shadow: none !important;
-            transition: all 0.2s !important;
+            border-radius: 0.75rem !important; border: 1px solid #e2e8f0 !important; background: #f8fafc !important;
+            color: #0f172a !important; font-size: 0.875rem !important; box-shadow: none !important; transition: all 0.2s !important;
+            font-family: 'Outfit', sans-serif !important;
         }
-        .swal2-input:focus, .swal2-select:focus, .swal2-textarea:focus {
-            border-color: #4f46e5 !important;
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2) !important;
-        }
-        .dark .swal2-input, .dark .swal2-select, .dark .swal2-textarea {
-            background: #0a0c10 !important;
-            border-color: #262e3c !important;
-            color: #f3f4f6 !important;
-        }
-        .dark .swal2-input:focus, .dark .swal2-select:focus, .dark .swal2-textarea:focus {
-            border-color: #6366f1 !important;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2) !important;
-        }
-        
-        .swal2-validation-message {
-            background: #fef2f2 !important;
-            color: #e11d48 !important;
-            border-radius: 0.75rem !important;
-            font-weight: 600 !important;
-            font-size: 0.875rem !important;
-            border: 1px solid #fecdd3 !important;
-            margin-top: 1rem !important;
-        }
-        .dark .swal2-validation-message {
-            background: rgba(159, 18, 57, 0.2) !important;
-            color: #fda4af !important;
-            border-color: rgba(225, 29, 72, 0.3) !important;
-        }
+        .swal2-input:focus, .swal2-select:focus, .swal2-textarea:focus { border-color: #8b5cf6 !important; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15) !important; }
+        .dark .swal2-input, .dark .swal2-select, .dark .swal2-textarea { background: #0B0F19 !important; border-color: #1F2937 !important; color: #f8fafc !important; }
+        .dark .swal2-input:focus, .dark .swal2-select:focus, .dark .swal2-textarea:focus { border-color: #a78bfa !important; box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15) !important; }
 
-        /* Toggle Checkbox Styling Custom (Admin Form) */
-        input:checked ~ .toggle-bg { background-color: #4f46e5; border-color: #4f46e5; }
+        /* Custom Toggle Switch for Admin */
+        input:checked ~ .toggle-bg { background-color: #7c3aed; border-color: #7c3aed; }
         input:checked ~ .toggle-dot { transform: translateX(100%); }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-100 antialiased">
+<body class="bg-slate-50 dark:bg-dark-base text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
-    <div id="app" v-cloak class="relative min-h-screen flex flex-col">
+    <div id="app" v-cloak class="h-screen flex flex-col overflow-hidden relative">
         
-        <!-- ambient background -->
-        <div class="fixed inset-0 pointer-events-none">
-            <div class="absolute top-0 -left-40 w-96 h-96 bg-indigo-200/30 dark:bg-indigo-900/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 right-0 w-[30rem] h-[30rem] bg-cyan-200/25 dark:bg-cyan-900/20 rounded-full blur-3xl"></div>
+        <!-- Abstract Ambient Glow (GPU Accelerated) -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-400/20 dark:bg-brand-600/10 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-[100px] animate-blob transform-gpu"></div>
+            <div class="absolute top-40 -right-40 w-96 h-96 bg-cyan-400/20 dark:bg-cyan-600/10 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-[100px] animate-blob transform-gpu" style="animation-delay: 2s;"></div>
+            <div class="absolute -bottom-40 left-40 w-96 h-96 bg-indigo-400/20 dark:bg-indigo-600/10 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-[100px] animate-blob transform-gpu" style="animation-delay: 4s;"></div>
         </div>
-        
-        <!-- Global Loader -->
+
+        <!-- Ambient Grid Background -->
+        <div class="absolute inset-0 pointer-events-none bg-grid-pattern z-0"></div>
+
+        <!-- GLOBAL APP LOADER (Z-Index Teratas) -->
         <transition name="fade">
-            <div v-if="state.isAppLoading" class="fixed inset-0 z-[100] bg-white/90 dark:bg-dark-base/95 backdrop-blur-md flex items-center justify-center">
-                <div class="text-center">
-                    <div class="w-16 h-16 border-4 border-brand-200 dark:border-brand-800 border-t-brand-600 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Menghubungkan ke Server EduPortal...</p>
-                    <p class="text-xs text-gray-400 mt-2">v3.5 Enterprise Backend</p>
+            <div v-if="state.isAppLoading" class="fixed inset-0 z-[999] bg-slate-50/95 dark:bg-dark-base/95 backdrop-blur-xl flex flex-col items-center justify-center">
+                <div class="relative w-24 h-24 mb-8">
+                    <div class="absolute inset-0 border-4 border-brand-100 dark:border-white/5 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-brand-600 dark:border-brand-500 rounded-full border-t-transparent animate-spin"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-brand-600 dark:text-brand-400">
+                        <i class="ph-fill ph-graduation-cap text-4xl animate-pulse"></i>
+                    </div>
                 </div>
-            </div>
-        </transition>
-        
-        <!-- Sync Toast -->
-        <transition name="fade">
-            <div v-if="state.isSyncing && !state.isAppLoading" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 glass-modern rounded-full px-5 py-2.5 shadow-lg flex gap-2 items-center text-sm font-medium">
-                <i class="ph-bold ph-arrow-clockwise animate-spin text-brand-600"></i>
-                <span>Sinkronisasi dengan server...</span>
+                <h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-2">Edu<span class="text-brand-600 dark:text-brand-400">Portal</span></h1>
+                <p class="text-xs font-bold text-slate-500 tracking-[0.2em] uppercase">Enterprise Core Initializing...</p>
             </div>
         </transition>
 
-        <!-- Offline Toast Indicator -->
+        <!-- GLOBAL OFFLINE INDICATOR -->
         <transition name="fade">
-            <div v-if="state.isOffline" class="fixed bottom-24 md:bottom-5 left-1/2 -translate-x-1/2 z-50 bg-rose-600 text-white rounded-full px-5 py-2.5 shadow-xl flex gap-2 items-center text-sm font-bold shadow-rose-600/30">
+            <div v-if="state.isOffline" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] bg-rose-600 text-white rounded-full px-5 py-2.5 shadow-2xl flex gap-2 items-center text-sm font-bold shadow-rose-600/20 border border-rose-500">
                 <i class="ph-bold ph-wifi-x"></i>
-                <span>Mode Offline — Menampilkan Data Cache</span>
+                <span>Offline Mode — Cache Active</span>
             </div>
         </transition>
-        
-        <!-- MAIN APP -->
-        <div v-show="!state.activeIframeUrl" class="relative flex flex-col flex-1">
-            
-            <!-- SMART GLOBAL ANNOUNCEMENT BANNER -->
-            <transition name="fade">
-                <div v-if="state.announcement.isVisible && state.announcement.text" class="bg-gradient-to-r from-brand-600 to-indigo-700 text-white px-4 py-2 text-sm flex items-center justify-between shadow-md relative z-40">
-                    <div class="flex items-center gap-3 overflow-hidden flex-1 max-w-7xl mx-auto">
-                        <i class="ph-fill ph-megaphone animate-pulse shrink-0 text-amber-300"></i>
-                        <!-- PURE CSS MARQUEE: Smooth, GPU Accelerated, Not Deprecated -->
-                        <div class="overflow-hidden flex-1 relative whitespace-nowrap">
-                            <div class="animate-marquee font-medium text-xs md:text-sm tracking-wide cursor-default">
-                                {{ state.announcement.text }}
-                            </div>
+
+        <!-- SMART GLOBAL ANNOUNCEMENT BANNER -->
+        <transition name="fade">
+            <div v-if="state.announcement.isVisible && state.announcement.text && !state.activeIframeUrl" class="bg-gradient-to-r from-brand-600 to-indigo-700 text-white px-4 py-3 text-sm flex items-center justify-between shadow-md relative z-40 border-b border-indigo-800/50">
+                <div class="flex items-center gap-3 overflow-hidden flex-1 max-w-7xl mx-auto">
+                    <div class="bg-white/20 rounded-full p-1.5 shrink-0 backdrop-blur-sm">
+                        <i class="ph-fill ph-megaphone animate-pulse text-amber-300 block text-lg"></i>
+                    </div>
+                    <div class="overflow-hidden flex-1 relative whitespace-nowrap">
+                        <div class="animate-marquee font-semibold text-sm tracking-wide cursor-default">
+                            {{ state.announcement.text }}
                         </div>
                     </div>
-                    <!-- Tombol Dismiss Cerdas -->
-                    <button @click="dismissAnnouncement" class="ml-4 shrink-0 hover:bg-white/20 rounded-full w-8 h-8 transition flex items-center justify-center" title="Tutup Pengumuman">
-                        <i class="ph-bold ph-x text-sm"></i>
-                    </button>
                 </div>
+                <button @click="dismissAnnouncement" class="ml-4 shrink-0 hover:bg-white/20 active:scale-95 rounded-full w-8 h-8 transition-all flex items-center justify-center bg-white/10" title="Tutup">
+                    <i class="ph-bold ph-x text-sm"></i>
+                </button>
+            </div>
+        </transition>
+
+        <!-- MAIN OMNI-SPA LAYOUT -->
+        <div v-show="!state.activeIframeUrl" class="flex-1 flex overflow-hidden relative z-10">
+            
+            <!-- MOBILE OVERLAY -->
+            <transition name="fade">
+                <div v-if="state.isAdmin && state.sidebarOpen" @click="state.sidebarOpen = false" class="fixed inset-0 bg-slate-900/50 dark:bg-black/50 backdrop-blur-sm z-40 lg:hidden"></div>
             </transition>
 
-            <!-- Header -->
-            <header class="sticky top-0 z-30 glass-modern border-b border-gray-200/50 dark:border-dark-border/50 px-4 md:px-8 py-3 flex items-center justify-between gap-3 flex-wrap">
-                <div class="flex items-center gap-3 shrink-0">
-                    <div class="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-brand-600 to-indigo-600 flex items-center justify-center shadow-md">
-                        <i class="ph-bold ph-graduation-cap text-white text-xl md:text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Edu<span class="text-brand-600 dark:text-brand-400">Portal</span></h1>
-                        <p class="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 hidden sm:block">Enterprise v3.5 · Terintegrasi</p>
-                    </div>
-                </div>
+            <!-- SIDEBAR NAVIGATION (HANYA ADMIN) -->
+            <aside v-if="state.isAdmin" :class="state.sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'" class="fixed lg:static inset-y-0 left-0 w-72 bg-white/80 dark:bg-dark-panel/80 backdrop-blur-xl border-r border-slate-200 dark:border-dark-border z-50 flex flex-col transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none">
                 
-                <div class="hidden md:flex items-center gap-4 flex-1 max-w-md ml-6">
-                    <div class="relative flex-1">
-                        <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input v-model="searchQuery" type="text" placeholder="Cari aplikasi, layanan, atau fitur..." class="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border rounded-2xl text-sm focus:ring-2 focus:ring-brand-400 transition dark:text-white">
+                <!-- BRANDING -->
+                <div class="h-20 flex items-center gap-4 px-6 border-b border-slate-200 dark:border-dark-border shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-700 flex items-center justify-center shadow-lg shadow-brand-500/20 border border-white/10">
+                        <i class="ph-fill ph-graduation-cap text-white text-2xl"></i>
                     </div>
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <button @click="toggleTheme" class="w-9 h-9 md:w-10 md:h-10 rounded-xl glass-modern flex items-center justify-center transition hover:bg-gray-100 dark:hover:bg-dark-hover">
-                        <i class="ph-bold text-lg" :class="state.isDark ? 'ph-sun' : 'ph-moon'"></i>
-                    </button>
-                    <button @click="handleAdminAction" class="px-3 md:px-5 py-2 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-sm" :class="state.isAdmin ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/30 dark:text-rose-400 border border-rose-200 dark:border-rose-800' : 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:scale-105'">
-                        <i class="ph-bold" :class="state.isAdmin ? 'ph-sign-out' : 'ph-shield-check'"></i>
-                        <span class="hidden sm:inline">{{ state.isAdmin ? 'Keluar Admin' : 'Admin' }}</span>
+                    <div class="flex flex-col">
+                        <h1 class="text-xl font-black tracking-tight text-slate-900 dark:text-white leading-none">Edu<span class="text-brand-600 dark:text-brand-400">Portal</span></h1>
+                        <span class="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase mt-1">v5.0 Enterprise</span>
+                    </div>
+                    <button @click="state.sidebarOpen = false" class="ml-auto w-8 h-8 rounded-lg flex lg:hidden items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-dark-border active:scale-95 transition-transform">
+                        <i class="ph-bold ph-x"></i>
                     </button>
                 </div>
-            </header>
-            
-            <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto px-4 md:px-8 py-6 md:py-8">
-                <div class="max-w-7xl mx-auto">
-                    <!-- Hero Greeting + Stats -->
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 animate-fade-in-up">
-                        <div>
-                            <h2 class="text-2xl md:text-4xl font-black tracking-tight bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                                {{ greeting }}, <span class="text-brand-600 dark:text-brand-400">{{ state.isAdmin ? 'Supervisor' : 'Wargi SMAPTA' }}</span>
-                            </h2>
-                            <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm font-medium flex items-center gap-1">
-                                <i class="ph-fill ph-chart-line"></i> 
-                                <span>{{ activeServicesCount }} layanan aktif • Server v3.5</span>
-                            </p>
-                        </div>
-                        <div class="flex gap-3 text-xs md:text-sm">
-                            <div class="stat-card rounded-2xl px-4 py-2 flex items-center gap-2 shadow-sm">
-                                <i class="ph-bold ph-app-window text-brand-500"></i>
-                                <span class="font-bold">{{ totalAppsCount }}</span>
-                                <span class="text-gray-500 dark:text-gray-400">Aplikasi</span>
-                            </div>
-                            <div class="stat-card rounded-2xl px-4 py-2 flex items-center gap-2 shadow-sm">
-                                <i class="ph-bold ph-chart-bar text-emerald-500"></i>
-                                <span class="font-bold">{{ onlineAppsCount }}</span>
-                                <span class="text-gray-500 dark:text-gray-400">Online</span>
-                            </div>
-                        </div>
-                    </div>
+
+                <!-- NAVIGATION MENUS -->
+                <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5 custom-scrollbar">
+                    <p class="px-3 text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-3">Menu Utama</p>
                     
-                    <!-- Mobile Search -->
-                    <div class="md:hidden mb-6 relative">
-                        <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                        <input v-model="searchQuery" type="text" class="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-dark-panel border border-gray-200 dark:border-dark-border rounded-2xl text-sm font-medium shadow-sm dark:text-white" placeholder="Cari aplikasi, absensi, atau kelas...">
-                    </div>
-                    
-                    <!-- Category Filter -->
-                    <div class="flex gap-2 overflow-x-auto no-scrollbar pb-4 mb-4">
-                        <button v-for="cat in categories" :key="cat.id" @click="activeCategory = cat.id" class="whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200" :class="activeCategory === cat.id ? 'bg-brand-600 text-white shadow-md shadow-brand-500/30' : 'bg-white/70 dark:bg-dark-panel/70 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-hover border border-gray-200/70 dark:border-dark-border'">
-                            {{ cat.name }}
-                            <span v-if="cat.id !== 'all'" class="ml-1 text-xs opacity-80">({{ getCategoryCount(cat.id) }})</span>
+                    <button @click="navigateTo('portal')" :class="state.currentRoute === 'portal' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-border font-medium'" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group active:scale-[0.98]">
+                        <i class="text-xl transition-transform group-hover:scale-110" :class="state.currentRoute === 'portal' ? 'ph-fill ph-squares-four' : 'ph-duotone ph-squares-four'"></i>
+                        <span>Layanan Publik</span>
+                    </button>
+
+                    <!-- ADMIN PROTECTED ROUTES -->
+                    <div class="pt-4 pb-2">
+                        <p class="px-3 text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-3 flex items-center justify-between">
+                            Administrator
+                            <i v-if="!state.isAdmin" class="ph-fill ph-lock-key text-rose-400"></i>
+                        </p>
+                        
+                        <button @click="navigateTo('dashboard')" :class="state.currentRoute === 'dashboard' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-border font-medium'" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group mb-1.5 active:scale-[0.98]">
+                            <i class="text-xl transition-transform group-hover:scale-110" :class="state.currentRoute === 'dashboard' ? 'ph-fill ph-chart-pie-slice' : 'ph-duotone ph-chart-pie-slice'"></i>
+                            <span>Dashboard</span>
+                        </button>
+
+                        <button @click="navigateTo('datamaster')" :class="state.currentRoute === 'datamaster' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-border font-medium'" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group mb-1.5 active:scale-[0.98]">
+                            <i class="text-xl transition-transform group-hover:scale-110" :class="state.currentRoute === 'datamaster' ? 'ph-fill ph-database' : 'ph-duotone ph-database'"></i>
+                            <span>Master Data App</span>
+                        </button>
+
+                        <button @click="navigateTo('telemetry')" :class="state.currentRoute === 'telemetry' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-border font-medium'" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group mb-1.5 active:scale-[0.98]">
+                            <i class="text-xl transition-transform group-hover:scale-110" :class="state.currentRoute === 'telemetry' ? 'ph-fill ph-terminal-window' : 'ph-duotone ph-terminal-window'"></i>
+                            <span>Sistem Telemetry</span>
+                        </button>
+
+                        <button @click="navigateTo('settings')" :class="state.currentRoute === 'settings' ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-border font-medium'" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group active:scale-[0.98]">
+                            <i class="text-xl transition-transform group-hover:scale-110" :class="state.currentRoute === 'settings' ? 'ph-fill ph-gear-six' : 'ph-duotone ph-gear-six'"></i>
+                            <span>Pengaturan Global</span>
                         </button>
                     </div>
-                    
-                    <!-- PUBLIC VIEW: App Grid -->
-                    <template v-if="state.currentView === 'public'">
-                        <transition-group name="app-list" tag="div" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
-                            <div v-for="(app, idx) in filteredApps" :key="app.id" @click="openIframe(app)" 
-                                 class="group cursor-pointer bg-white/80 dark:bg-dark-panel/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-100 dark:border-dark-border shadow-sm transition-all duration-200 flex flex-col items-center text-center relative overflow-hidden"
-                                 :class="app.status === 'online' ? 'hover:-translate-y-1 hover:shadow-xl card-hover' : 'opacity-85 grayscale-[30%] hover:bg-gray-50 dark:hover:bg-dark-hover'">
-                                
-                                <div class="absolute top-3 right-3">
-                                    <span class="relative flex h-2 w-2">
-                                        <span v-if="app.status === 'online'" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2" :class="{'bg-emerald-500': app.status === 'online', 'bg-amber-500': app.status === 'maintenance', 'bg-rose-500': app.status === 'offline'}"></span>
-                                    </span>
-                                </div>
-                                
-                                <!-- Lock icon overlay if not online -->
-                                <div v-if="app.status !== 'online'" class="absolute inset-0 z-10 bg-white/10 dark:bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200 backdrop-blur-[1px]">
-                                    <div class="w-10 h-10 rounded-full bg-white dark:bg-dark-panel shadow-lg flex items-center justify-center text-rose-500">
-                                        <i class="ph-fill ph-lock-key text-xl"></i>
+                </nav>
+
+                <!-- USER PROFILE / AUTH FOOTER -->
+                <div class="p-4 border-t border-slate-200 dark:border-dark-border shrink-0">
+                    <div class="flex items-center gap-3 bg-slate-50 dark:bg-dark-base p-3 rounded-xl border border-slate-200 dark:border-dark-border">
+                        <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-lg">
+                            <i class="ph-bold ph-shield-check"></i>
+                        </div>
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-sm font-bold text-slate-900 dark:text-white truncate">Administrator</p>
+                            <p class="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">Access Granted</p>
+                        </div>
+                        <button @click="handleAdminAction" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 flex items-center justify-center hover:bg-rose-100 active:scale-90 transition-all" title="Logout">
+                            <i class="ph-bold ph-sign-out"></i>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+                
+                <!-- TOP HEADER -->
+                <header class="h-20 bg-white/60 dark:bg-dark-base/60 backdrop-blur-md border-b border-slate-200 dark:border-dark-border flex items-center justify-between px-4 lg:px-8 z-30 shrink-0">
+                    <div class="flex items-center gap-4">
+                        <button v-if="state.isAdmin" @click="state.sidebarOpen = true" class="lg:hidden w-10 h-10 rounded-xl bg-white dark:bg-dark-panel border border-slate-200 dark:border-dark-border flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform">
+                            <i class="ph-bold ph-list text-xl"></i>
+                        </button>
+                        
+                        <!-- Public Branding (Visible only when sidebar is hidden) -->
+                        <div v-if="!state.isAdmin" class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-700 flex items-center justify-center shadow-lg border border-white/10 shrink-0">
+                                <i class="ph-fill ph-graduation-cap text-white text-2xl"></i>
+                            </div>
+                            <h1 class="text-xl font-black tracking-tight text-slate-900 dark:text-white hidden sm:block">Edu<span class="text-brand-600 dark:text-brand-400">Portal</span></h1>
+                        </div>
+
+                        <div :class="{'hidden md:block': !state.isAdmin}">
+                            <h2 class="text-xl lg:text-2xl font-black text-slate-900 dark:text-white">{{ getRouteTitle(state.currentRoute) }}</h2>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <span class="flex h-2 w-2 relative">
+                                  <span v-if="state.isSyncing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2 w-2" :class="state.isOffline ? 'bg-rose-500' : 'bg-emerald-500'"></span>
+                                </span>
+                                <span class="text-[10px] font-bold uppercase tracking-widest" :class="state.isOffline ? 'text-rose-500' : 'text-slate-400'">
+                                    {{ state.isOffline ? 'Offline' : (state.isSyncing ? 'Syncing...' : 'Connected') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <!-- Desktop Search -->
+                        <div v-if="state.currentRoute === 'portal' || state.currentRoute === 'datamaster'" class="hidden md:flex relative group mr-1">
+                            <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500 transition-colors"></i>
+                            <input v-model="searchQuery" type="text" placeholder="Cari aplikasi..." class="w-64 pl-11 pr-4 py-2 bg-slate-100 dark:bg-dark-panel border border-transparent dark:border-dark-border rounded-xl text-sm font-medium focus:ring-2 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-dark-base transition-all dark:text-white outline-none">
+                        </div>
+                        
+                        <!-- Admin Login Button (Public View) -->
+                        <button v-if="!state.isAdmin" @click="handleAdminAction" class="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-dark-panel dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold flex items-center justify-center transition-all shadow-md text-sm active:scale-95">
+                            <i class="ph-bold ph-shield-check text-lg"></i>
+                        </button>
+
+                        <button @click="toggleTheme" class="w-10 h-10 rounded-xl bg-white dark:bg-dark-panel border border-slate-200 dark:border-dark-border flex items-center justify-center transition-all active:scale-95 hover:shadow-md text-slate-600 dark:text-slate-300 group shrink-0">
+                            <i class="ph-bold text-lg group-hover:rotate-12 transition-transform" :class="state.isDark ? 'ph-sun' : 'ph-moon'"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- DYNAMIC VIEWS CONTAINER -->
+                <main class="flex-1 overflow-y-auto p-4 lg:p-8 relative custom-scrollbar">
+                    <transition name="fade" mode="out-in">
+                        <div :key="state.currentRoute" class="w-full max-w-7xl mx-auto min-h-full pb-10">
+                            
+                            <!-- ========================================== -->
+                            <!-- VIEW 1: PORTAL (LAYANAN PUBLIK)            -->
+                            <!-- ========================================== -->
+                            <template v-if="state.currentRoute === 'portal'">
+                                <!-- DYNAMIC HERO BANNER -->
+                                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 animate-fade-in-up">
+                                    <div>
+                                        <h2 class="text-3xl lg:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-2">
+                                            {{ greeting }}, <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400">{{ state.isAdmin ? 'Administrator' : 'Edu' }}</span>
+                                        </h2>
+                                        <div class="flex items-center gap-3 text-sm font-medium mt-3 flex-wrap">
+                                            <div class="flex items-center gap-1.5 bg-white dark:bg-dark-panel px-3 py-1.5 rounded-lg border border-slate-200 dark:border-dark-border shadow-sm text-slate-600 dark:text-slate-400">
+                                                <i class="ph-bold ph-app-window text-brand-500"></i>
+                                                <span><strong class="text-slate-900 dark:text-white">{{ totalAppsCount }}</strong> Aplikasi</span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5 bg-white dark:bg-dark-panel px-3 py-1.5 rounded-lg border border-slate-200 dark:border-dark-border shadow-sm text-slate-600 dark:text-slate-400">
+                                                <i class="ph-bold ph-chart-bar text-emerald-500"></i>
+                                                <span><strong class="text-slate-900 dark:text-white">{{ onlineAppsCount }}</strong> Online</span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5 bg-brand-50 dark:bg-brand-900/20 px-3 py-1.5 rounded-lg border border-brand-100 dark:border-brand-500/20 shadow-sm text-brand-700 dark:text-brand-300">
+                                                <i class="ph-fill ph-cpu"></i>
+                                                <span>Server v5.0</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl mb-3 transition-transform duration-200" :class="[app.color, app.status === 'online' ? 'group-hover:scale-110' : '']">
-                                    <i :class="app.icon"></i>
+                                <!-- Mobile Search Bar -->
+                                <div class="md:hidden relative mb-6">
+                                    <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <input v-model="searchQuery" type="text" class="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-dark-panel border border-slate-200 dark:border-dark-border rounded-2xl text-sm font-medium shadow-sm dark:text-white transition-all focus:ring-2 focus:ring-brand-500/50 outline-none" placeholder="Cari layanan, modul...">
                                 </div>
-                                <h3 class="font-bold text-gray-800 dark:text-white text-sm leading-tight line-clamp-1">{{ app.title }}</h3>
-                                <p class="text-[10px] font-medium mt-1 uppercase tracking-wide" :class="app.status === 'online' ? 'text-gray-400' : (app.status === 'maintenance' ? 'text-amber-500' : 'text-rose-500')">
-                                    {{ app.status === 'online' ? getCategoryLabel(app.category) : app.status }}
-                                </p>
-                                <div v-if="app.status === 'online'" class="mt-2 opacity-0 group-hover:opacity-100 transition text-brand-500 text-xs flex items-center gap-1">
-                                    <span>Buka</span> <i class="ph-bold ph-arrow-right text-xs"></i>
+                                
+                                <!-- Category Filters -->
+                                <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-6">
+                                    <button v-for="cat in categories" :key="cat.id" @click="activeCategory = cat.id" 
+                                        class="whitespace-nowrap px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-95 flex items-center gap-2 border" 
+                                        :class="activeCategory === cat.id ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white shadow-md' : 'bg-white dark:bg-dark-panel text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-base border-slate-200 dark:border-dark-border'">
+                                        {{ cat.name }}
+                                        <span v-if="cat.id !== 'all'" class="text-[10px] py-0.5 px-2 rounded-md font-bold" :class="activeCategory === cat.id ? 'bg-white/20 dark:bg-black/10' : 'bg-slate-100 dark:bg-dark-base'">{{ getCategoryCount(cat.id) }}</span>
+                                    </button>
                                 </div>
-                            </div>
-                        </transition-group>
-                        
-                        <div v-if="filteredApps.length === 0 && !state.isAppLoading" class="flex flex-col items-center justify-center py-16 text-center">
-                            <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-dark-hover flex items-center justify-center mb-4">
-                                <i class="ph-duotone ph-compass text-3xl text-gray-400"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-700 dark:text-gray-200">Layanan tidak ditemukan</h3>
-                            <p class="text-gray-500 text-sm mt-1 max-w-xs">Coba kata kunci lain atau reset filter</p>
-                            <button @click="clearFilters" class="mt-5 text-brand-600 font-semibold text-sm underline">Reset pencarian</button>
-                        </div>
-                    </template>
-                    
-                    <!-- ADMIN VIEW: Full CMS Management -->
-                    <template v-else-if="state.currentView === 'admin' && state.isAdmin">
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <!-- Apps Manager -->
-                            <div class="lg:col-span-2 glass-modern rounded-3xl p-5 border border-gray-200 dark:border-dark-border relative">
-                                <div v-if="state.isOffline" class="absolute inset-0 z-10 bg-white/50 dark:bg-dark-base/50 backdrop-blur-[2px] rounded-3xl flex items-center justify-center">
-                                    <div class="bg-rose-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg">Mode Edit Nonaktif Saat Offline</div>
-                                </div>
-                                <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
-                                    <div>
-                                        <h3 class="text-xl font-black flex items-center gap-2"><i class="ph-bold ph-database"></i> Manajemen Layanan</h3>
-                                        <p class="text-xs text-gray-500">Kelola aplikasi, status, dan visibilitas</p>
+
+                                <!-- App Grid -->
+                                <transition-group name="app-list" tag="div" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5 relative">
+                                    <div v-for="app in filteredApps" :key="app.id" @click="openIframe(app)" 
+                                         class="group relative bg-white dark:bg-dark-panel rounded-3xl p-5 border border-slate-200 dark:border-dark-border flex flex-col items-center text-center cursor-pointer active:scale-[0.97] transition-all hover:shadow-xl hover:-translate-y-1"
+                                         :class="app.status === 'online' ? '' : 'opacity-80 grayscale-[20%]' ">
+                                        
+                                        <!-- Status Indicator -->
+                                        <div class="absolute top-4 right-4 flex items-center justify-center">
+                                            <span v-if="app.status === 'online'" class="absolute inline-flex h-3 w-3 rounded-full bg-emerald-400 opacity-40 group-hover:animate-ping"></span>
+                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5" :class="{'bg-emerald-500': app.status === 'online', 'bg-amber-500': app.status === 'maintenance', 'bg-rose-500': app.status === 'offline'}"></span>
+                                        </div>
+                                        
+                                        <!-- Lock Overlay -->
+                                        <div v-if="app.status !== 'online'" class="absolute inset-0 z-10 bg-slate-50/40 dark:bg-dark-base/40 backdrop-blur-[2px] rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div class="w-12 h-12 rounded-full bg-white dark:bg-dark-panel shadow-lg flex items-center justify-center text-rose-500 border border-rose-100 dark:border-rose-900/30">
+                                                <i class="ph-fill ph-lock-key text-xl"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4 transition-transform duration-300 shadow-sm border border-slate-100 dark:border-white/5" :class="[app.color, app.status === 'online' ? 'group-hover:scale-110 group-hover:rotate-3' : '']">
+                                            <i :class="app.icon"></i>
+                                        </div>
+                                        
+                                        <h3 class="font-bold text-slate-800 dark:text-white text-sm leading-tight line-clamp-2 w-full">{{ app.title }}</h3>
+                                        <p class="text-[10px] font-bold mt-2 uppercase tracking-widest px-2 py-1 rounded-md bg-slate-50 dark:bg-dark-base border border-slate-100 dark:border-white/5" :class="app.status === 'online' ? 'text-slate-500' : (app.status === 'maintenance' ? 'text-amber-500' : 'text-rose-500')">
+                                            {{ app.status === 'online' ? getCategoryLabel(app.category) : app.status }}
+                                        </p>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <button @click="showAnnouncementForm()" class="px-3 md:px-4 py-2 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 hover:bg-amber-200 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition">
-                                            <i class="ph-bold ph-megaphone"></i> <span class="hidden sm:inline">Pengumuman</span>
-                                        </button>
-                                        <button @click="showAppForm()" class="px-3 md:px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2 transition">
-                                            <i class="ph-bold ph-plus"></i> <span class="hidden sm:inline">Tambah App</span>
-                                        </button>
+                                </transition-group>
+
+                                <!-- Empty State -->
+                                <div v-if="filteredApps.length === 0 && !state.isAppLoading" class="flex flex-col items-center justify-center py-24 text-center">
+                                    <div class="w-24 h-24 mb-6 rounded-full bg-slate-100 dark:bg-dark-panel border border-slate-200 dark:border-dark-border flex items-center justify-center shadow-inner">
+                                        <i class="ph-duotone ph-magnifying-glass text-4xl text-slate-400"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-black text-slate-800 dark:text-slate-100">Modul Tidak Ditemukan</h3>
+                                    <p class="text-slate-500 font-medium mt-2 max-w-sm">Periksa kembali kata kunci pencarian Anda atau reset filter kategori ke "Semua Layanan".</p>
+                                    <button @click="clearFilters" class="mt-8 px-8 py-3 bg-slate-900 text-white dark:bg-white dark:text-slate-900 rounded-xl font-bold transition-all active:scale-95 shadow-lg">Bersihkan Filter</button>
+                                </div>
+                            </template>
+
+                            <!-- ========================================== -->
+                            <!-- VIEW 2: DASHBOARD (ADMIN)                  -->
+                            <!-- ========================================== -->
+                            <template v-if="state.currentRoute === 'dashboard'">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-slate-200 dark:border-dark-border shadow-sm flex items-center gap-4">
+                                        <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-900/20 dark:text-brand-400 flex items-center justify-center text-2xl border border-brand-100 dark:border-brand-500/20"><i class="ph-fill ph-app-window"></i></div>
+                                        <div><p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Total App</p><p class="text-2xl font-black text-slate-900 dark:text-white leading-none mt-1">{{ totalAppsCount }}</p></div>
+                                    </div>
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-slate-200 dark:border-dark-border shadow-sm flex items-center gap-4">
+                                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400 flex items-center justify-center text-2xl border border-emerald-100 dark:border-emerald-500/20"><i class="ph-fill ph-check-circle"></i></div>
+                                        <div><p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Online</p><p class="text-2xl font-black text-slate-900 dark:text-white leading-none mt-1">{{ onlineAppsCount }}</p></div>
+                                    </div>
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-slate-200 dark:border-dark-border shadow-sm flex items-center gap-4">
+                                        <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400 flex items-center justify-center text-2xl border border-amber-100 dark:border-amber-500/20"><i class="ph-fill ph-wrench"></i></div>
+                                        <div><p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Maintenance</p><p class="text-2xl font-black text-slate-900 dark:text-white leading-none mt-1">{{ appsData.filter(a => a.status==='maintenance').length }}</p></div>
+                                    </div>
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-slate-200 dark:border-dark-border shadow-sm flex items-center gap-4">
+                                        <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400 flex items-center justify-center text-2xl border border-rose-100 dark:border-rose-500/20"><i class="ph-fill ph-wifi-slash"></i></div>
+                                        <div><p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Offline</p><p class="text-2xl font-black text-slate-900 dark:text-white leading-none mt-1">{{ appsData.filter(a => a.status==='offline').length }}</p></div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
-                                    <div v-for="app in appsData" :key="app.id" class="bg-white dark:bg-dark-base rounded-xl p-3 border border-gray-100 dark:border-dark-border shadow-sm flex justify-between items-start gap-2">
-                                        <div class="flex gap-3 flex-1">
-                                            <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0" :class="app.color"><i :class="app.icon"></i></div>
-                                            <div class="flex-1 min-w-0">
-                                                <h4 class="font-bold text-sm truncate">{{ app.title }}</h4>
-                                                <div class="flex gap-2 text-[10px] font-semibold mt-1">
-                                                    <span class="bg-gray-100 dark:bg-dark-hover px-2 py-0.5 rounded-full">{{ getCategoryLabel(app.category) }}</span>
-                                                    <span :class="{'text-emerald-600': app.status === 'online', 'text-amber-600': app.status === 'maintenance', 'text-rose-500': app.status === 'offline'}" class="capitalize">{{ app.status }}</span>
+                                
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-slate-200 dark:border-dark-border shadow-sm">
+                                        <h3 class="font-bold text-lg mb-6 flex items-center gap-2"><i class="ph-fill ph-chart-bar text-brand-500"></i> Distribusi Kategori</h3>
+                                        <div class="relative h-64 w-full flex items-center justify-center">
+                                            <canvas id="categoryChart"></canvas>
+                                            <div v-if="appsData.length === 0" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-dark-panel/80 backdrop-blur-sm z-10"><span class="font-bold text-slate-400">Belum ada data</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-6 border border-slate-200 dark:border-dark-border shadow-sm">
+                                        <h3 class="font-bold text-lg mb-6 flex items-center gap-2"><i class="ph-fill ph-chart-donut text-brand-500"></i> Status Sistem</h3>
+                                        <div class="relative h-64 w-full flex items-center justify-center">
+                                            <canvas id="statusChart"></canvas>
+                                            <div v-if="appsData.length === 0" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-dark-panel/80 backdrop-blur-sm z-10"><span class="font-bold text-slate-400">Belum ada data</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- ========================================== -->
+                            <!-- VIEW 3: DATA MASTER (ADMIN)                -->
+                            <!-- ========================================== -->
+                            <template v-if="state.currentRoute === 'datamaster'">
+                                <div class="bg-white dark:bg-dark-panel rounded-3xl p-1 border border-slate-200 dark:border-dark-border shadow-sm flex flex-col min-h-[600px] relative">
+                                    
+                                    <div v-if="state.isOffline" class="absolute inset-0 z-10 bg-white/60 dark:bg-dark-base/60 backdrop-blur-sm rounded-3xl flex items-center justify-center">
+                                        <div class="bg-rose-600 text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-2xl flex items-center gap-3"><i class="ph-bold ph-wifi-slash text-xl"></i> Mode Offline: Editing Disabled</div>
+                                    </div>
+
+                                    <!-- Toolbar -->
+                                    <div class="p-5 border-b border-slate-200 dark:border-dark-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                        <div>
+                                            <h3 class="text-lg font-black text-slate-900 dark:text-white">Registry Layanan</h3>
+                                            <p class="text-xs font-medium text-slate-500 mt-1">Kelola endpoint, status, dan visibilitas aplikasi.</p>
+                                        </div>
+                                        <button @click="showAppForm()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 active:scale-95 text-white rounded-xl text-sm font-bold shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2">
+                                            <i class="ph-bold ph-plus"></i> Tambah Layanan Baru
+                                        </button>
+                                    </div>
+
+                                    <!-- Data List -->
+                                    <div class="flex-1 p-5 overflow-y-auto space-y-3 custom-scrollbar">
+                                        <!-- Empty State -->
+                                        <div v-if="filteredApps.length === 0" class="flex flex-col items-center justify-center h-64 text-center">
+                                            <i class="ph-duotone ph-database text-4xl text-slate-300 dark:text-slate-600 mb-4"></i>
+                                            <p class="font-bold text-slate-500">Tidak ada layanan yang terdaftar.</p>
+                                        </div>
+
+                                        <!-- Items -->
+                                        <div v-for="app in filteredApps" :key="app.id" class="group bg-slate-50 dark:bg-dark-base hover:bg-slate-100 dark:hover:bg-[#151b2b] rounded-2xl p-4 border border-slate-200/60 dark:border-dark-border transition-colors flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                            <div class="flex gap-4 flex-1 min-w-0">
+                                                <div class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl shrink-0 shadow-sm border border-black/5 dark:border-white/5" :class="app.color">
+                                                    <i :class="app.icon"></i>
+                                                </div>
+                                                <div class="flex-1 min-w-0 flex flex-col justify-center">
+                                                    <div class="flex items-center gap-2 mb-1">
+                                                        <h4 class="font-bold text-base text-slate-900 dark:text-white truncate">{{ app.title }}</h4>
+                                                        <span class="shrink-0 px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider" :class="{'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400': app.status==='online', 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400': app.status==='maintenance', 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400': app.status==='offline'}">{{ app.status }}</span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{{ app.id }}</span>
+                                                        <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                                                        <span class="text-[11px] font-medium text-slate-500 truncate">{{ getCategoryLabel(app.category) }}</span>
+                                                        <span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 hidden sm:block"></span>
+                                                        <span class="text-[11px] font-medium text-slate-400 truncate hidden sm:block">{{ app.url }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-5 border-t border-slate-200 dark:border-dark-border pt-4 sm:border-0 sm:pt-0">
+                                                <!-- Custom Toggle -->
+                                                <label class="relative inline-flex items-center cursor-pointer group/toggle">
+                                                    <input type="checkbox" :checked="app.isActive" @change="toggleAppVisibility(app.id)" class="sr-only peer">
+                                                    <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 rounded-full peer-checked:bg-brand-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5 peer-checked:after:border-white shadow-inner"></div>
+                                                    <span class="ml-2.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest w-12">{{ app.isActive ? 'Visible' : 'Hidden' }}</span>
+                                                </label>
+                                                
+                                                <div class="flex gap-2">
+                                                    <button @click="showAppForm(app)" class="w-10 h-10 rounded-xl bg-white dark:bg-dark-panel text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-dark-border hover:border-brand-300 hover:text-brand-600 dark:hover:border-brand-500/50 dark:hover:text-brand-400 active:scale-90 transition-all flex items-center justify-center shadow-sm"><i class="ph-bold ph-pencil-simple text-base"></i></button>
+                                                    <button @click="deleteApp(app.id)" class="w-10 h-10 rounded-xl bg-white dark:bg-dark-panel text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-dark-border hover:border-rose-300 hover:text-rose-600 dark:hover:border-rose-500/50 dark:hover:text-rose-400 active:scale-90 transition-all flex items-center justify-center shadow-sm"><i class="ph-bold ph-trash text-base"></i></button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex flex-col items-end gap-2">
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" :checked="app.isActive" @change="toggleAppVisibility(app.id)" class="sr-only peer">
-                                                <div class="w-9 h-5 bg-gray-300 rounded-full peer-checked:bg-brand-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
-                                            </label>
-                                            <div class="flex gap-1">
-                                                <button @click="showAppForm(app)" class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-900/20 flex items-center justify-center"><i class="ph-bold ph-pencil-simple text-xs"></i></button>
-                                                <button @click="deleteApp(app.id)" class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-900/20 flex items-center justify-center"><i class="ph-bold ph-trash text-xs"></i></button>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- ========================================== -->
+                            <!-- VIEW 4: TELEMETRY (ADMIN)                  -->
+                            <!-- ========================================== -->
+                            <template v-if="state.currentRoute === 'telemetry'">
+                                <div class="bg-[#0A0D14] rounded-3xl p-1 border border-slate-800 shadow-2xl flex flex-col min-h-[600px] relative font-mono text-slate-300">
+                                    <div v-if="state.isOffline" class="absolute inset-0 z-10 bg-[#0A0D14]/80 backdrop-blur-sm rounded-3xl flex items-center justify-center">
+                                        <div class="bg-rose-600 text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-2xl font-sans"><i class="ph-bold ph-wifi-slash mr-2"></i> Terminal Offline</div>
+                                    </div>
+                                    
+                                    <div class="p-5 border-b border-slate-800 flex items-center justify-between shrink-0 bg-[#0f121a] rounded-t-[22px]">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex gap-1.5">
+                                                <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                                                <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                                                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                            </div>
+                                            <h3 class="font-bold text-sm text-white tracking-widest uppercase ml-2"><i class="ph-fill ph-terminal-window text-emerald-400 mr-2"></i> Server Telemetry</h3>
+                                        </div>
+                                        <button @click="clearTelemetryLogs" class="text-[10px] font-bold px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg active:scale-95 transition border border-slate-700 uppercase tracking-widest font-sans">Clear Logs</button>
+                                    </div>
+                                    
+                                    <div class="flex-1 p-6 overflow-y-auto relative custom-scrollbar">
+                                        <!-- Empty State -->
+                                        <div v-if="systemLogs.length === 0" class="flex flex-col items-center justify-center h-full text-center opacity-30">
+                                            <i class="ph-duotone ph-check-circle text-5xl mb-3"></i>
+                                            <span class="text-xs uppercase tracking-widest font-bold">Logs Empty / Cleared</span>
+                                        </div>
+                                        
+                                        <div class="space-y-4">
+                                            <div v-for="(log, idx) in systemLogs.slice(0, 50)" :key="idx" class="relative pl-6 group">
+                                                <div class="absolute left-[7px] top-4 bottom-[-16px] w-[1px] bg-slate-800 group-last:hidden"></div>
+                                                <div class="absolute left-0 top-1.5 w-3.5 h-3.5 rounded-full bg-[#0A0D14] border-2 border-emerald-500 z-10 shadow-[0_0_10px_rgba(16,185,129,0.3)]"></div>
+                                                
+                                                <div class="bg-slate-800/20 rounded-xl p-4 border border-slate-800/50 hover:border-slate-700 transition-colors hover:bg-slate-800/40">
+                                                    <div class="flex justify-between items-start mb-2">
+                                                        <span class="font-bold text-xs text-emerald-400 uppercase tracking-wider">{{ log.action }}</span>
+                                                        <span class="text-[10px] text-slate-500 bg-black/30 px-2 py-0.5 rounded">{{ log.timestamp }}</span>
+                                                    </div>
+                                                    <p class="text-sm leading-relaxed text-slate-300 font-medium">{{ log.details }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <!-- Telemetry Logs -->
-                            <div class="glass-modern rounded-3xl p-5 border border-gray-200 dark:border-dark-border flex flex-col relative">
-                                <div v-if="state.isOffline" class="absolute inset-0 z-10 bg-white/50 dark:bg-dark-base/50 backdrop-blur-[2px] rounded-3xl"></div>
-                                <div class="flex items-center justify-between mb-4">
-                                    <h3 class="font-black flex items-center gap-2"><i class="ph-bold ph-activity"></i> Aktivitas Server</h3>
-                                    <button @click="clearTelemetryLogs" class="text-xs font-semibold px-3 py-1.5 bg-gray-200 dark:bg-dark-hover rounded-full hover:bg-gray-300 transition">Bersihkan Log</button>
-                                </div>
-                                <div class="flex-1 overflow-y-auto space-y-3 max-h-80 pr-1">
-                                    <div v-if="systemLogs.length === 0" class="text-center py-8 text-gray-400 text-sm flex flex-col items-center gap-2">
-                                        <i class="ph-fill ph-check-circle text-2xl"></i>
-                                        <span>Tidak ada log terbaru</span>
-                                    </div>
-                                    <div v-for="(log, idx) in systemLogs.slice(0, 30)" :key="idx" class="text-xs p-3 rounded-xl bg-gray-50 dark:bg-dark-hover border-l-4 border-brand-300">
-                                        <div class="flex justify-between items-start">
-                                            <span class="font-mono text-[10px] text-gray-400">{{ log.timestamp }}</span>
-                                            <span class="font-bold text-brand-600 dark:text-brand-400">{{ log.action }}</span>
+                            </template>
+
+                            <!-- ========================================== -->
+                            <!-- VIEW 5: SETTINGS (ADMIN)                   -->
+                            <!-- ========================================== -->
+                            <template v-if="state.currentRoute === 'settings'">
+                                <div class="max-w-2xl">
+                                    <div class="bg-white dark:bg-dark-panel rounded-3xl p-8 border border-slate-200 dark:border-dark-border shadow-sm">
+                                        <div class="flex items-center gap-4 mb-8">
+                                            <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl border border-indigo-100 dark:border-indigo-500/20">
+                                                <i class="ph-fill ph-megaphone"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-xl font-black text-slate-900 dark:text-white">Global Announcement</h3>
+                                                <p class="text-xs font-medium text-slate-500 mt-1">Siarkan pesan ke seluruh pengguna aktif EduPortal.</p>
+                                            </div>
                                         </div>
-                                        <p class="text-gray-600 dark:text-gray-300 mt-1 break-words">{{ log.details }}</p>
+
+                                        <div class="space-y-6">
+                                            <label class="relative flex items-center justify-between cursor-pointer p-5 border border-slate-200 dark:border-dark-border rounded-2xl bg-slate-50 dark:bg-dark-base active:scale-[0.99] transition-transform">
+                                                <div class="flex flex-col">
+                                                    <span class="text-sm font-bold text-slate-900 dark:text-white">Aktifkan Buletin</span>
+                                                    <span class="text-[11px] text-slate-500 font-medium mt-1">Tampilkan banner berjalan di atas aplikasi.</span>
+                                                </div>
+                                                <input type="checkbox" v-model="state.announcement.globalActive" class="sr-only peer">
+                                                <div class="toggle-bg w-14 h-8 bg-slate-300 dark:bg-slate-700 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out relative">
+                                                    <div class="toggle-dot absolute left-0 top-0 w-7 h-7 bg-white rounded-full shadow transition-transform duration-200 ease-in-out"></div>
+                                                </div>
+                                            </label>
+
+                                            <div>
+                                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest">Teks Pengumuman</label>
+                                                <textarea v-model="state.announcement.text" class="w-full bg-slate-50 dark:bg-dark-base border border-slate-200 dark:border-dark-border rounded-2xl p-4 text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-brand-500/50 outline-none transition-all resize-none" rows="4" placeholder="Ketik informasi penting di sini..."></textarea>
+                                            </div>
+
+                                            <button @click="saveSettings" class="w-full py-4 bg-brand-600 hover:bg-brand-500 active:scale-[0.98] text-white rounded-2xl text-sm font-bold shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2">
+                                                <i class="ph-bold ph-floppy-disk"></i> Simpan Konfigurasi
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="mt-3 pt-3 border-t border-gray-200 dark:border-dark-border text-[11px] text-gray-400 flex justify-between">
-                                    <span>Total events: {{ systemLogs.length }}</span>
-                                    <i class="ph-bold ph-shield-check"></i>
-                                </div>
-                            </div>
+                            </template>
+                            
                         </div>
-                    </template>
-                </div>
-            </main>
-            
-            <!-- Bottom Navigation Mobile -->
-            <div class="md:hidden fixed bottom-4 left-4 right-4 z-40 glass-modern rounded-2xl shadow-xl flex justify-around items-center p-2 backdrop-blur-xl">
-                <button @click="state.currentView = 'public'" class="flex flex-col items-center py-1 px-3 rounded-xl transition-colors" :class="state.currentView === 'public' ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' : 'text-gray-500'">
-                    <i class="ph-fill ph-compass text-xl"></i>
-                    <span class="text-[10px] font-bold">Jelajah</span>
-                </button>
-                <button @click="toggleTheme" class="flex flex-col items-center py-1 px-3 rounded-xl text-gray-500">
-                    <i class="ph-fill text-xl" :class="state.isDark ? 'ph-sun' : 'ph-moon'"></i>
-                    <span class="text-[10px] font-bold">Tema</span>
-                </button>
-                <button v-if="state.isAdmin" @click="state.currentView = 'admin'" class="flex flex-col items-center py-1 px-3 rounded-xl transition-colors" :class="state.currentView === 'admin' ? 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' : 'text-gray-500'">
-                    <i class="ph-fill ph-gauge text-xl"></i>
-                    <span class="text-[10px] font-bold">Kontrol</span>
-                </button>
-                <button @click="handleAdminAction" class="flex flex-col items-center py-1 px-3 rounded-xl" :class="state.isAdmin ? 'text-rose-500' : 'text-gray-500'">
-                    <i class="ph-fill text-xl" :class="state.isAdmin ? 'ph-sign-out' : 'ph-shield'"></i>
-                    <span class="text-[10px] font-bold">{{ state.isAdmin ? 'Keluar' : 'Admin' }}</span>
-                </button>
+                    </transition>
+                </main>
             </div>
         </div>
-        
-        <!-- IFRAME MODAL Fullscreen -->
+
+        <!-- OMNI-IFRAME MODAL (FULL SCREEN Z-Index: 900) -->
         <transition name="fade">
-            <div v-if="state.activeIframeUrl" class="fixed inset-0 bg-white dark:bg-dark-base z-50 flex flex-col">
-                <div class="bg-white/95 dark:bg-dark-panel/95 backdrop-blur-sm px-3 py-2 flex items-center justify-between border-b border-gray-200 dark:border-dark-border shrink-0">
-                    <button @click="closeIframe" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-dark-hover"><i class="ph-bold ph-x text-xl"></i></button>
-                    <div class="flex items-center gap-2 truncate max-w-[60%]">
-                        <i v-if="!state.isOffline" class="ph-fill ph-lock-key text-emerald-500 text-xs"></i>
-                        <i v-else class="ph-bold ph-wifi-slash text-rose-500 text-xs"></i>
-                        <span class="font-semibold text-sm truncate">{{ state.activeIframeTitle }}</span>
+            <div v-if="state.activeIframeUrl" class="fixed inset-0 bg-dark-base z-[900] flex flex-col">
+                <!-- Mac-OS Style Toolbar -->
+                <div class="bg-white dark:bg-[#111827] px-4 py-3 flex items-center justify-between border-b border-slate-200 dark:border-dark-border shrink-0 select-none shadow-md relative z-10">
+                    <div class="flex items-center gap-4 flex-1">
+                        <!-- Window Controls -->
+                        <div class="flex gap-2.5">
+                            <button @click="closeIframe" class="w-3.5 h-3.5 rounded-full bg-rose-500 hover:bg-rose-600 active:scale-90 transition-all flex items-center justify-center group" title="Tutup">
+                                <i class="ph-bold ph-x text-[8px] text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </button>
+                            <button @click="refreshIframe" class="w-3.5 h-3.5 rounded-full bg-amber-500 hover:bg-amber-600 active:scale-90 transition-all flex items-center justify-center group" title="Muat Ulang">
+                                <i class="ph-bold ph-arrow-clockwise text-[8px] text-white opacity-0 group-hover:opacity-100 transition-opacity" :class="{'animate-spin opacity-100': state.isIframeLoading}"></i>
+                            </button>
+                            <button @click="openExternal" class="w-3.5 h-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 active:scale-90 transition-all flex items-center justify-center group" title="Buka di Tab Baru">
+                                <i class="ph-bold ph-arrows-out text-[8px] text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- URL Bar Mockup -->
+                        <div class="flex-1 max-w-2xl mx-auto hidden sm:flex items-center justify-center">
+                            <div class="bg-slate-100 dark:bg-dark-base border border-slate-200 dark:border-dark-border rounded-lg px-4 py-1.5 flex items-center gap-2 w-full max-w-md justify-center text-xs font-semibold text-slate-500 shadow-inner">
+                                <i v-if="!state.isOffline" class="ph-fill ph-lock-key text-emerald-500"></i>
+                                <i v-else class="ph-bold ph-wifi-slash text-rose-500"></i>
+                                <span class="truncate">{{ state.activeIframeTitle }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex gap-1">
-                        <button @click="refreshIframe" class="w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-dark-hover"><i class="ph-bold ph-arrows-clockwise" :class="{'animate-spin': state.isIframeLoading}"></i></button>
-                        <button @click="openExternal" class="w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-dark-hover"><i class="ph-bold ph-arrow-square-out"></i></button>
+                    
+                    <!-- Mobile Fallback Title -->
+                    <div class="sm:hidden flex items-center gap-1.5 truncate text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <i v-if="!state.isOffline" class="ph-fill ph-lock-key text-emerald-500"></i>
+                        <span class="truncate">{{ state.activeIframeTitle }}</span>
                     </div>
                 </div>
-                <div class="relative flex-1 bg-gray-50 dark:bg-dark-base">
-                    <div v-if="state.isOffline" class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-dark-base z-20">
-                        <i class="ph-duotone ph-wifi-slash text-6xl text-gray-400 mb-4"></i>
-                        <h2 class="text-xl font-bold">Koneksi Terputus</h2>
-                        <p class="text-sm text-gray-500 mt-2">Aplikasi ini memerlukan internet untuk dimuat.</p>
-                        <button @click="closeIframe" class="mt-6 px-6 py-2 bg-brand-600 text-white rounded-xl font-bold">Kembali ke Beranda</button>
+                
+                <div class="relative flex-1 bg-slate-50 dark:bg-dark-base">
+                    <!-- Loading Overlay -->
+                    <transition name="fade">
+                        <div v-if="state.isIframeLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/90 dark:bg-dark-base/90 backdrop-blur-md z-10">
+                            <div class="w-16 h-16 border-4 border-slate-200 dark:border-dark-border border-t-brand-500 rounded-full animate-spin mb-6"></div>
+                            <h3 class="text-xl font-black text-slate-800 dark:text-white">Menyambungkan Secure Gateway...</h3>
+                            <p class="mt-2 text-sm text-slate-500 max-w-sm mx-auto text-center font-medium">
+                                Membangun koneksi ke <span class="text-brand-500 font-bold">{{ state.activeIframeTitle }}</span>.
+                            </p>
+                        </div>
+                    </transition>
+                    
+                    <!-- Offline Block -->
+                    <div v-if="state.isOffline" class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-dark-panel z-20">
+                        <div class="w-24 h-24 rounded-full bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center mb-6">
+                            <i class="ph-duotone ph-wifi-slash text-5xl text-rose-500"></i>
+                        </div>
+                        <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Koneksi Terputus</h2>
+                        <p class="text-base font-medium text-slate-500">Layanan ini membutuhkan akses internet aktif.</p>
+                        <button @click="closeIframe" class="mt-8 px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold active:scale-95 transition-transform text-sm shadow-xl">Tutup Layanan</button>
                     </div>
-                    <div v-else-if="state.isIframeLoading" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-dark-base/80 z-10"><i class="ph-duotone ph-spinner-gap animate-spin text-4xl text-brand-500"></i></div>
-                    <iframe v-if="!state.isOffline" ref="appIframe" v-show="!state.isIframeLoading" :src="state.activeIframeUrl" @load="iframeLoaded" class="w-full h-full border-0" allow="fullscreen; autoplay; clipboard-write"></iframe>
+                    
+                    <iframe v-if="!state.isOffline" ref="appIframe" v-show="!state.isIframeLoading" :src="state.activeIframeUrl" @load="iframeLoaded" class="w-full h-full border-0" allow="fullscreen; autoplay; clipboard-write; camera; microphone"></iframe>
                 </div>
             </div>
         </transition>
+
     </div>
     
+    <!-- PWA INJECTOR -->
     <script>
-        // ============================================================
-        // [PWA INJECTOR] DYNAMIC MANIFEST & SERVICE WORKER GENERATOR
-        // ============================================================
         (function injectPWA() {
             const manifest = {
-                name: "EduPortal Enterprise", short_name: "EduPortal", start_url: ".", display: "standalone",
-                background_color: "#fafcff", theme_color: "#4f46e5",
-                icons: [{ src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'%3E%3Cpath d='M12 2L1 7l11 5 9-4.09V17h2V7L12 2z'/%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" }]
+                name: "EduPortal Enterprise v5", short_name: "EduPortal", start_url: ".", display: "standalone",
+                background_color: "#0B0F19", theme_color: "#7c3aed",
+                icons: [{ src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237c3aed'%3E%3Cpath d='M12 2L1 7l11 5 9-4.09V17h2V7L12 2z'/%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" }]
             };
             const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
             document.head.insertAdjacentHTML('beforeend', `<link rel="manifest" href="${URL.createObjectURL(manifestBlob)}">`);
 
             if ('serviceWorker' in navigator) {
                 const swCode = `
-                    const CACHE_NAME = 'eduportal-v3-cache';
+                    const CACHE_NAME = 'eduportal-v5.0-cache';
                     self.addEventListener('install', e => self.skipWaiting());
-                    self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+                    self.addEventListener('activate', e => {
+                        e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))));
+                        self.clients.claim();
+                    });
                     self.addEventListener('fetch', e => {
-                        if (e.request.url.includes('google.com') || e.request.url.includes('script.google')) return; 
-                        e.respondWith(caches.match(e.request).then(res => res || fetch(e.request).then(newRes => {
-                            if (e.request.method === 'GET') { const resClone = newRes.clone(); caches.open(CACHE_NAME).then(c => c.put(e.request, resClone)); }
-                            return newRes;
-                        }).catch(() => new Response('Offline'))));
+                        if (e.request.method !== 'GET' || e.request.url.includes('script.google')) return; 
+                        e.respondWith(
+                            fetch(e.request).then(res => {
+                                const clone = res.clone();
+                                caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+                                return res;
+                            }).catch(() => caches.match(e.request)) 
+                        );
                     });
                 `;
                 const swBlob = new Blob([swCode], {type: 'application/javascript'});
-                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.warn('PWA SW Init Failed:', err));
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.warn('PWA Init Failed:', err));
             }
         })();
+    </script>
 
-        // ============================================================
-        // VUE APP Core
-        // ============================================================
-        const { createApp, ref, reactive, computed, onMounted, onUnmounted } = Vue;
+    <!-- OMNI-SPA VUE 3 CORE (THE BRAIN) -->
+    <script>
+        const { createApp, ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } = Vue;
         
-        // KONFIGURASI BACKEND - URL DEPLOYMENT GAS 
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzuuSAFxDEYbdeMQW4TYbzdDyuA9SMDMXKjtUSEtp_d7jfBi1URoa2FZyg6qN_090dl/exec";
+        // GAS API ENDPOINT - JANGAN DIUBAH!
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzuX4VlyjjAlJqDwOe5mZqk7KT0UoHrI9QQmty9XKMRzmMwUJLZKmF7sMFM9dPJ8tjP/exec";
         
         createApp({
             setup() {
+                // 1. GLOBAL APP STATE
                 const state = reactive({
                     isAppLoading: true,
                     isSyncing: false,
                     isDark: false,
                     isAdmin: false,
-                    currentView: 'public',
+                    sidebarOpen: window.innerWidth > 1024,
+                    currentRoute: 'portal',
                     activeIframeUrl: null,
                     activeIframeTitle: '',
                     isIframeLoading: false,
                     isOffline: !navigator.onLine,
-                    announcement: { 
-                        text: '', 
-                        globalActive: false, // Menyimpan status asli/global dari server
-                        isVisible: false     // Menyimpan status tampilan di layar user saat ini
-                    } 
+                    announcement: { text: '', globalActive: false, isVisible: false } 
                 });
                 
+                // DATA STORE
                 const appsData = ref([]);
                 const systemLogs = ref([]);
                 const appIframe = ref(null);
                 const searchQuery = ref('');
                 const activeCategory = ref('all');
                 
+                let chartInstances = { category: null, status: null };
+
                 const categories = [
                     { id: 'all', name: 'Semua Layanan' },
                     { id: 'acad', name: 'Akademik' },
@@ -581,6 +785,7 @@
                     { id: 'general', name: 'Fasilitas & Umum' }
                 ];
                 
+                // COMPUTED PROPERTIES
                 const getCategoryLabel = (id) => categories.find(c => c.id === id)?.name || id;
                 const getCategoryCount = (catId) => appsData.value.filter(a => a.isActive && a.category === catId).length;
                 
@@ -602,17 +807,88 @@
                         const matchSearch = app.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
                                           (app.desc || '').toLowerCase().includes(searchQuery.value.toLowerCase());
                         const matchCategory = activeCategory.value === 'all' || app.category === activeCategory.value;
-                        return isVisible && matchSearch && matchCategory;
+                        return (state.currentRoute === 'datamaster' ? true : isVisible) && matchSearch && matchCategory;
                     });
                 });
+
+                const getRouteTitle = (route) => {
+                    const titles = { 'portal': 'Layanan', 'dashboard': 'Command Center', 'datamaster': 'Data Aplikasi', 'telemetry': 'System Logs', 'settings': 'Pengaturan Global' };
+                    return titles[route] || '';
+                };
                 
-                // ========== API INTEGRATION DENGAN OFFLINE FALLBACK ==========
-                const fetchAPI = async (action, payload = {}) => {
-                    if (GAS_API_URL.includes("ISI_DENGAN") || GAS_API_URL === "") {
-                        console.warn("⚠️ GAS_API_URL belum dikonfigurasi");
-                        return { success: false, data: null, error: "Backend URL belum diset" };
+                // ROUTING ENGINE
+                const navigateTo = (route) => {
+                    // Proteksi Admin Routes
+                    const protectedRoutes = ['dashboard', 'datamaster', 'telemetry', 'settings'];
+                    if (protectedRoutes.includes(route) && !state.isAdmin) {
+                        handleAdminAction(route);
+                        return;
                     }
                     
+                    state.currentRoute = route;
+                    if(window.innerWidth < 1024) state.sidebarOpen = false;
+                    
+                    // Render Chart jika ke Dashboard
+                    if (route === 'dashboard') {
+                        nextTick(() => renderCharts());
+                    }
+                };
+
+                // CHART.JS INTEGRATION (Dengan Optimasi Memori)
+                const renderCharts = () => {
+                    if (chartInstances.category) { chartInstances.category.destroy(); chartInstances.category = null; }
+                    if (chartInstances.status) { chartInstances.status.destroy(); chartInstances.status = null; }
+
+                    const isDark = state.isDark;
+                    const textColor = isDark ? '#f8fafc' : '#0f172a';
+                    const gridColor = isDark ? '#1F2937' : '#e2e8f0';
+
+                    Chart.defaults.font.family = '"Outfit", sans-serif';
+                    Chart.defaults.color = textColor;
+
+                    // Kategori Chart (Bar)
+                    const catCtx = document.getElementById('categoryChart');
+                    if(catCtx) {
+                        const catCounts = categories.filter(c => c.id !== 'all').map(c => getCategoryCount(c.id));
+                        const catLabels = categories.filter(c => c.id !== 'all').map(c => c.name);
+                        
+                        chartInstances.category = new Chart(catCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: catLabels,
+                                datasets: [{ label: 'Total Aplikasi', data: catCounts, backgroundColor: '#8b5cf6', borderRadius: 8 }]
+                            },
+                            options: {
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: { 
+                                    y: { beginAtZero: true, grid: { color: gridColor }, ticks: { precision: 0 } },
+                                    x: { grid: { display: false } }
+                                }
+                            }
+                        });
+                    }
+
+                    // Status Chart (Doughnut)
+                    const statCtx = document.getElementById('statusChart');
+                    if(statCtx) {
+                        const online = appsData.value.filter(a => a.status === 'online').length;
+                        const main = appsData.value.filter(a => a.status === 'maintenance').length;
+                        const off = appsData.value.filter(a => a.status === 'offline').length;
+
+                        chartInstances.status = new Chart(statCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Online', 'Maintenance', 'Offline'],
+                                datasets: [{ data: [online, main, off], backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'], borderWidth: 0, hoverOffset: 4 }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom' } } }
+                        });
+                    }
+                };
+                
+                // API COMMUNICATION LAYER (ZERO REGRESSION)
+                const fetchAPI = async (action, payload = {}) => {
                     if (!navigator.onLine) {
                         if (action === 'GET_APPS') {
                             const cachedApps = localStorage.getItem('eduportal_offline_apps');
@@ -626,7 +902,7 @@
                     }
 
                     try {
-                        const token = localStorage.getItem('eduportal_admin_token') || "";
+                        const token = sessionStorage.getItem('eduportal_admin_token') || "";
                         const response = await fetch(GAS_API_URL, {
                             method: 'POST',
                             headers: { 'Content-Type': 'text/plain' },
@@ -636,7 +912,6 @@
                         
                         if (!result.success) throw new Error(result.error || "Unknown error");
                         
-                        // Caching
                         if (action === 'GET_APPS' && result.data) localStorage.setItem('eduportal_offline_apps', JSON.stringify(result.data));
                         if (action === 'GET_CONFIG' && result.data) localStorage.setItem('eduportal_offline_config', JSON.stringify(result.data));
                         
@@ -653,15 +928,12 @@
                 const loadDatabase = async () => {
                     if (!state.isAppLoading) state.isSyncing = true;
                     
-                    // 1. Load System Config (Pengumuman)
                     const configRes = await fetchAPI('GET_CONFIG');
                     if (configRes.success && configRes.data) {
                         state.announcement.text = configRes.data.announcement;
                         state.announcement.globalActive = configRes.data.isAnncActive;
 
-                        // SMART DISMISS LOGIC: Cek memori browser
                         const dismissedText = localStorage.getItem('eduportal_dismissed_annc');
-                        // Hanya tampilkan jika aktif global DAN teks pengumuman belum pernah ditutup oleh user ini
                         if (state.announcement.globalActive && state.announcement.text !== dismissedText) {
                             state.announcement.isVisible = true;
                         } else {
@@ -669,35 +941,31 @@
                         }
                     }
 
-                    // 2. Load Apps
                     const appsRes = await fetchAPI('GET_APPS');
                     if (appsRes.success && appsRes.data) {
                         appsData.value = appsRes.data;
+                        if(state.currentRoute === 'dashboard') renderCharts();
                     }
                     
-                    // 3. Load Logs
                     if (state.isAdmin && navigator.onLine) {
                         const logsRes = await fetchAPI('GET_LOGS');
-                        if (logsRes.success && logsRes.data) {
-                            systemLogs.value = logsRes.data;
-                        }
+                        if (logsRes.success && logsRes.data) systemLogs.value = logsRes.data;
                     }
                     
                     state.isSyncing = false;
                     state.isAppLoading = false;
                 };
 
-                // Fungsi menutup buletin
-                const dismissAnnouncement = () => {
-                    state.announcement.isVisible = false;
-                    // Simpan teks pengumuman spesifik ini. Jika admin merubah teks, pengumuman akan muncul lagi!
-                    localStorage.setItem('eduportal_dismissed_annc', state.announcement.text);
-                };
-                
                 const writeLog = async (action, details) => {
                     if (state.isAdmin && navigator.onLine) {
                         await fetchAPI('WRITE_LOG', { actionName: action, details: details });
                     }
+                };
+
+                // UI ACTIONS
+                const dismissAnnouncement = () => {
+                    state.announcement.isVisible = false;
+                    localStorage.setItem('eduportal_dismissed_annc', state.announcement.text);
                 };
                 
                 const clearFilters = () => {
@@ -705,8 +973,7 @@
                     activeCategory.value = 'all';
                 };
                 
-                // ========== ADMIN AUTH ==========
-                const handleAdminAction = async () => {
+                const handleAdminAction = async (targetRoute = 'dashboard') => {
                     if (state.isOffline && !state.isAdmin) {
                         Swal.fire('Mode Offline Aktif', 'Tidak dapat login admin tanpa koneksi internet.', 'warning');
                         return;
@@ -714,9 +981,9 @@
 
                     if (state.isAdmin) {
                         state.isAdmin = false;
-                        state.currentView = 'public';
-                        localStorage.removeItem('eduportal_admin_auth');
-                        localStorage.removeItem('eduportal_admin_token');
+                        navigateTo('portal');
+                        sessionStorage.removeItem('eduportal_admin_auth');
+                        sessionStorage.removeItem('eduportal_admin_token');
                         await writeLog('AUTH', 'Admin logout');
                         Swal.fire({ toast: true, icon: 'success', title: 'Keluar dari mode admin', timer: 2000 });
                     } else {
@@ -737,12 +1004,12 @@
                             
                             if (res.success && res.data.isValid) {
                                 state.isAdmin = true;
-                                state.currentView = 'admin';
-                                localStorage.setItem('eduportal_admin_auth', 'true');
-                                localStorage.setItem('eduportal_admin_token', pin);
+                                sessionStorage.setItem('eduportal_admin_auth', 'true');
+                                sessionStorage.setItem('eduportal_admin_token', pin);
                                 await loadDatabase();
                                 await writeLog('AUTH', 'Admin login sukses');
-                                Swal.fire({ toast: true, icon: 'success', title: 'Mode Admin Aktif', timer: 2000 });
+                                Swal.fire({ toast: true, icon: 'success', title: 'Akses Diberikan', timer: 2000 });
+                                navigateTo(typeof targetRoute === 'string' ? targetRoute : 'dashboard');
                             } else {
                                 Swal.fire('Akses Ditolak', 'PIN Administrator tidak valid!', 'error');
                                 await writeLog('AUTH_FAIL', 'Percobaan login gagal');
@@ -751,129 +1018,68 @@
                     }
                 };
                 
-                // ========== CRUD OPERATIONS ==========
-                
-                // Form Pengaturan Pengumuman
-                const showAnnouncementForm = async () => {
-                    if (state.isOffline) return Swal.fire('Mode Offline', 'Tidak bisa mengedit data saat offline.', 'warning');
-
-                    const { value: formValues } = await Swal.fire({
-                        title: 'Pengaturan Buletin',
-                        html: `
-                            <div class="text-left mt-4 space-y-4">
-                                <label class="relative flex items-center cursor-pointer p-4 border border-gray-200 dark:border-dark-border rounded-xl bg-gray-50 dark:bg-dark-hover">
-                                    <input type="checkbox" id="f-annc-active" class="sr-only" ${state.announcement.globalActive ? 'checked' : ''}>
-                                    <div class="toggle-bg w-11 h-6 bg-gray-300 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out relative">
-                                        <div class="toggle-dot absolute left-0 top-0 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ease-in-out"></div>
-                                    </div>
-                                    <span class="ml-3 text-sm font-bold text-gray-800 dark:text-white">Tampilkan Pengumuman (Global)</span>
-                                </label>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Teks Pengumuman</label>
-                                    <textarea id="f-annc-text" class="swal2-textarea !mx-0 !w-full !mt-0" rows="3" placeholder="Ketik info pemeliharaan atau jadwal penting...">${state.announcement.text}</textarea>
-                                </div>
-                            </div>
-                        `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Simpan Info',
-                        cancelButtonText: 'Batal',
-                        preConfirm: () => {
-                            return {
-                                isAnncActive: document.getElementById('f-annc-active').checked,
-                                announcement: document.getElementById('f-annc-text').value
-                            }
-                        }
-                    });
-
-                    if (formValues) {
-                        state.isSyncing = true;
-                        const res = await fetchAPI('UPDATE_CONFIG', formValues);
-                        state.isSyncing = false;
-                        if (res.success) {
-                            state.announcement.text = formValues.announcement;
-                            state.announcement.globalActive = formValues.isAnncActive;
-                            
-                            // Jika Admin menyalakan pengumuman, paksa tampil di layar admin dan reset riwayat dismiss
-                            if (formValues.isAnncActive) {
-                                state.announcement.isVisible = true;
-                                localStorage.removeItem('eduportal_dismissed_annc');
-                            } else {
-                                state.announcement.isVisible = false;
-                            }
-                            
-                            await writeLog('CMS_UPDATE', 'Pembaruan buletin informasi global');
-                            Swal.fire({ toast: true, icon: 'success', title: 'Pengumuman disiarkan', timer: 2000 });
-                        }
-                    }
-                };
-
+                // CRUD ACTIONS
                 const showAppForm = async (app = null) => {
                     if (state.isOffline) return Swal.fire('Mode Offline', 'Tidak bisa mengedit data saat offline.', 'warning');
                     
                     const isEdit = !!app;
                     const { value: formValues } = await Swal.fire({
-                        title: isEdit ? 'Edit Aplikasi' : 'Tambah Aplikasi Baru',
+                        title: isEdit ? 'Edit Layanan' : 'Tambah Layanan Baru',
                         html: `
-                            <div class="space-y-4 text-left mt-2">
+                            <div class="space-y-4 text-left mt-2 font-sans">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Nama Aplikasi</label>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Nama Aplikasi</label>
                                     <input id="f-title" class="swal2-input !mx-0 !w-full !mt-0" placeholder="Contoh: Siakad Online" value="${app ? app.title : ''}">
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Kategori</label>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Kategori</label>
                                         <select id="f-category" class="swal2-select !mx-0 !w-full !mt-0">
                                             ${categories.filter(c => c.id !== 'all').map(c => `<option value="${c.id}" ${app && app.category === c.id ? 'selected' : ''}>${c.name}</option>`).join('')}
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Status Akses</label>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Status Akses</label>
                                         <select id="f-status" class="swal2-select !mx-0 !w-full !mt-0">
-                                            <option value="online" ${app && app.status === 'online' ? 'selected' : ''}>Online (Bisa Dibuka)</option>
-                                            <option value="maintenance" ${app && app.status === 'maintenance' ? 'selected' : ''}>Maintenance (Terkunci)</option>
-                                            <option value="offline" ${app && app.status === 'offline' ? 'selected' : ''}>Offline (Terkunci)</option>
+                                            <option value="online" ${app && app.status === 'online' ? 'selected' : ''}>Online (Buka)</option>
+                                            <option value="maintenance" ${app && app.status === 'maintenance' ? 'selected' : ''}>Maintenance</option>
+                                            <option value="offline" ${app && app.status === 'offline' ? 'selected' : ''}>Offline (Kunci)</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Icon (Phosphor)</label>
-                                    <input id="f-icon" class="swal2-input !mx-0 !w-full !mt-0" placeholder="ph-duotone ph-app-window" value="${app ? app.icon : 'ph-duotone ph-app-window'}">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Icon (Phosphor)</label>
+                                        <input id="f-icon" class="swal2-input !mx-0 !w-full !mt-0" placeholder="ph-duotone ph-app-window" value="${app ? app.icon : 'ph-duotone ph-app-window'}">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Color (Tailwind)</label>
+                                        <input id="f-color" class="swal2-input !mx-0 !w-full !mt-0" placeholder="bg-indigo-50 text-indigo-600" value="${app ? app.color : 'bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400'}">
+                                    </div>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Warna (Tailwind)</label>
-                                    <input id="f-color" class="swal2-input !mx-0 !w-full !mt-0" placeholder="bg-indigo-100 text-indigo-600" value="${app ? app.color : 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40'}">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">URL Aplikasi</label>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">URL Endpoint</label>
                                     <input id="f-url" class="swal2-input !mx-0 !w-full !mt-0" placeholder="https://" value="${app ? app.url : 'https://'}">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Deskripsi Singkat</label>
-                                    <textarea id="f-desc" class="swal2-textarea !mx-0 !w-full !mt-0" rows="2" placeholder="Deskripsi singkat">${app ? app.desc : ''}</textarea>
+                                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Deskripsi Singkat</label>
+                                    <textarea id="f-desc" class="swal2-textarea !mx-0 !w-full !mt-0" rows="2" placeholder="Deskripsi peruntukan aplikasi...">${app ? app.desc : ''}</textarea>
                                 </div>
                             </div>
                         `,
                         focusConfirm: false,
                         showCancelButton: true,
-                        confirmButtonText: isEdit ? 'Simpan Perubahan' : 'Tambah Aplikasi',
+                        confirmButtonText: isEdit ? 'Simpan Perubahan' : 'Tambah Layanan',
                         cancelButtonText: 'Batal',
-                        customClass: { popup: 'rounded-2xl' },
                         preConfirm: () => {
                             const title = document.getElementById('f-title').value;
-                            if (!title) {
-                                Swal.showValidationMessage('Nama aplikasi wajib diisi!');
-                                return false;
-                            }
+                            if (!title) { Swal.showValidationMessage('Nama aplikasi wajib diisi!'); return false; }
                             return {
                                 id: isEdit ? app.id : 'APP_' + Date.now(),
-                                title: title,
-                                category: document.getElementById('f-category').value,
-                                status: document.getElementById('f-status').value,
-                                icon: document.getElementById('f-icon').value,
-                                color: document.getElementById('f-color').value,
-                                url: document.getElementById('f-url').value,
-                                desc: document.getElementById('f-desc').value,
-                                isActive: isEdit ? app.isActive : true
+                                title: title, category: document.getElementById('f-category').value,
+                                status: document.getElementById('f-status').value, icon: document.getElementById('f-icon').value,
+                                color: document.getElementById('f-color').value, url: document.getElementById('f-url').value,
+                                desc: document.getElementById('f-desc').value, isActive: isEdit ? app.isActive : true
                             };
                         }
                     });
@@ -890,13 +1096,10 @@
                         }
                     }
                 };
-                
+
                 const deleteApp = async (appId) => {
                     if (state.isOffline) return;
-                    const result = await Swal.fire({
-                        title: 'Hapus Aplikasi?', text: "Data akan dihapus permanen dari server!", icon: 'warning',
-                        showCancelButton: true, confirmButtonText: 'Ya, Hapus!'
-                    });
+                    const result = await Swal.fire({ title: 'Hapus Layanan?', text: "Tindakan ini permanen di server!", icon: 'warning', showCancelButton: true, confirmButtonText: 'Hapus' });
                     if (result.isConfirmed) {
                         state.isSyncing = true;
                         const res = await fetchAPI('DELETE_APP', { id: appId });
@@ -908,133 +1111,106 @@
                         }
                     }
                 };
-                
+
                 const toggleAppVisibility = async (appId) => {
                     if (state.isOffline) return;
                     const app = appsData.value.find(a => a.id === appId);
                     if (app) app.isActive = !app.isActive; 
-                    
                     const res = await fetchAPI('TOGGLE_APP', { id: appId });
-                    if (!res.success) {
-                        await loadDatabase(); 
-                    } else {
-                        await writeLog('CMS_UPDATE', `Toggle visibilitas ${appId} -> ${res.data?.isActive}`);
+                    if (!res.success) await loadDatabase(); 
+                    else await writeLog('CMS_UPDATE', `Toggle visibilitas ${appId} -> ${res.data?.isActive}`);
+                };
+
+                const saveSettings = async () => {
+                    if (state.isOffline) return Swal.fire('Mode Offline', 'Tidak bisa mengedit pengaturan saat offline.', 'warning');
+                    state.isSyncing = true;
+                    const res = await fetchAPI('UPDATE_CONFIG', {
+                        isAnncActive: state.announcement.globalActive,
+                        announcement: state.announcement.text
+                    });
+                    state.isSyncing = false;
+                    if (res.success) {
+                        if (state.announcement.globalActive) {
+                            state.announcement.isVisible = true;
+                            localStorage.removeItem('eduportal_dismissed_annc');
+                        } else {
+                            state.announcement.isVisible = false;
+                        }
+                        await writeLog('CMS_UPDATE', 'Pembaruan buletin informasi global');
+                        Swal.fire({ toast: true, icon: 'success', title: 'Pengaturan Disimpan', timer: 2000 });
                     }
                 };
-                
+
                 const clearTelemetryLogs = async () => {
                     if (state.isOffline) return;
-                    const confirm = await Swal.fire({ title: 'Bersihkan Semua Log?', text: 'Aksi tidak dapat dibatalkan', icon: 'warning', showCancelButton: true });
+                    const confirm = await Swal.fire({ title: 'Bersihkan Telemetry?', text: 'Seluruh log aktivitas akan dihapus permanen.', icon: 'warning', showCancelButton: true });
                     if (confirm.isConfirmed) {
                         state.isSyncing = true;
                         const res = await fetchAPI('CLEAR_LOGS');
                         state.isSyncing = false;
                         if (res.success) {
                             systemLogs.value = [];
-                            await writeLog('SYSTEM', 'Log server dibersihkan oleh admin');
-                            Swal.fire({ toast: true, icon: 'success', title: 'Log bersih', timer: 2000 });
+                            await writeLog('SYSTEM', 'Log server dibersihkan secara manual');
+                            Swal.fire({ toast: true, icon: 'success', title: 'Telemetry bersih', timer: 2000 });
                         }
                     }
                 };
-                
-                // ========== SMART ACCESS GATEKEEPER ==========
+
+                // IFRAME HANDLERS
                 const openIframe = (app) => {
-                    if (state.isOffline) {
-                        Swal.fire({toast: true, position: 'top', icon: 'info', title: 'Mode Offline', text: 'Tidak dapat membuka aplikasi saat koneksi terputus'});
-                        return;
-                    }
+                    if (state.isOffline) { Swal.fire({toast: true, position: 'top', icon: 'info', title: 'Mode Offline Aktif', text: 'Tidak dapat membuka aplikasi saat koneksi terputus'}); return; }
+                    if (app.status === 'maintenance') { Swal.fire({ icon: 'warning', title: 'Pemeliharaan Sistem', text: `Layanan ${app.title} sedang dalam perbaikan rutin untuk peningkatan performa. Silakan coba beberapa saat lagi.` }); return; }
+                    if (app.status === 'offline') { Swal.fire({ icon: 'error', title: 'Layanan Terputus', text: `Maaf, koneksi ke server ${app.title} saat ini sedang dinonaktifkan sementara.` }); return; }
 
-                    if (app.status === 'maintenance') {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Pemeliharaan Sistem',
-                            text: `Layanan ${app.title} sedang dalam perbaikan rutin untuk peningkatan performa. Silakan coba beberapa saat lagi.`,
-                            confirmButtonText: 'Mengerti',
-                            confirmButtonColor: '#f59e0b'
-                        });
-                        return;
-                    }
-                    if (app.status === 'offline') {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Layanan Terputus',
-                            text: `Maaf, koneksi ke server ${app.title} saat ini sedang bermasalah atau dinonaktifkan sementara.`,
-                            confirmButtonText: 'Kembali',
-                            confirmButtonColor: '#ef4444'
-                        });
-                        return;
-                    }
-
-                    state.isIframeLoading = true;
-                    state.activeIframeTitle = app.title;
-                    state.activeIframeUrl = app.url;
-                    writeLog('APP_OPEN', `Membuka aplikasi: ${app.title}`);
+                    state.isIframeLoading = true; state.activeIframeTitle = app.title; state.activeIframeUrl = app.url;
+                    writeLog('APP_OPEN', `Akses layanan: ${app.title}`);
                 };
                 
-                const closeIframe = () => {
-                    state.activeIframeUrl = null;
-                    state.activeIframeTitle = '';
-                };
-                
+                const closeIframe = () => { state.activeIframeUrl = null; state.activeIframeTitle = ''; };
                 const iframeLoaded = () => { state.isIframeLoading = false; };
+                const refreshIframe = () => { if (appIframe.value && !state.isOffline) { state.isIframeLoading = true; const currentSrc = appIframe.value.src; appIframe.value.src = ''; setTimeout(() => { appIframe.value.src = currentSrc; }, 50); } };
+                const openExternal = () => { if (state.activeIframeUrl) window.open(state.activeIframeUrl, '_blank', 'noopener'); };
                 
-                const refreshIframe = () => {
-                    if (appIframe.value && !state.isOffline) {
-                        state.isIframeLoading = true;
-                        const currentSrc = appIframe.value.src;
-                        appIframe.value.src = '';
-                        setTimeout(() => { appIframe.value.src = currentSrc; }, 50);
-                    }
-                };
-                
-                const openExternal = () => {
-                    if (state.activeIframeUrl) window.open(state.activeIframeUrl, '_blank', 'noopener');
-                };
-                
+                // THEME & NETWORK WATCHERS
                 const toggleTheme = () => {
                     state.isDark = !state.isDark;
-                    if (state.isDark) { document.documentElement.classList.add('dark'); localStorage.setItem('theme', 'dark'); } 
-                    else { document.documentElement.classList.remove('dark'); localStorage.setItem('theme', 'light'); }
-                };
-                
-                // ========== NETWORK LISTENERS ==========
-                const updateOnlineStatus = () => {
-                    state.isOffline = !navigator.onLine;
-                    if (!state.isOffline && !state.isAppLoading) {
-                        loadDatabase(); 
-                    }
+                    localStorage.setItem('theme', state.isDark ? 'dark' : 'light');
+                    if (state.isDark) document.documentElement.classList.add('dark');
+                    else document.documentElement.classList.remove('dark');
+                    if (state.currentRoute === 'dashboard') nextTick(() => renderCharts()); // Update chart color
                 };
 
-                // ========== INITIALIZATION ==========
+                const updateOnlineStatus = () => {
+                    state.isOffline = !navigator.onLine;
+                    if (!state.isOffline && !state.isAppLoading) loadDatabase();
+                };
+
+                // INIT
                 onMounted(async () => {
                     window.addEventListener('online', updateOnlineStatus);
                     window.addEventListener('offline', updateOnlineStatus);
 
-                    if (localStorage.getItem('theme') === 'dark') {
-                        document.documentElement.classList.add('dark');
-                        state.isDark = true;
-                    }
-                    
-                    if (localStorage.getItem('eduportal_admin_auth') === 'true') {
-                        state.isAdmin = true;
-                    }
+                    if (localStorage.getItem('theme') === 'dark') { document.documentElement.classList.add('dark'); state.isDark = true; }
+                    if (sessionStorage.getItem('eduportal_admin_auth') === 'true') { state.isAdmin = true; }
                     
                     await loadDatabase();
+                    if (state.isAdmin && navigator.onLine) await writeLog('SYSTEM_BOOT', 'EduPortal Enterprise Terminal diakses');
                     
-                    if (state.isAdmin && navigator.onLine) {
-                        await writeLog('SYSTEM_BOOT', 'Portal v3.5 Enterprise dijalankan');
-                    }
+                    window.addEventListener('resize', () => { if (window.innerWidth > 1024) state.sidebarOpen = true; else state.sidebarOpen = false; });
                 });
 
                 onUnmounted(() => {
                     window.removeEventListener('online', updateOnlineStatus);
                     window.removeEventListener('offline', updateOnlineStatus);
+                    // Cleanup chart instances on destroy
+                    if (chartInstances.category) chartInstances.category.destroy();
+                    if (chartInstances.status) chartInstances.status.destroy();
                 });
-                
+
                 return {
                     state, categories, searchQuery, activeCategory, appsData, filteredApps, systemLogs, appIframe,
-                    greeting, getCategoryLabel, getCategoryCount, totalAppsCount, onlineAppsCount, activeServicesCount,
-                    clearFilters, handleAdminAction, showAppForm, showAnnouncementForm, dismissAnnouncement, 
+                    greeting, activeServicesCount, getCategoryLabel, getCategoryCount, totalAppsCount, onlineAppsCount, getRouteTitle, navigateTo,
+                    clearFilters, handleAdminAction, showAppForm, saveSettings, dismissAnnouncement, 
                     deleteApp, toggleAppVisibility, clearTelemetryLogs, openIframe, closeIframe, iframeLoaded, 
                     refreshIframe, openExternal, toggleTheme
                 };
