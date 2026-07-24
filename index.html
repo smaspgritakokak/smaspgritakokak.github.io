@@ -3,25 +3,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="theme-color" content="#f8fafc" id="meta-theme-color" />
-    <title>SMAPTA Workspace | Elegant</title>
+    <meta name="theme-color" content="#f4f7ff" id="meta-theme-color" />
+    <title>SMAPTA Workspace | Tautan Layanan Digital</title>
     <link rel="icon" href="https://www.google.com/s2/favicons?domain=google.com&sz=128" type="image/png" />
     
-    <!-- ARSENAL CDN MANDATORI -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Google Sans & Anonymous Pro for Elegant Theme -->
-    <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Google+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     
-    <!-- Tailwind, Vue 3, Lucide Icons, SweetAlert2, DOMPurify -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
-    <!-- TAILWIND CONFIGURATION -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -43,454 +38,799 @@
                         },
                         border: 'var(--border)'
                     },
-                    boxShadow: { 
-                        elegant: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'elegant-hover': '0 12px 30px -4px rgba(59, 130, 246, 0.12)',
-                        'elegant-sm': '0 2px 8px -1px rgba(0, 0, 0, 0.04)'
-                    },
-                    borderRadius: { 
-                        base: '12px',
-                        lg: '16px',
-                        xl: '24px'
-                    },
                     fontFamily: { 
-                        sans: ['Google Sans', 'sans-serif'],
-                        mono: ['Anonymous Pro', 'monospace']
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     }
                 }
             }
         };
     </script>
 
-    <!-- MASTER CSS VARIABLES & ELEGANT STYLES -->
     <style>
         :root {
-            /* Elegant Light Theme */
             --background: #F8FAFC;
             --surface: #FFFFFF;
             --surface-hover: #F1F5F9;
-            
             --text-main: #111827;
             --text-muted: #6B7280;
             --border: #E2E8F0;
-            
             --primary: #3B82F6;
             --primary-light: #EFF6FF;
             --secondary: #8B5CF6;
             --success: #16A34A;
             --warning: #D97706;
             --danger: #DC2626;
-
             --ring: rgba(59, 130, 246, 0.4);
         }
         
         .dark {
-            /* Elegant Dark Theme */
             --background: #0B0F19;
             --surface: #111827;
             --surface-hover: #1F2937;
-            
             --text-main: #F9FAFB;
             --text-muted: #9CA3AF;
             --border: #1F2937;
-            
             --primary: #3B82F6;
             --primary-light: rgba(59, 130, 246, 0.15);
             --secondary: #8B5CF6;
-            --success: #16A34A;
-            --warning: #D97706;
-            --danger: #EF4444;
-
-            --ring: rgba(59, 130, 246, 0.6);
         }
 
         [v-cloak] { display: none !important; }
         
+        * { 
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         body { 
             background-color: var(--background);
             color: var(--text-main);
-            font-weight: 400;
+            font-family: 'Inter', system-ui, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        h1, h2, h3, h4, h5, h6 { font-weight: 500; letter-spacing: -0.02em; }
-        
-        /* Core Utilities */
-        .elegant-focus { outline: none; transition: box-shadow 0.2s ease; }
-        .elegant-focus:focus-visible {
-            box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--primary);
-        }
-
-        .elegant-panel {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-elegant);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        /* Interactive Elements */
-        .elegant-card-interactive {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-            will-change: transform, box-shadow;
-        }
-        .elegant-card-interactive:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.08);
-            border-color: var(--border);
-            z-index: 10;
-        }
-        .dark .elegant-card-interactive:hover {
-            box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.4);
-            border-color: var(--text-muted);
-        }
-
-        .elegant-input {
-            background-color: var(--background);
-            color: var(--text-main);
+        /* Simple Card */
+        .card {
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
             transition: all 0.2s ease;
         }
-        .elegant-input:focus {
+        
+        .card-hover {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .card-hover:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .card-hover:active {
+            transform: scale(0.98);
+        }
+
+        /* Simple Input */
+        .input {
+            background: var(--surface);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.625rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            width: 100%;
+        }
+        
+        .input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
-            background-color: var(--surface);
-        }
-        .elegant-input::placeholder { color: var(--text-muted); font-weight: 400; }
-        
-        /* Modals & Overlays */
-        .elegant-glass {
-            background-color: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .dark .elegant-glass {
-            background-color: rgba(11, 15, 25, 0.6);
+            box-shadow: 0 0 0 3px var(--primary-light);
         }
         
+        .input::placeholder { 
+            color: var(--text-muted); 
+        }
+
+        /* Simple Button */
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            background: #2563EB;
+            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-main);
+            padding: 0.625rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+        }
+
+        /* Simple Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Animations */
-        .fade-enter-active, .fade-leave-active { transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(8px); }
+        .fade-enter-active, .fade-leave-active { 
+            transition: opacity 0.25s ease, transform 0.25s ease; 
+        }
+        .fade-enter-from, .fade-leave-to { 
+            opacity: 0; 
+            transform: translateY(8px); 
+        }
         
-        .slide-enter-active, .slide-leave-active { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide-enter-from, .slide-leave-to { transform: translateX(-100%); }
+        .slide-enter-active, .slide-leave-active { 
+            transition: transform 0.25s ease; 
+        }
+        .slide-enter-from, .slide-leave-to { 
+            transform: translateX(-100%); 
+        }
 
         @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         .animate-skeleton {
-            animation: shimmer 2s infinite linear;
-            background: linear-gradient(to right, var(--surface) 4%, var(--border) 25%, var(--surface) 36%);
-            background-size: 1000px 100%;
+            animation: shimmer 1.5s infinite linear;
+            background: linear-gradient(90deg, var(--surface) 25%, var(--border) 50%, var(--surface) 75%);
+            background-size: 200% 100%;
         }
-        .dark .animate-skeleton {
-            background: linear-gradient(to right, var(--surface) 4%, #1f2937 25%, var(--surface) 36%);
-            background-size: 1000px 100%;
+
+        /* Toast Container */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .toast-item {
+            pointer-events: auto;
+            animation: slideInRight 0.3s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideOutRight {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Utility */
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        @keyframes float-soft { 
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-8px); } 
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-base { font-size: 1rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        
+        .font-normal { font-weight: 400; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-y-auto { overflow-y: auto; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .flex-1 { flex: 1; }
+        .flex-shrink-0 { flex-shrink: 0; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .p-5 { padding: 1.25rem; }
+        .p-6 { padding: 1.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+        .max-w-2xl { max-width: 42rem; }
+        .max-w-4xl { max-width: 56rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .border-b { border-bottom: 1px solid var(--border); }
+        .border-r { border-right: 1px solid var(--border); }
+        .border-t { border-top: 1px solid var(--border); }
+        .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .rounded-lg { border-radius: 12px; }
+        .rounded-full { border-radius: 9999px; }
+        .bg-background { background-color: var(--background); }
+        .bg-surface { background-color: var(--surface); }
+        .bg-primary { background-color: var(--primary); }
+        .bg-primary-light { background-color: var(--primary-light); }
+        .text-text-main { color: var(--text-main); }
+        .text-text-muted { color: var(--text-muted); }
+        .text-primary { color: var(--primary); }
+        .text-white { color: #fff; }
+        .border-border { border-color: var(--border); }
+        .cursor-pointer { cursor: pointer; }
+        .transition-colors { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; }
+        .transition-transform { transition: transform 0.2s ease; }
+        .grid { display: grid; }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+
+        /* s.id-inspired public microsite */
+        .microsite-shell {
+            min-height: 100%;
+            position: relative;
+            isolation: isolate;
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 12% 8%, rgba(59, 130, 246, 0.18), transparent 30%),
+                radial-gradient(circle at 90% 16%, rgba(139, 92, 246, 0.16), transparent 28%),
+                linear-gradient(160deg, #f8fbff 0%, #f4f7ff 48%, #f8fafc 100%);
         }
-        .animate-float-soft { animation: float-soft 4s ease-in-out infinite; }
+
+        .dark .microsite-shell {
+            background:
+                radial-gradient(circle at 12% 8%, rgba(59, 130, 246, 0.20), transparent 32%),
+                radial-gradient(circle at 90% 16%, rgba(139, 92, 246, 0.18), transparent 30%),
+                linear-gradient(160deg, #0b1020 0%, #10172a 48%, #0b0f19 100%);
+        }
+
+        .microsite-glow {
+            position: fixed;
+            z-index: -1;
+            border-radius: 9999px;
+            filter: blur(2px);
+            pointer-events: none;
+            opacity: .72;
+        }
+
+        .microsite-glow-one {
+            width: 210px;
+            height: 210px;
+            top: -90px;
+            left: -80px;
+            background: linear-gradient(145deg, rgba(59,130,246,.42), rgba(96,165,250,.04));
+        }
+
+        .microsite-glow-two {
+            width: 260px;
+            height: 260px;
+            right: -150px;
+            top: 190px;
+            background: linear-gradient(145deg, rgba(139,92,246,.28), rgba(59,130,246,.03));
+        }
+
+        .microsite-top-button {
+            width: 42px;
+            height: 42px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            background: color-mix(in srgb, var(--surface) 84%, transparent);
+            border: 1px solid color-mix(in srgb, var(--border) 84%, transparent);
+            box-shadow: 0 8px 30px rgba(15, 23, 42, .08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+        }
+
+        .microsite-top-button:hover {
+            transform: translateY(-2px);
+            background: var(--surface);
+            box-shadow: 0 12px 34px rgba(15, 23, 42, .14);
+        }
+
+        .profile-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 9999px;
+            background: var(--surface);
+            border: 4px solid color-mix(in srgb, var(--surface) 82%, transparent);
+            box-shadow: 0 16px 46px rgba(15, 23, 42, .16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+        }
+
+        .profile-handle {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            border-radius: 9999px;
+            background: color-mix(in srgb, var(--surface) 72%, transparent);
+            border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .microsite-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .microsite-search .input {
+            min-height: 48px;
+            border-radius: 16px;
+            background: color-mix(in srgb, var(--surface) 88%, transparent);
+            padding-left: 44px;
+            padding-right: 42px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .microsite-link {
+            width: 100%;
+            min-height: 76px;
+            position: relative;
+            display: grid;
+            grid-template-columns: 52px minmax(0, 1fr) 36px;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 20px;
+            color: var(--text-main);
+            background: color-mix(in srgb, var(--surface) 91%, transparent);
+            border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+            box-shadow: 0 10px 34px rgba(15, 23, 42, .08);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .microsite-link:hover {
+            transform: translateY(-3px) scale(1.005);
+            border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+            box-shadow: 0 16px 42px rgba(15, 23, 42, .13);
+        }
+
+        .microsite-link:active { transform: scale(.985); }
+        .microsite-link:focus-visible { outline: 3px solid var(--primary-light); outline-offset: 3px; }
+
+        .microsite-link-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .microsite-link-arrow {
+            width: 34px;
+            height: 34px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            background: color-mix(in srgb, var(--background) 68%, transparent);
+            transition: transform .2s ease, color .2s ease;
+        }
+
+        .microsite-link:hover .microsite-link-arrow {
+            transform: translateX(2px);
+            color: var(--primary);
+        }
+
+        .microsite-footer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: 9999px;
+            color: var(--text-muted);
+            background: color-mix(in srgb, var(--surface) 74%, transparent);
+            border: 1px solid color-mix(in srgb, var(--border) 74%, transparent);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .02em;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 640px) {
+            .microsite-content { padding-top: 22px; padding-bottom: 34px; }
+            .profile-avatar { width: 88px; height: 88px; }
+            .profile-avatar img { width: 66px; height: 66px; }
+            .microsite-link { min-height: 72px; grid-template-columns: 48px minmax(0, 1fr) 32px; border-radius: 18px; }
+            .microsite-link-icon { width: 46px; height: 46px; border-radius: 14px; }
+        }
     </style>
 </head>
-<body class="h-[100dvh] w-full overflow-hidden selection:bg-primary-light selection:text-primary relative text-[14px] md:text-[16px]">
+<body>
+
+    <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
     <div id="app" class="w-full h-full flex relative" v-cloak>
 
         <!-- ========================================== -->
-        <!-- PUBLIC WORKSPACE (ELEGANT BENTO LAYOUT)    -->
+        <!-- PUBLIC WORKSPACE (S.ID-STYLE MICROSITE)    -->
         <!-- ========================================== -->
-        <div v-if="!isAdmin" key="public-workspace" class="w-full h-full overflow-y-auto relative z-10 p-6 sm:p-8 md:p-12 lg:p-16 pb-12">
-            
-            <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-24 relative">
-                
-                <!-- LEFT COLUMN: Profile & Info -->
-                <div class="w-full lg:w-[320px] flex flex-col gap-8 shrink-0 lg:sticky lg:top-16 h-fit">
-                    
-                    <!-- Header Profil & Titles -->
-                    <div class="flex flex-col items-start gap-5">
-                        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center bg-surface border border-border shadow-elegant-sm overflow-hidden">        
-                            <img src="https://smapgritakokak.sch.id/media_library/images/icon-128x128.png" alt="Logo" class="w-10 h-10 object-contain"/>
-                        </div>
+        <div v-if="!isAdmin" key="public-workspace" class="w-full h-full overflow-y-auto microsite-shell">
+            <div class="microsite-glow microsite-glow-one"></div>
+            <div class="microsite-glow microsite-glow-two"></div>
 
-                        <div>
-                            <h1 class="text-3xl md:text-[40px] font-semibold tracking-tight leading-tight text-text-main">SMAPTA<span class="text-primary font-light">.</span></h1>
-                            <h2 class="text-[14px] font-medium mt-1 tracking-widest text-text-muted uppercase">Workspace</h2>
-                        </div>
-                    </div>
-                    
-                    <!-- Live Clock Widget -->
-                    <div class="flex flex-col gap-1">
-                        <span class="text-[12px] font-medium tracking-wider text-text-muted uppercase">Waktu Sistem</span>
-                        <div class="flex items-center gap-3">
-                            <span class="text-[24px] md:text-[32px] font-light font-mono text-text-main tracking-tight">{{ currentTime }}</span>
-                        </div>
-                    </div>
-                                        
-                    <!-- Search Input -->
-                    <div class="relative w-full group">
-                        <input v-model="searchQuery" type="text" class="block w-full pl-12 pr-4 py-3 elegant-input elegant-focus text-[14px] transition-all" placeholder="Cari modul atau fungsi..." aria-label="Pencarian Modul" />
-                        <l-icon name="search" icon-class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors"></l-icon>
-                    </div>
+            <div class="microsite-content max-w-2xl mx-auto px-4 py-8 md:py-12 relative">
+                <!-- Floating utilities -->
+                <div class="flex items-center justify-between mb-5">
+                    <button @click="showLoginModal = true"
+                            class="microsite-top-button"
+                            aria-label="Buka otorisasi admin"
+                            title="Otorisasi admin">
+                        <l-icon name="lock-keyhole" icon-class="w-4 h-4"></l-icon>
+                    </button>
 
-                    <!-- ACTION ROW: Theme Toggle & Admin Login -->
-                    <div class="flex items-center gap-3 w-full">
-                        <button @click="toggleTheme" class="w-12 h-12 flex items-center justify-center rounded-[12px] bg-surface border border-border hover:bg-surface-hover transition-colors elegant-focus shrink-0 text-text-muted hover:text-text-main shadow-sm" aria-label="Ganti Tema Visual" title="Ganti Tema">
-                            <l-icon :name="isDarkMode ? 'sun' : 'moon'" icon-class="w-5 h-5 stroke-[1.5]"></l-icon>
+                    <div class="flex items-center gap-2">
+                        <button @click="toggleTheme"
+                                class="microsite-top-button"
+                                :aria-label="isDarkMode ? 'Ganti ke tema terang' : 'Ganti ke tema gelap'"
+                                :title="isDarkMode ? 'Tema terang' : 'Tema gelap'">
+                            <l-icon :name="isDarkMode ? 'sun' : 'moon'" icon-class="w-4 h-4"></l-icon>
                         </button>
-                        
-                        <button @click="showLoginModal = true" class="flex-1 h-12 flex items-center justify-center gap-2 elegant-focus rounded-[12px] font-medium text-[14px] text-white bg-primary hover:bg-blue-600 transition-colors shadow-elegant-sm" aria-label="Otorisasi Eksekutif">
-                            <l-icon name="shield" icon-class="w-4 h-4 stroke-[2]"></l-icon>
-                            Otorisasi
+                        <button @click="shareMicrosite"
+                                class="microsite-top-button"
+                                aria-label="Bagikan microsite"
+                                title="Bagikan">
+                            <l-icon name="share-2" icon-class="w-4 h-4"></l-icon>
                         </button>
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN: Bento Grid -->
-                <div class="w-full lg:flex-1 pb-8">
-                    
-                    <!-- Section Title -->
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="font-medium text-[18px] tracking-tight text-text-main">Modul Tersedia</h3>
-                        <span class="text-[14px] text-text-muted">{{ displayedApps.length }} Modul</span>
+                <!-- Profile -->
+                <header class="text-center mb-7">
+                    <div class="profile-avatar mx-auto mb-4">
+                        <img src="https://smapgritakokak.sch.id/media_library/images/icon-128x128.png" alt="Logo SMAPTA" />
                     </div>
-
-                    <!-- Skeleton Loader -->
-                    <div v-if="isLoadingData" class="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
-                        <div v-for="i in 6" :key="i" class="rounded-2xl p-6 aspect-square sm:aspect-auto sm:h-40 animate-skeleton border border-border"></div>
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                        <h1 class="text-2xl md:text-3xl font-bold text-text-main">SMAPTA Workspace</h1>
+                        <span class="w-5 h-5 rounded-full bg-primary text-white inline-flex items-center justify-center" title="Terverifikasi">
+                            <l-icon name="check" icon-class="w-3 h-3"></l-icon>
+                        </span>
                     </div>
+                    <p class="text-sm text-text-muted max-w-md mx-auto mb-4 leading-relaxed">
+                        Akses cepat seluruh layanan digital SMA PGRI Takokak dalam satu halaman.
+                    </p>
+                    <span class="profile-handle">
+                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                        {{ currentTime }}
+                    </span>
+                </header>
 
-                    <!-- App Data Grid -->
-                    <div v-else>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
-                            
-                            <!-- App Card (Elegant Style) -->
-                            <div v-for="app in displayedApps" :key="app.id" @click="openApp(app)" tabindex="0" @keyup.enter="openApp(app)"
-                                 class="relative p-5 md:p-6 cursor-pointer flex flex-col justify-between aspect-square sm:aspect-auto sm:h-44 rounded-2xl elegant-card-interactive elegant-focus group overflow-hidden bg-surface"
-                                 :aria-label="`Buka modul ${app.title}`">
-                                
-                                <!-- Subtle color accent bar at the top -->
-                                <div class="absolute top-0 left-0 w-full h-1 opacity-80" :style="`background-color: ${app.color || 'var(--primary)'};`"></div>
-
-                                <div class="flex justify-between items-start z-10">
-                                    <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-transform bg-primary-light text-primary group-hover:scale-110 duration-300" :style="app.color ? `background-color: ${app.color}15; color: ${app.color};` : ''">
-                                        <l-icon :name="app.icon || 'box'" icon-class="w-5 h-5 stroke-[1.5]"></l-icon>
-                                    </div>
-                                    <l-icon name="arrow-up-right" icon-class="w-4 h-4 stroke-[1.5] opacity-0 group-hover:opacity-100 transition-opacity text-text-muted -translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 duration-300"></l-icon>
-                                </div>
-                                
-                                <div class="mt-auto flex flex-col items-start text-left z-10 pt-4">
-                                    <h3 class="font-medium text-[16px] leading-tight w-full truncate text-text-main group-hover:text-primary transition-colors duration-300">{{ app.title }}</h3>
-                                    <p class="text-[12px] truncate mt-1 w-full text-text-muted font-light">{{ app.desc || 'Modul Sistem' }}</p>
-                                </div>
-                            </div>
-
-                        </div>
-                        
-                        <!-- Empty State -->
-                        <div v-if="displayedApps.length === 0" class="flex flex-col items-center justify-center py-24 px-4 text-center w-full mt-4">
-                            <div class="w-16 h-16 rounded-full flex items-center justify-center bg-surface border border-border shadow-sm mb-6 text-text-muted">
-                                <l-icon name="inbox" icon-class="w-8 h-8 stroke-[1]"></l-icon>
-                            </div>
-                            <h3 class="text-[18px] font-medium tracking-tight text-text-main">Tidak Ada Modul Ditemukan</h3>
-                            <p class="text-[14px] mt-2 max-w-sm text-text-muted font-light">Pencarian Anda tidak cocok dengan modul apa pun yang terdaftar.</p>
-                            <button @click="searchQuery = ''" class="mt-6 px-6 py-2.5 bg-surface text-text-main text-[14px] rounded-full border border-border hover:bg-surface-hover transition-colors elegant-focus">Reset Pencarian</button>
-                        </div>
-                    </div>
-
+                <!-- Search -->
+                <div class="microsite-search">
+                    <input
+                        v-model="searchQuery"
+                        type="search"
+                        class="input"
+                        placeholder="Cari tautan atau layanan..."
+                        aria-label="Cari tautan atau layanan"
+                        ref="searchInput"
+                    />
+                    <l-icon name="search" icon-class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"></l-icon>
+                    <button v-if="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex-center text-text-muted hover:bg-surface-hover" aria-label="Hapus pencarian">
+                        <l-icon name="x" icon-class="w-3.5 h-3.5"></l-icon>
+                    </button>
                 </div>
 
+                <!-- Skeleton links -->
+                <div v-if="isLoadingData" class="flex flex-col gap-3">
+                    <div v-for="i in 5" :key="i" class="h-[76px] rounded-[20px] animate-skeleton border border-border"></div>
+                </div>
+
+                <!-- Link list -->
+                <main v-else class="flex flex-col gap-3" aria-label="Daftar layanan SMAPTA">
+                    <button v-for="app in displayedApps"
+                            :key="app.id"
+                            @click="openApp(app)"
+                            :aria-label="`Buka ${app.title}`"
+                            class="microsite-link group">
+                        <span class="microsite-link-icon"
+                              :style="app.color ? `background: ${app.color}18; color: ${app.color};` : 'background: var(--primary-light); color: var(--primary);'">
+                            <l-icon :name="app.icon || 'link'" icon-class="w-5 h-5"></l-icon>
+                        </span>
+                        <span class="min-w-0">
+                            <span class="block text-sm md:text-base font-semibold truncate">{{ app.title }}</span>
+                            <span class="block text-xs text-text-muted mt-1 truncate">{{ app.desc || 'Buka layanan digital' }}</span>
+                        </span>
+                        <span class="microsite-link-arrow">
+                            <l-icon name="arrow-up-right" icon-class="w-4 h-4"></l-icon>
+                        </span>
+                    </button>
+                </main>
+
+                <!-- Empty -->
+                <div v-if="displayedApps.length === 0 && !isLoadingData" class="text-center py-10 px-5 rounded-[22px] bg-surface/70 border border-border backdrop-blur-sm">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center bg-primary-light text-primary mx-auto mb-3">
+                        <l-icon name="search-x" icon-class="w-6 h-6"></l-icon>
+                    </div>
+                    <p class="text-sm font-semibold text-text-main">Tautan tidak ditemukan</p>
+                    <p class="text-xs text-text-muted mt-1">Coba gunakan kata kunci lain.</p>
+                    <button @click="searchQuery = ''" class="btn-secondary text-sm mt-4 px-4 py-2">Tampilkan semua</button>
+                </div>
+
+                <footer class="text-center mt-8 pb-2">
+                    <span class="microsite-footer-badge">
+                        <l-icon name="sparkles" icon-class="w-3.5 h-3.5 text-primary"></l-icon>
+                        SMAPTA Digital Workspace
+                    </span>
+                </footer>
             </div>
         </div>
 
         <!-- ========================================== -->
         <!-- ADMIN CONSOLE                              -->
         <!-- ========================================== -->
-        <div v-else key="admin-workspace" class="w-full h-full flex relative overflow-hidden z-10 bg-background">
-            <!-- Mobile Sidebar Overlay -->
+        <div v-else key="admin-workspace" class="w-full h-full flex relative bg-background">
+            
+            <!-- Mobile Overlay -->
             <transition name="fade">
-                <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="fixed inset-0 z-[40] lg:hidden elegant-glass"></div>
+                <div v-if="isSidebarOpen" @click="isSidebarOpen = false" class="fixed inset-0 z-40 bg-black/30 lg:hidden" aria-hidden="true"></div>
             </transition>
 
             <!-- Sidebar -->
-            <aside :class="['w-[280px] h-full flex flex-col shrink-0 z-[50] fixed lg:static transition-transform duration-400 ease-in-out border-r border-border bg-surface', isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']">
-                <div class="h-20 flex items-center px-8 justify-between">
-                    <div class="flex items-center gap-3">
-                        <l-icon name="layout-dashboard" icon-class="w-6 h-6 stroke-[1.5] text-primary"></l-icon>
-                        <span class="font-medium text-[18px] tracking-tight text-text-main">Kendali Pusat</span>
+            <aside :class="['w-64 h-full flex flex-col shrink-0 z-50 fixed lg:static transition-transform duration-300 ease-in-out bg-surface border-r border-border', isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']">
+                <div class="p-4 border-b border-border flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <l-icon name="layout-dashboard" icon-class="w-5 h-5 text-primary"></l-icon>
+                        <span class="font-semibold text-sm">Kendali</span>
                     </div>
-                    <button @click="isSidebarOpen = false" class="lg:hidden p-2 rounded-lg text-text-muted hover:bg-surface-hover elegant-focus transition-colors">
-                        <l-icon name="x" icon-class="w-5 h-5"></l-icon>
+                    <button @click="isSidebarOpen = false" class="lg:hidden p-1 rounded text-text-muted hover:bg-surface-hover">
+                        <l-icon name="x" icon-class="w-4 h-4"></l-icon>
                     </button>
                 </div>
                 
-                <div class="flex-1 overflow-y-auto no-scrollbar py-6 px-4 flex flex-col gap-1">
-                    <div class="text-[12px] font-medium tracking-widest px-4 mb-3 text-text-muted uppercase">Infrastruktur</div>
-                    
-                    <button @click="navigateAdmin('datamaster')" :class="currentRoute === 'datamaster' ? 'bg-primary-light text-primary font-medium' : 'hover:bg-surface-hover text-text-main font-normal'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[14px] text-left transition-colors elegant-focus">
-                        <l-icon name="database" icon-class="w-5 h-5 stroke-[1.5]"></l-icon> Data Master
+                <div class="flex-1 overflow-y-auto no-scrollbar py-3 px-3 flex flex-col gap-1">
+                    <button @click="navigateAdmin('datamaster')" 
+                            :class="currentRoute === 'datamaster' ? 'bg-primary-light text-primary font-semibold' : 'hover:bg-surface-hover text-text-main'" 
+                            class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-left transition-colors">
+                        <l-icon name="database" icon-class="w-4 h-4"></l-icon> Data Master
                     </button>
                     
-                    <button @click="navigateAdmin('analytics')" :class="currentRoute === 'analytics' ? 'bg-primary-light text-primary font-medium' : 'hover:bg-surface-hover text-text-main font-normal'" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[14px] text-left transition-colors elegant-focus">
-                        <l-icon name="activity" icon-class="w-5 h-5 stroke-[1.5]"></l-icon> Telemetri Server
+                    <button @click="navigateAdmin('analytics')" 
+                            :class="currentRoute === 'analytics' ? 'bg-primary-light text-primary font-semibold' : 'hover:bg-surface-hover text-text-main'" 
+                            class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-left transition-colors">
+                        <l-icon name="activity" icon-class="w-4 h-4"></l-icon> Telemetri
                     </button>
                 </div>
 
-                <div class="p-6">
-                    <button @click="logoutAdmin" class="elegant-focus w-full py-3 flex justify-center items-center gap-2 text-[14px] font-medium rounded-xl text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
-                        <l-icon name="log-out" icon-class="w-4 h-4 stroke-[1.5]"></l-icon> Keluar Sesi
+                <div class="p-3 border-t border-border">
+                    <button @click="logoutAdmin" class="btn-secondary w-full justify-center text-sm text-danger border-danger/20 hover:bg-danger/10">
+                        <l-icon name="log-out" icon-class="w-4 h-4"></l-icon> Keluar
                     </button>
                 </div>
             </aside>
 
-            <!-- Main Admin Content -->
-            <div class="flex-1 flex flex-col min-w-0 h-full relative">
-                <header class="h-20 flex items-center justify-between px-6 md:px-10 z-10 shrink-0 border-b border-border bg-surface/80 backdrop-blur-md">
-                    <div class="flex items-center gap-4">
-                        <button @click="isSidebarOpen = true" class="lg:hidden p-2 rounded-lg text-text-muted hover:bg-surface-hover elegant-focus transition-colors">
+            <!-- Main -->
+            <div class="flex-1 flex flex-col min-w-0 h-full">
+                <header class="h-14 flex items-center justify-between px-4 border-b border-border bg-surface/80 backdrop-blur-sm shrink-0">
+                    <div class="flex items-center gap-3">
+                        <button @click="isSidebarOpen = true" class="lg:hidden p-1.5 rounded text-text-muted hover:bg-surface-hover">
                             <l-icon name="menu" icon-class="w-5 h-5"></l-icon>
                         </button>
-                        <div>
-                            <h2 class="text-[20px] md:text-[24px] font-medium tracking-tight text-text-main leading-none">{{ currentRoute === 'datamaster' ? 'Data Master' : 'Telemetri' }}</h2>
+                        <h2 class="text-sm font-semibold">{{ currentRoute === 'datamaster' ? 'Data Master' : 'Telemetri' }}</h2>
+                        <div v-if="isSyncing" class="flex items-center gap-1 text-xs text-primary bg-primary-light px-2 py-0.5 rounded-full">
+                            <l-icon name="refresh-cw" icon-class="w-3 h-3 animate-spin"></l-icon>
+                            <span class="hidden sm:inline">Sync</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div v-if="isSyncing" class="flex items-center gap-2 text-[12px] text-primary bg-primary-light px-3 py-1.5 rounded-full font-medium">
-                            <l-icon name="refresh-cw" icon-class="w-3.5 h-3.5 animate-spin stroke-[2]"></l-icon> 
-                            <span class="hidden sm:inline">Sinkronisasi</span>
-                        </div>
-                        <button @click="toggleTheme" class="p-2 rounded-full hover:bg-surface-hover elegant-focus text-text-muted transition-colors" aria-label="Ganti Tema Visual">
-                            <l-icon :name="isDarkMode ? 'sun' : 'moon'" icon-class="w-5 h-5 stroke-[1.5]"></l-icon>
-                        </button>
-                    </div>
+                    <button @click="toggleTheme" class="p-1.5 rounded hover:bg-surface-hover text-text-muted">
+                        <l-icon :name="isDarkMode ? 'sun' : 'moon'" icon-class="w-4 h-4"></l-icon>
+                    </button>
                 </header>
 
-                <main class="flex-1 overflow-y-auto p-6 md:p-10 no-scrollbar scroll-smooth">
+                <main class="flex-1 overflow-y-auto p-4 no-scrollbar">
                     
-                    <!-- ADMIN: DATA MASTER -->
+                    <!-- DATA MASTER -->
                     <transition name="fade" mode="out-in">
-                        <div v-if="currentRoute === 'datamaster'" class="max-w-6xl mx-auto elegant-panel overflow-hidden flex flex-col h-full">
+                        <div v-if="currentRoute === 'datamaster'" class="max-w-4xl mx-auto">
                             
-                            <!-- Toolbar -->
-                            <div class="p-6 md:p-8 flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-border bg-surface">
+                            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4">
                                 <div>
-                                    <h3 class="text-[18px] font-medium text-text-main">Registri Modul</h3>
-                                    <p class="text-[14px] mt-1 text-text-muted font-light">{{ apps.length }} modul terdaftar dalam sistem.</p>
+                                    <h3 class="text-base font-semibold">Registri Modul</h3>
+                                    <p class="text-xs text-text-muted">{{ apps.length }} modul terdaftar</p>
                                 </div>
-                                <div class="flex gap-3">
-                                    <button @click="loadData" class="p-2.5 rounded-xl border border-border bg-surface hover:bg-surface-hover transition-colors elegant-focus text-text-muted" aria-label="Refresh Data">
-                                        <l-icon name="refresh-cw" icon-class="w-5 h-5 stroke-[1.5]"></l-icon>
+                                <div class="flex gap-2">
+                                    <button @click="loadData" class="btn-secondary text-sm px-3 py-1.5" :disabled="isSyncing">
+                                        <l-icon name="refresh-cw" icon-class="w-3.5 h-3.5" :class="{'animate-spin': isSyncing}"></l-icon>
                                     </button>
-                                    <button @click="openAppForm()" class="elegant-focus px-5 py-2.5 flex items-center justify-center gap-2 text-[14px] font-medium rounded-xl flex-1 sm:flex-none bg-primary text-white hover:bg-blue-600 transition-colors shadow-sm">
-                                        <l-icon name="plus" icon-class="w-4 h-4 stroke-[2]"></l-icon> Registrasi Baru
+                                    <button @click="openAppForm()" class="btn-primary text-sm px-3 py-1.5">
+                                        <l-icon name="plus" icon-class="w-3.5 h-3.5"></l-icon> Baru
                                     </button>
                                 </div>
                             </div>
                             
-                            <!-- Table -->
-                            <div class="overflow-x-auto flex-1 bg-surface rounded-b-[16px]">
-                                <table class="w-full text-left border-collapse min-w-[600px]">
-                                    <thead>
-                                        <tr class="text-[12px] font-medium tracking-wider text-text-muted border-b border-border bg-background/50">
-                                            <th class="px-6 py-4 font-medium whitespace-nowrap">Identitas & URL</th>
-                                            <th class="px-6 py-4 font-medium text-center whitespace-nowrap">Status</th>
-                                            <th class="px-6 py-4 font-medium text-right whitespace-nowrap">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="app in apps" :key="app.id" class="group border-b border-border/50 hover:bg-background/50 transition-colors">
-                                            <td class="px-6 py-4">
-                                                <div class="flex items-center gap-4">
-                                                    <div class="w-10 h-10 flex items-center justify-center shrink-0 rounded-xl bg-surface border border-border shadow-sm text-text-main" :style="app.color ? `color: ${app.color}; border-color: ${app.color}30; background-color: ${app.color}10;` : ''">
-                                                        <l-icon :name="app.icon || 'box'" icon-class="w-4 h-4 stroke-[1.5]"></l-icon>
+                            <div class="card overflow-hidden">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-sm border-collapse min-w-[500px]">
+                                        <thead>
+                                            <tr class="text-xs font-semibold text-text-muted border-b border-border bg-background/50">
+                                                <th class="px-4 py-3 font-semibold">Modul</th>
+                                                <th class="px-4 py-3 font-semibold text-center">Status</th>
+                                                <th class="px-4 py-3 font-semibold text-right">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="app in apps" :key="app.id" class="border-b border-border/50 hover:bg-background/50 transition-colors">
+                                                <td class="px-4 py-3">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-surface border border-border text-text-main text-xs"
+                                                             :style="app.color ? `color: ${app.color}; border-color: ${app.color}30; background-color: ${app.color}10;` : ''">
+                                                            <l-icon :name="app.icon || 'box'" icon-class="w-3.5 h-3.5"></l-icon>
+                                                        </div>
+                                                        <div class="min-w-0">
+                                                            <div class="font-medium text-sm truncate">{{ app.title }}</div>
+                                                            <div class="text-xs font-mono truncate max-w-[180px] text-text-muted">{{ app.url }}</div>
+                                                        </div>
                                                     </div>
-                                                    <div class="min-w-0">
-                                                        <div class="text-[14px] md:text-[16px] font-medium text-text-main truncate">{{ app.title }}</div>
-                                                        <div class="text-[12px] mt-0.5 font-light font-mono truncate max-w-[200px] md:max-w-[350px] text-text-muted">{{ app.url }}</div>
+                                                </td>
+                                                <td class="px-4 py-3 text-center">
+                                                    <button @click="toggleAppStatus(app)" 
+                                                            :class="['px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors border', app.isActive ? 'bg-success/10 text-success border-success/20' : 'bg-surface text-text-muted border-border']">
+                                                        {{ app.isActive ? 'Aktif' : 'Nonaktif' }}
+                                                    </button>
+                                                </td>
+                                                <td class="px-4 py-3 text-right">
+                                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button @click="openAppForm(app)" class="p-1.5 rounded hover:bg-surface-hover text-text-muted hover:text-primary">
+                                                            <l-icon name="edit-2" icon-class="w-3.5 h-3.5"></l-icon>
+                                                        </button>
+                                                        <button @click="deleteAppPrompt(app)" class="p-1.5 rounded hover:bg-surface-hover text-text-muted hover:text-danger">
+                                                            <l-icon name="trash-2" icon-class="w-3.5 h-3.5"></l-icon>
+                                                        </button>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 text-center align-middle">
-                                                <button @click="toggleAppStatus(app)" 
-                                                    :class="['px-3 py-1 rounded-full text-[12px] font-medium elegant-focus whitespace-nowrap transition-colors border', app.isActive ? 'bg-success/10 text-success border-success/20 hover:bg-success/20' : 'bg-surface text-text-muted border-border hover:bg-surface-hover']">
-                                                    {{ app.isActive ? 'Aktif' : 'Nonaktif' }}
-                                                </button>
-                                            </td>
-                                            <td class="px-6 py-4 text-right align-middle">
-                                                <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button @click="openAppForm(app)" class="p-2 rounded-lg text-text-muted hover:text-primary hover:bg-primary-light elegant-focus transition-colors" aria-label="Edit">
-                                                        <l-icon name="edit-2" icon-class="w-4 h-4 stroke-[1.5]"></l-icon>
-                                                    </button>
-                                                    <button @click="deleteAppPrompt(app)" class="p-2 rounded-lg text-text-muted hover:text-danger hover:bg-danger/10 elegant-focus transition-colors" aria-label="Hapus">
-                                                        <l-icon name="trash-2" icon-class="w-4 h-4 stroke-[1.5]"></l-icon>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr v-if="apps.length === 0">
-                                            <td colspan="3" class="px-6 py-16 text-center">
-                                                <div class="flex flex-col items-center justify-center gap-3 text-text-muted">
-                                                    <l-icon name="inbox" icon-class="w-10 h-10 stroke-[1]"></l-icon>
-                                                    <span class="font-light text-[14px]">Belum ada data modul teregistrasi.</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                </td>
+                                            </tr>
+                                            <tr v-if="apps.length === 0">
+                                                <td colspan="3" class="px-4 py-12 text-center text-text-muted">
+                                                    <l-icon name="inbox" icon-class="w-8 h-8 mx-auto mb-2"></l-icon>
+                                                    <p class="text-sm">Belum ada data modul</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
-                    <!-- ADMIN: ANALYTICS -->
-                        <div v-else-if="currentRoute === 'analytics'" class="max-w-6xl mx-auto">
-                            <!-- KPI Cards -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                                <div class="elegant-panel p-8 flex items-center justify-between group cursor-default">
-                                    <div>
-                                        <div class="text-[12px] font-medium text-text-muted mb-2 uppercase tracking-wider">Modul Aktif</div>
-                                        <div class="text-[32px] md:text-[40px] font-light text-text-main flex items-baseline gap-2">
-                                            {{ apps.filter(a=>a.isActive).length }} <span class="text-[16px] text-text-muted">/ {{ apps.length }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-primary-light text-primary">
-                                        <l-icon name="grid" icon-class="w-6 h-6 stroke-[1.5]"></l-icon>
+                        <!-- ANALYTICS -->
+                        <div v-else-if="currentRoute === 'analytics'" class="max-w-4xl mx-auto">
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="card p-4">
+                                    <div class="text-xs font-medium text-text-muted uppercase tracking-wider">Modul Aktif</div>
+                                    <div class="text-2xl font-light mt-1">
+                                        {{ apps.filter(a=>a.isActive).length }} <span class="text-sm text-text-muted">/ {{ apps.length }}</span>
                                     </div>
                                 </div>
-                                <div class="elegant-panel p-8 flex items-center justify-between group cursor-default">
-                                    <div>
-                                        <div class="text-[12px] font-medium text-text-muted mb-2 uppercase tracking-wider">Status Jaringan</div>
-                                        <div class="text-[24px] md:text-[32px] font-light text-text-main mt-1">Stabil</div>
-                                    </div>
-                                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 bg-success/10 text-success">
-                                        <l-icon name="check-circle" icon-class="w-6 h-6 stroke-[1.5]"></l-icon>
+                                <div class="card p-4">
+                                    <div class="text-xs font-medium text-text-muted uppercase tracking-wider">Status</div>
+                                    <div class="text-sm font-medium mt-1 flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Stabil
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Chart Panel -->
-                            <div class="elegant-panel p-6 md:p-8">
-                                <div class="flex items-center justify-between mb-8">
-                                    <h3 class="font-medium text-[18px] text-text-main">Kepadatan Transmisi</h3>
-                                    <l-icon name="bar-chart-2" icon-class="w-5 h-5 text-text-muted"></l-icon>
+                            <div class="card p-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-semibold text-sm">Kepadatan Transmisi</h3>
+                                    <l-icon name="bar-chart-2" icon-class="w-4 h-4 text-text-muted"></l-icon>
                                 </div>
-                                <div class="w-full h-[300px] md:h-[350px] relative">
+                                <div class="w-full h-[250px] relative">
                                     <canvas id="appChart"></canvas>
                                 </div>
                             </div>
@@ -501,18 +841,19 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- MODALS & OVERLAYS                          -->
+        <!-- MODALS                                     -->
         <!-- ========================================== -->
         
         <!-- Initial Loader -->
         <Teleport to="body">
             <transition name="fade">
-                <div v-if="isInitialLoading" class="fixed inset-0 z-[9999] flex flex-col justify-center items-center bg-background">
+                <div v-if="isInitialLoading" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background">
                     <div class="flex flex-col items-center">
-                        <img src="https://smapgritakokak.sch.id/media_library/images/icon-128x128.png" alt="Logo" class="w-12 h-12 stroke-[1] text-primary animate-pulse mb-6 object-contain"/>
-                        <div class="text-[24px] font-light tracking-tight text-text-main">SMAPTA<span class="text-primary"> Workspace</span></div>
-                        <div class="w-24 h-px bg-border mt-4 mb-4"></div>
-                        <div class="text-[12px] font-light tracking-widest text-text-muted uppercase">Memuat sistem...</div>
+                        <div class="w-16 h-16 rounded-lg flex items-center justify-center bg-surface border border-border shadow-sm mb-4">
+                            <img src="https://smapgritakokak.sch.id/media_library/images/icon-128x128.png" alt="Logo" class="w-8 h-8 object-contain"/>
+                        </div>
+                        <div class="text-xl font-light">SMAPTA<span class="text-primary">.</span></div>
+                        <div class="text-xs text-text-muted mt-2 animate-pulse">Memuat...</div>
                     </div>
                 </div>
             </transition>
@@ -521,142 +862,144 @@
         <!-- Iframe Launcher -->
         <Teleport to="body">
             <transition name="fade">
-                <div v-if="activeApp" class="fixed inset-0 z-[9000] flex flex-col bg-background">
-                    <!-- Title Bar Window -->
-                    <div class="h-16 px-6 flex items-center justify-between z-10 shrink-0 bg-surface border-b border-border">
-                        <div class="flex items-center gap-4">
-                            <button @click="closeApp" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-hover text-text-muted hover:text-text-main transition-colors elegant-focus shrink-0" aria-label="Tutup Modul">
-                                <l-icon name="arrow-left" icon-class="w-4 h-4 stroke-[1.5]"></l-icon>
-                            </button>
-                            <div class="h-4 w-px bg-border mx-2"></div>
-                            <div class="flex items-center gap-3 text-[14px] font-medium text-text-main">
-                                <l-icon :name="activeApp.icon || 'box'" icon-class="w-4 h-4 text-primary stroke-[1.5]"></l-icon>
-                                <span>{{ activeApp.title }}</span>
-                            </div>
-                        </div>
-                    </div>
+                <div v-if="activeApp" class="fixed inset-0 z-[9000] bg-background">
+                    <button @click="closeApp" class="absolute top-3 right-3 z-[9010] p-2 rounded-lg bg-surface border border-border hover:bg-surface-hover shadow-sm">
+                        <l-icon name="x" icon-class="w-4 h-4"></l-icon>
+                    </button>
                     
-                    <div class="relative flex-1 bg-background">
+                    <div class="absolute inset-0 w-full h-full">
                         <transition name="fade">
-                            <div v-if="isIframeLoading" class="absolute inset-0 flex flex-col items-center justify-center z-50 bg-background/80 backdrop-blur-sm">
-                                <l-icon name="loader-2" icon-class="w-8 h-8 animate-spin mb-4 text-primary stroke-[1.5]"></l-icon>
+                            <div v-if="isIframeLoading" class="absolute inset-0 flex flex-col items-center justify-center z-[9005] bg-background/80">
+                                <l-icon name="loader-2" icon-class="w-6 h-6 animate-spin mb-2 text-primary"></l-icon>
+                                <span class="text-xs text-text-muted">Menghubungkan...</span>
                             </div>
                         </transition>
-                        <iframe :src="iframeSrc" @load="onIframeLoad" class="w-full h-full border-0 absolute inset-0 z-0 bg-surface" title="Modul Aktif"></iframe>
+                        <iframe :src="iframeSrc" 
+                                @load="onIframeLoad" 
+                                class="w-full h-full border-0 absolute inset-0 z-0 bg-surface" 
+                                :title="`Modul ${activeApp.title}`"
+                                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                                loading="lazy">
+                        </iframe>
                     </div>
                 </div>
             </transition>
         </Teleport>
 
-        <!-- Modal Otorisasi -->
+        <!-- Login Modal -->
         <Teleport to="body">
             <transition name="fade">
-                <div v-if="showLoginModal" class="fixed inset-0 z-[9500] flex items-center justify-center p-4 elegant-glass">
-                    <div class="elegant-panel w-full max-w-sm p-8 text-center mx-4 animate-float-soft relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-primary opacity-80"></div>
-                        <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-6 bg-primary-light text-primary">
-                            <l-icon name="shield" icon-class="w-8 h-8 stroke-[1.5]"></l-icon>
+                <div v-if="showLoginModal" 
+                     class="fixed inset-0 z-[9500] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+                     @keydown.esc="showLoginModal = false; pinInput = ''">
+                    <div class="card w-full max-w-sm p-6 text-center">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 bg-primary-light text-primary">
+                            <l-icon name="shield" icon-class="w-6 h-6"></l-icon>
                         </div>
-                        <h2 class="text-[20px] font-medium mb-1 text-text-main">Otentikasi Eksekutif</h2>
-                        <p class="text-[14px] mb-8 text-text-muted font-light">Masukkan PIN kredensial Anda</p>
+                        <h2 class="text-lg font-semibold mb-1">Otentikasi</h2>
+                        <p class="text-sm text-text-muted mb-6">Masukkan PIN Anda</p>
                         
-                        <input v-model="pinInput" ref="pinInputRef" type="password" placeholder="••••••••" class="w-full px-4 py-3 elegant-input elegant-focus text-center tracking-[0.5em] text-[18px] font-mono mb-8 text-text-main" @keyup.enter="processLogin" aria-label="PIN Otorisasi" />
+                        <input v-model="pinInput" 
+                               ref="pinInputRef" 
+                               type="password" 
+                               placeholder="••••••••" 
+                               class="input text-center tracking-[0.5em] text-base mb-4" 
+                               @keyup.enter="processLogin" 
+                               autocomplete="current-password" />
                         
-                        <div class="flex gap-3 flex-col">
-                            <button @click="processLogin" class="elegant-focus w-full py-3 text-[14px] font-medium rounded-xl bg-primary text-white hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 shadow-sm" :disabled="isSubmitting">
+                        <div class="flex gap-2 flex-col">
+                            <button @click="processLogin" class="btn-primary w-full justify-center" :disabled="isSubmitting">
                                 <l-icon v-if="isSubmitting" name="loader-2" icon-class="w-4 h-4 animate-spin"></l-icon>
-                                {{ isSubmitting ? 'Verifikasi...' : 'Akses Sistem' }}
+                                {{ isSubmitting ? 'Verifikasi...' : 'Akses' }}
                             </button>
-                            <button @click="showLoginModal = false; pinInput = ''" class="elegant-focus w-full py-3 text-[14px] font-medium rounded-xl bg-surface border border-border text-text-muted hover:bg-surface-hover hover:text-text-main transition-colors">Batal</button>
+                            <button @click="showLoginModal = false; pinInput = ''" class="btn-secondary w-full justify-center">Batal</button>
                         </div>
                     </div>
                 </div>
             </transition>
         </Teleport>
 
-        <!-- Modal Form Modul -->
+        <!-- App Form Modal -->
         <Teleport to="body">
             <transition name="fade">
-                <div v-if="showAppModal" class="fixed inset-0 z-[9500] flex items-center justify-center p-4 elegant-glass">
-                    <div class="elegant-panel w-full max-w-md flex flex-col max-h-[90dvh] mx-4 p-0 shadow-2xl">
-                        <!-- Header -->
-                        <div class="px-6 py-5 border-b border-border flex justify-between items-center shrink-0 bg-surface rounded-t-[16px]">
-                            <h2 class="text-[18px] font-medium text-text-main flex items-center gap-2">
-                                {{ isEditing ? 'Edit Modul' : 'Modul Baru' }}
-                            </h2>
-                            <button @click="showAppModal = false" class="p-2 rounded-full text-text-muted hover:bg-surface-hover elegant-focus transition-colors" aria-label="Tutup">
-                                <l-icon name="x" icon-class="w-5 h-5 stroke-[1.5]"></l-icon>
+                <div v-if="showAppModal" 
+                     class="fixed inset-0 z-[9500] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+                     @keydown.esc="showAppModal = false">
+                    <div class="card w-full max-w-md flex flex-col max-h-[90vh] mx-4 p-0">
+                        <div class="px-5 py-4 border-b border-border flex justify-between items-center shrink-0">
+                            <h2 class="text-base font-semibold">{{ isEditing ? 'Edit Modul' : 'Modul Baru' }}</h2>
+                            <button @click="showAppModal = false" class="p-1.5 rounded hover:bg-surface-hover text-text-muted">
+                                <l-icon name="x" icon-class="w-4 h-4"></l-icon>
                             </button>
                         </div>
                         
-                        <!-- Body -->
-                        <div class="p-6 overflow-y-auto no-scrollbar space-y-5 bg-background">
+                        <div class="p-5 overflow-y-auto no-scrollbar space-y-4 bg-background">
                             <div>
-                                <label class="block text-[12px] font-medium mb-1.5 text-text-main">Judul Modul <span class="text-danger">*</span></label>
-                                <input v-model="appForm.title" type="text" class="w-full px-4 py-2.5 elegant-input elegant-focus text-[14px]" placeholder="Contoh: Sistem Akademik" />
+                                <label class="block text-xs font-medium mb-1 text-text-main">Judul <span class="text-danger">*</span></label>
+                                <input v-model="appForm.title" type="text" class="input text-sm" placeholder="Sistem Akademik" />
                             </div>
                             <div>
-                                <label class="block text-[12px] font-medium mb-1.5 text-text-main">Deskripsi Singkat <span class="text-danger">*</span></label>
-                                <input v-model="appForm.desc" type="text" class="w-full px-4 py-2.5 elegant-input elegant-focus text-[14px]" placeholder="Penjelasan ringkas fungsi" />
+                                <label class="block text-xs font-medium mb-1 text-text-main">Deskripsi <span class="text-danger">*</span></label>
+                                <input v-model="appForm.desc" type="text" class="input text-sm" placeholder="Deskripsi singkat" />
                             </div>
                             <div>
-                                <label class="block text-[12px] font-medium mb-1.5 text-text-main">URL Tujuan <span class="text-danger">*</span></label>
+                                <label class="block text-xs font-medium mb-1 text-text-main">URL <span class="text-danger">*</span></label>
                                 <div class="relative">
-                                    <l-icon name="link-2" icon-class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"></l-icon>
-                                    <input v-model="appForm.url" type="url" class="w-full pl-10 pr-4 py-2.5 elegant-input elegant-focus font-mono text-[13px]" placeholder="https://..." />
+                                    <l-icon name="link-2" icon-class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"></l-icon>
+                                    <input v-model="appForm.url" type="url" class="input pl-9 text-sm" placeholder="https://..." />
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-5">
+                            <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-[12px] font-medium mb-1.5 text-text-main">Ikon (Lucide)</label>
-                                    <div class="flex items-center relative">
-                                        <div class="w-10 h-10 rounded-l-xl flex items-center justify-center border border-r-0 border-border bg-surface shrink-0 z-10 text-text-muted">
-                                            <l-icon :name="appForm.icon || 'box'" icon-class="w-4 h-4 stroke-[1.5]"></l-icon>
+                                    <label class="block text-xs font-medium mb-1 text-text-main">Ikon</label>
+                                    <div class="flex">
+                                        <div class="w-9 h-9 rounded-l-lg flex items-center justify-center border border-r-0 border-border bg-surface shrink-0 text-text-muted">
+                                            <l-icon :name="appForm.icon || 'box'" icon-class="w-3.5 h-3.5"></l-icon>
                                         </div>
-                                        <input v-model="appForm.icon" type="text" class="w-full pl-3 pr-3 py-2.5 elegant-input rounded-l-none elegant-focus font-mono text-[13px]" placeholder="box" />
+                                        <input v-model="appForm.icon" type="text" class="input rounded-l-none text-sm" placeholder="box" />
                                     </div>
-                                    <p class="text-[10px] mt-1 text-text-muted text-right"><a href="https://lucide.dev/icons/" target="_blank" class="hover:text-primary hover:underline transition-colors">Referensi Ikon &rarr;</a></p>
                                 </div>
                                 <div>
-                                    <label class="block text-[12px] font-medium mb-1.5 text-text-main">Warna Aksen</label>
-                                    <div class="flex items-center relative">
-                                        <div class="w-10 h-10 rounded-l-xl border border-r-0 border-border bg-surface shrink-0 z-10 flex items-center justify-center overflow-hidden">
-                                            <input v-model="appForm.color" type="color" class="w-6 h-6 p-0 border-0 cursor-pointer bg-transparent" />
+                                    <label class="block text-xs font-medium mb-1 text-text-main">Warna</label>
+                                    <div class="flex">
+                                        <div class="w-9 h-9 rounded-l-lg border border-r-0 border-border bg-surface shrink-0 flex items-center justify-center overflow-hidden">
+                                            <input v-model="appForm.color" type="color" class="w-5 h-5 p-0 border-0 cursor-pointer bg-transparent" />
                                         </div>
-                                        <input v-model="appForm.color" type="text" class="w-full pl-3 pr-3 py-2.5 elegant-input rounded-l-none elegant-focus text-[13px] font-mono uppercase" />
+                                        <input v-model="appForm.color" type="text" class="input rounded-l-none text-sm font-mono uppercase" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Footer -->
-                        <div class="px-6 py-5 border-t border-border flex gap-3 shrink-0 bg-surface rounded-b-[16px]">
-                            <button @click="showAppModal = false" class="elegant-focus flex-1 py-2.5 text-[14px] font-medium rounded-xl bg-surface border border-border text-text-muted hover:bg-surface-hover hover:text-text-main transition-colors">Batal</button>
-                            <button @click="saveAppForm" class="elegant-focus flex-[2] py-2.5 text-[14px] flex items-center justify-center gap-2 font-medium rounded-xl bg-primary text-white hover:bg-blue-600 transition-colors shadow-sm" :disabled="isSubmitting">
+                        <div class="px-5 py-4 border-t border-border flex gap-2 shrink-0">
+                            <button @click="showAppModal = false" class="btn-secondary flex-1 justify-center text-sm">Batal</button>
+                            <button @click="saveAppForm" class="btn-primary flex-[2] justify-center text-sm" :disabled="isSubmitting">
                                 <l-icon v-if="isSubmitting" name="loader-2" icon-class="w-4 h-4 animate-spin"></l-icon>
-                                {{ isSubmitting ? 'Menyimpan...' : 'Simpan Data' }}
+                                {{ isSubmitting ? 'Menyimpan...' : 'Simpan' }}
                             </button>
                         </div>
                     </div>
                 </div>
             </transition>
         </Teleport>
+
+        <!-- Toast Container -->
+        <div id="toast-container"></div>
 
     </div>
 
-    <!-- SCRIPT VUE 3 NATIVE RPC ARCHITECTURE -->
     <script>
         const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
 
+        // ===== COMPONENT: Lucide Icon =====
         const LucideIcon = {
             props: {
                 name: { type: String, required: true },
-                iconClass: { type: String, default: '' },
-                iconStyle: { type: String, default: '' }
+                iconClass: { type: String, default: '' }
             },
             template: `<span v-html="iconHtml" style="display: contents;"></span>`,
             computed: {
-                iconHtml() { return `<i data-lucide="${this.name || 'box'}" class="${this.iconClass}" style="${this.iconStyle}"></i>`; }
+                iconHtml() { return `<i data-lucide="${this.name || 'box'}" class="${this.iconClass}"></i>`; }
             },
             mounted() { this.renderIcon(); },
             updated() { this.renderIcon(); },
@@ -667,166 +1010,442 @@
             }
         };
 
+        // ===== CONFIG =====
+        const CONFIG = {
+            API_URL: "https://script.google.com/macros/s/AKfycbw09thIhTGLUWi0Uc3Zg2PbqdrQI2thEch7Jl9V-H_m29_av5vGgHtEXb6aKmh2kXRD/exec",
+            TIMEOUT: 30000,
+            RETRY_ATTEMPTS: 3,
+            CACHE_TTL: 60000
+        };
+
+        const cache = new Map();
+        
+        const getCached = (key) => {
+            const cached = cache.get(key);
+            if (cached && Date.now() - cached.timestamp < CONFIG.CACHE_TTL) return cached.data;
+            cache.delete(key);
+            return null;
+        };
+        
+        const setCached = (key, data) => {
+            cache.set(key, { data, timestamp: Date.now() });
+        };
+
+        const showToast = (title, iconType = 'info', duration = 3500) => {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const styles = getComputedStyle(document.documentElement);
+            const bgColor = styles.getPropertyValue('--surface').trim();
+            const textColor = styles.getPropertyValue('--text-main').trim();
+            const borderColor = styles.getPropertyValue('--border').trim();
+            
+            let iconColor = iconType === 'success' ? styles.getPropertyValue('--success').trim() : 
+                           iconType === 'error' ? styles.getPropertyValue('--danger').trim() : 
+                           styles.getPropertyValue('--primary').trim();
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-item card p-3 shadow-sm';
+            toast.style.cssText = `
+                background: ${bgColor};
+                border: 1px solid ${borderColor};
+                border-radius: 10px;
+                padding: 12px 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 6px;
+                animation: slideInRight 0.3s ease forwards;
+            `;
+            
+            toast.innerHTML = `
+                <div style="width:6px; height:6px; border-radius:50%; background:${iconColor}; flex-shrink:0;"></div>
+                <span style="color:${textColor}; font-size:13px; flex:1;">${DOMPurify.sanitize(title)}</span>
+                <button style="background:none; border:none; color:${textColor}; opacity:0.4; cursor:pointer; padding:2px;">✕</button>
+            `;
+
+            toast.querySelector('button').addEventListener('click', () => {
+                toast.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideOutRight 0.3s ease forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+        };
+
+        // ===== MAIN APP =====
         const app = createApp({
             setup() {
-                // State Core
                 const isInitialLoading = ref(true);
                 const isLoadingData = ref(true);
                 const isSyncing = ref(false);
                 const isAdmin = ref(false);
-                
-                // Simpan JWT Token
                 const authToken = ref('');
-                
                 const isDarkMode = ref(false);
-                
-                // Clock State
                 const currentTime = ref('');
-
-                // Routing & Data
                 const currentRoute = ref('datamaster');
                 const apps = ref([]);
                 const searchQuery = ref('');
-
-                // UI States
                 const isSidebarOpen = ref(false);
                 const showLoginModal = ref(false);
                 const pinInputRef = ref(null);
                 const pinInput = ref('');
                 const isSubmitting = ref(false);
-
-                // Iframe States
                 const activeApp = ref(null);
                 const iframeSrc = ref('about:blank');
                 const isIframeLoading = ref(false);
-
-                // Form States
                 const showAppModal = ref(false);
                 const isEditing = ref(false);
                 const appForm = ref({});
-                
+                const searchInput = ref(null);
                 let chartInstance = null;
+                let clockInterval = null;
 
-                // --- CLOCK LOGIC ---
+                const csrfToken = ref(Math.random().toString(36).substring(2, 15));
+                
                 const updateClock = () => {
                     const now = new Date();
                     currentTime.value = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 };
 
-                // --- NAVIGATION & THEME ---
                 const navigateAdmin = (route) => {
                     currentRoute.value = route;
                     if (window.innerWidth < 1024) isSidebarOpen.value = false;
+                    if (route === 'analytics') nextTick(() => renderChart());
                 };
 
                 const toggleTheme = () => {
                     isDarkMode.value = !isDarkMode.value;
-                    const docEl = document.documentElement;
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('smapta_theme', isDarkMode.value ? 'dark' : 'light');
                     const metaTheme = document.getElementById('meta-theme-color');
-                    
-                    if (isDarkMode.value) {
-                        docEl.classList.add('dark');
-                        localStorage.setItem('educore_theme', 'dark');
-                        if(metaTheme) metaTheme.setAttribute('content', '#0B0F19');
-                    } else {
-                        docEl.classList.remove('dark');
-                        localStorage.setItem('educore_theme', 'light');
-                        if(metaTheme) metaTheme.setAttribute('content', '#F8FAFC');
-                    }
+                    if(metaTheme) metaTheme.setAttribute('content', isDarkMode.value ? '#0B0F19' : '#F8FAFC');
                     if (currentRoute.value === 'analytics') renderChart();
                 };
 
                 const initTheme = () => {
-                    const savedTheme = localStorage.getItem('educore_theme');
+                    const savedTheme = localStorage.getItem('smapta_theme');
                     if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                         isDarkMode.value = true;
                         document.documentElement.classList.add('dark');
-                        const metaTheme = document.getElementById('meta-theme-color');
-                        if(metaTheme) metaTheme.setAttribute('content', '#0B0F19');
                     }
                 };
 
-                // --- RPC & HYBRID ADAPTER ---
-                const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxA1ZizShpTaHSBS9qbMsQ0aS_iHq_G1KcjfjEnVJbEaBxJhhxHcH0QX4Th5NKiZAtM/exec"; 
+                const rpcCall = async (action, payload = {}) => {
+                    const cacheKey = JSON.stringify({ action, payload });
+                    if (action === 'GET_APPS') {
+                        const cached = getCached(cacheKey);
+                        if (cached) return cached;
+                    }
 
-                const rpcCall = (action, payload = {}) => {
-                    return new Promise((resolve, reject) => {
-                        const requestData = JSON.stringify({ action, payload, token: authToken.value });
+                    payload._csrf = csrfToken.value;
+                    payload._timestamp = Date.now();
+                    const requestData = JSON.stringify({ action, payload, token: authToken.value });
 
-                        if (typeof google === 'undefined') {
-                            if (GAS_WEBAPP_URL) {
-                                fetch(GAS_WEBAPP_URL, {
+                    try {
+                        const result = await new Promise((resolve, reject) => {
+                            const timeoutId = setTimeout(() => reject(new Error('timeout')), CONFIG.TIMEOUT);
+
+                            if (typeof google === 'undefined' || !google.script) {
+                                fetch(CONFIG.API_URL, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                                     body: requestData
                                 })
-                                .then(res => res.json())
-                                .then(result => {
-                                    if (!result.success) reject(new Error(result.error));
-                                    else resolve(result.data);
-                                })
-                                .catch(err => reject(new Error("Kegagalan transmisi Hybrid: " + err.message)));
-                                return;
+                                .then(res => { clearTimeout(timeoutId); if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+                                .then(result => { if (!result.success) throw new Error(result.error); resolve(result.data); })
+                                .catch(err => { clearTimeout(timeoutId); reject(err); });
                             } else {
-                                // Mock Fallback untuk lingkungan pengembangan non-GAS
-                                setTimeout(() => {
-                                    if (action === 'GET_APPS') resolve([
-                                        { id: 'AKD', title: 'Sistem Akademik', desc: 'Manajemen nilai & KBM', url: 'https://example.com', icon: 'graduation-cap', color: '#3B82F6', isActive: true },
-                                        { id: 'FIN', title: 'Keuangan Terpadu', desc: 'Sistem SPP & Akuntansi', url: 'https://example.com', icon: 'wallet', color: '#16A34A', isActive: true },
-                                        { id: 'HRD', title: 'Kepegawaian', desc: 'Absensi & Data Guru', url: 'https://example.com', icon: 'users', color: '#8B5CF6', isActive: false },
-                                    ]);
-                                    else if (action === 'AUTHORIZE') {
-                                        if (payload.pin === 'admin') resolve({ token: 'mock_jwt_token_header.payload.signature' });
-                                        else reject(new Error("401 UNAUTHORIZED: Kredensial tidak valid."));
-                                    }
-                                    else resolve({ success: true });
-                                }, 800);
-                                return;
+                                google.script.run
+                                    .withSuccessHandler((responseStr) => {
+                                        clearTimeout(timeoutId);
+                                        try { const result = JSON.parse(responseStr); if (!result.success) reject(new Error(result.error)); else resolve(result.data); }
+                                        catch (e) { reject(new Error("Gagal mengurai respons")); }
+                                    })
+                                    .withFailureHandler((err) => { clearTimeout(timeoutId); reject(new Error(err.message)); })
+                                    .serverRouter(requestData);
                             }
-                        }
-
-                        google.script.run
-                            .withSuccessHandler((responseStr) => {
-                                try {
-                                    const result = JSON.parse(responseStr);
-                                    if (!result.success) reject(new Error(result.error));
-                                    else resolve(result.data);
-                                } catch (e) { reject(new Error("Gagal mengurai respons sistem.")); }
-                            })
-                            .withFailureHandler((err) => reject(new Error(err.message)))
-                            .serverRouter(requestData);
-                    });
+                        });
+                        
+                        if (action === 'GET_APPS') setCached(cacheKey, result);
+                        return result;
+                    } catch (error) {
+                        throw error;
+                    }
                 };
 
-                // --- TOAST/FEEDBACK ENGINE (Elegant Style) ---
-                const showToast = (title, iconType = 'info') => {
+                const loadData = async () => {
+                    try {
+                        isSyncing.value = true;
+                        const data = await rpcCall('GET_APPS');
+                        apps.value = data || [];
+                    } catch (error) {
+                        console.error('Load error:', error);
+                        if (error.message.includes('401')) {
+                            showToast('Sesi habis, login ulang.', 'error');
+                            logoutAdmin();
+                        } else {
+                            showToast('Gagal sinkronisasi data.', 'error');
+                        }
+                    } finally {
+                        isSyncing.value = false;
+                        isLoadingData.value = false;
+                    }
+                };
+
+                const processLogin = async () => {
+                    if (!pinInput.value) { showToast('Masukkan PIN.', 'error'); return; }
+                    
+                    isSubmitting.value = true;
+                    try {
+                        const data = await rpcCall('AUTHORIZE', { pin: pinInput.value });
+                        if (data && data.token) {
+                            isAdmin.value = true;
+                            authToken.value = data.token;
+                            showLoginModal.value = false;
+                            pinInput.value = '';
+                            showToast('Otorisasi berhasil.', 'success');
+                            if (currentRoute.value === 'analytics') renderChart();
+                        } else {
+                            showToast('Respons tidak valid.', 'error');
+                        }
+                    } catch (error) {
+                        showToast(error.message.includes('401') ? 'PIN salah.' : 'Gagal komunikasi.', 'error');
+                    } finally {
+                        isSubmitting.value = false;
+                    }
+                };
+
+                const logoutAdmin = () => {
+                    isAdmin.value = false;
+                    authToken.value = '';
+                    isSidebarOpen.value = false;
+                    csrfToken.value = Math.random().toString(36).substring(2, 15);
+                    showToast('Sesi ditutup.', 'info');
+                    cache.clear();
+                };
+
+                const openAppForm = (app = null) => {
+                    isEditing.value = !!app;
+                    if (app) {
+                        appForm.value = JSON.parse(JSON.stringify(app));
+                    } else {
+                        appForm.value = { id: 'MDL_' + Date.now().toString().slice(-6), title: '', desc: '', url: '', icon: 'box', color: '#3B82F6', isActive: true };
+                    }
+                    showAppModal.value = true;
+                };
+
+                const saveAppForm = async () => {
+                    if (!appForm.value.title || !appForm.value.url || !appForm.value.desc) {
+                        showToast('Lengkapi data.', 'error');
+                        return;
+                    }
+
+                    isSubmitting.value = true;
+                    try {
+                        const action = isEditing.value ? 'UPDATE_APP' : 'CREATE_APP';
+                        await rpcCall(action, appForm.value);
+                        showToast('Data tersimpan.', 'success');
+                        showAppModal.value = false;
+                        await loadData();
+                    } catch (error) {
+                        if (error.message.includes('401')) { showToast('Sesi habis.', 'error'); logoutAdmin(); }
+                        else showToast('Gagal menyimpan.', 'error');
+                    } finally {
+                        isSubmitting.value = false;
+                    }
+                };
+
+                const deleteAppPrompt = (app) => {
+                    const safeTitle = DOMPurify.sanitize(app.title);
                     const styles = getComputedStyle(document.documentElement);
-                    let iconColor = iconType === 'success' ? styles.getPropertyValue('--success').trim() : 
-                                    iconType === 'error' ? styles.getPropertyValue('--danger').trim() : 
-                                    styles.getPropertyValue('--primary').trim();
-                    
-                    const bgColor = styles.getPropertyValue('--surface').trim();
                     const textColor = styles.getPropertyValue('--text-main').trim();
-                    const borderColor = styles.getPropertyValue('--border').trim();
-                    
-                    let htmlRaw = `
-                        <div style="display:flex; align-items:center; gap:12px; font-family:'Google Sans', sans-serif;">
-                            <div style="width:8px; height:8px; border-radius: 50%; background-color:${iconColor}; box-shadow: 0 0 8px ${iconColor}40;"></div>
-                            <span style="color:${textColor}; font-size:14px; font-weight:400; letter-spacing: 0.01em;">${title}</span>
-                        </div>
-                    `;
-                    
-                    let htmlSafe = DOMPurify.sanitize(htmlRaw);
+                    const textMuted = styles.getPropertyValue('--text-muted').trim();
+                    const dangerColor = styles.getPropertyValue('--danger').trim();
+                    const bgColor = styles.getPropertyValue('--surface').trim();
 
                     Swal.fire({
-                        toast: true, position: 'bottom-end', showConfirmButton: false, timer: 3500,
+                        title: `<span style="color:${textColor}; font-weight:600; font-size:16px;">Hapus Modul?</span>`,
+                        html: `<p style="color:${textMuted}; font-size:13px;">"${safeTitle}" akan dihapus permanen.</p>`,
+                        icon: 'warning',
+                        iconColor: dangerColor,
+                        showCancelButton: true,
                         background: bgColor,
-                        html: htmlSafe,
-                        customClass: { 
-                            popup: `!border !border-[var(--border)] !rounded-[12px] !shadow-[0_4px_24px_-4px_rgba(0,0,0,0.1)] !m-4 !p-4` 
+                        confirmButtonColor: dangerColor,
+                        cancelButtonColor: 'transparent',
+                        confirmButtonText: '<span style="font-weight:500; font-size:13px; color:white;">Hapus</span>',
+                        cancelButtonText: `<span style="font-weight:500; color:${textMuted}; font-size:13px;">Batal</span>`,
+                        customClass: {
+                            popup: `border border-[var(--border)] rounded-[12px] shadow-lg`,
+                            confirmButton: `rounded-lg px-4 py-2`,
+                            cancelButton: `rounded-lg px-4 py-2 border border-[var(--border)] hover:bg-[var(--surface-hover)]`
+                        }
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            try {
+                                await rpcCall('DELETE_APP', { id: app.id });
+                                showToast('Modul dihapus.', 'success');
+                                await loadData();
+                            } catch (error) {
+                                if (error.message.includes('401')) { showToast('Akses ditolak.', 'error'); logoutAdmin(); }
+                                else showToast('Gagal menghapus.', 'error');
+                            }
                         }
                     });
                 };
+
+                const toggleAppStatus = async (app) => {
+                    const originalStatus = app.isActive;
+                    try {
+                        app.isActive = !app.isActive;
+                        await rpcCall('TOGGLE_APP', { id: app.id });
+                        await loadData();
+                        showToast(`Modul ${app.isActive ? 'diaktifkan' : 'dinonaktifkan'}.`, 'success');
+                    } catch (error) {
+                        app.isActive = originalStatus;
+                        if (error.message.includes('401')) { showToast('Sesi habis.', 'error'); logoutAdmin(); }
+                        else showToast('Gagal merubah status.', 'error');
+                    }
+                };
+
+                const openApp = (app) => {
+                    activeApp.value = app;
+                    isIframeLoading.value = true;
+                    setTimeout(() => { iframeSrc.value = app.url; }, 300);
+                };
+
+                const closeApp = () => {
+                    iframeSrc.value = 'about:blank';
+                    activeApp.value = null;
+                    isIframeLoading.value = false;
+                };
+
+                const shareMicrosite = async () => {
+                    const shareData = {
+                        title: 'SMAPTA Workspace',
+                        text: 'Akses cepat seluruh layanan digital SMA PGRI Takokak.',
+                        url: window.location.href
+                    };
+
+                    try {
+                        if (navigator.share) {
+                            await navigator.share(shareData);
+                        } else if (navigator.clipboard && window.isSecureContext) {
+                            await navigator.clipboard.writeText(window.location.href);
+                            showToast('Tautan berhasil disalin.', 'success');
+                        } else {
+                            const input = document.createElement('input');
+                            input.value = window.location.href;
+                            document.body.appendChild(input);
+                            input.select();
+                            document.execCommand('copy');
+                            input.remove();
+                            showToast('Tautan berhasil disalin.', 'success');
+                        }
+                    } catch (error) {
+                        if (error?.name !== 'AbortError') showToast('Tautan belum dapat dibagikan.', 'error');
+                    }
+                };
+
+                const onIframeLoad = () => {
+                    if (iframeSrc.value !== 'about:blank') {
+                        isIframeLoading.value = false;
+                        showToast(`${activeApp.value?.title || 'Modul'} siap.`, 'info', 1500);
+                    }
+                };
+
+                const renderChart = async () => {
+                    await nextTick();
+                    const canvas = document.getElementById('appChart');
+                    if (!canvas) return;
+                    
+                    if (typeof Chart === 'undefined') {
+                        try { await import('https://cdn.jsdelivr.net/npm/chart.js'); } 
+                        catch (e) { console.error('Chart.js load error:', e); return; }
+                    }
+
+                    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+
+                    const styles = getComputedStyle(document.documentElement);
+                    const labels = apps.value.map(a => a.title);
+                    const data = apps.value.map(() => Math.floor(Math.random() * 80) + 20);
+                    const colors = apps.value.map(a => a.color || styles.getPropertyValue('--primary').trim());
+
+                    chartInstance = new Chart(canvas, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: colors.map(c => `${c}CC`),
+                                borderColor: colors,
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                barPercentage: 0.5
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: styles.getPropertyValue('--surface').trim(),
+                                    titleColor: styles.getPropertyValue('--text-main').trim(),
+                                    bodyColor: styles.getPropertyValue('--text-main').trim(),
+                                    borderColor: styles.getPropertyValue('--border').trim(),
+                                    borderWidth: 1,
+                                    cornerRadius: 8,
+                                    padding: 8,
+                                    titleFont: { size: 12, weight: '600' },
+                                    bodyFont: { size: 11 }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: { color: isDarkMode.value ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
+                                    ticks: { color: styles.getPropertyValue('--text-muted').trim(), font: { size: 10 } }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: styles.getPropertyValue('--text-muted').trim(), font: { size: 10 } }
+                                }
+                            }
+                        }
+                    });
+                };
+
+                const handleKeyboardShortcuts = (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        if (!isAdmin.value && searchInput.value) searchInput.value.focus();
+                    }
+                    if (e.key === 'Escape') {
+                        if (activeApp.value) closeApp();
+                        if (showAppModal.value) showAppModal.value = false;
+                        if (showLoginModal.value) { showLoginModal.value = false; pinInput.value = ''; }
+                    }
+                };
+
+                onMounted(() => {
+                    initTheme();
+                    updateClock();
+                    clockInterval = setInterval(updateClock, 1000);
+                    
+                    setTimeout(() => {
+                        isInitialLoading.value = false;
+                        loadData();
+                    }, 1000);
+
+                    document.addEventListener('keydown', handleKeyboardShortcuts);
+                });
 
                 const displayedApps = computed(() => {
                     let list = apps.value.filter(a => a.isActive);
@@ -837,229 +1456,53 @@
                     return list;
                 });
 
-                // --- CORE ACTIONS ---
-                const loadData = async () => {
-                    try {
-                        isSyncing.value = true;
-                        const data = await rpcCall('GET_APPS');
-                        apps.value = data || [];
-                    } catch (error) { showToast('Gagal sinkronisasi data.', 'error'); } 
-                    finally { isSyncing.value = false; isLoadingData.value = false; }
-                };
-
-                watch(showLoginModal, (val) => {
-                    if (val) nextTick(() => pinInputRef.value?.focus());
-                });
-
-                const processLogin = async () => {
-                    if (!pinInput.value) return showToast('Kredensial wajib diisi.', 'error');
-                    isSubmitting.value = true;
-                    try {
-                        const data = await rpcCall('AUTHORIZE', { pin: pinInput.value });
-                        
-                        if (data && data.token) {
-                            isAdmin.value = true;
-                            authToken.value = data.token;
-                            showLoginModal.value = false;
-                            pinInput.value = '';
-                            showToast('Otorisasi berhasil diverifikasi.', 'success');
-                            if(currentRoute.value === 'analytics') renderChart();
-                        } else { 
-                            showToast('Respons server tidak valid.', 'error'); 
-                        }
-                    } catch (error) { 
-                        const isAuthError = error.message.includes('401');
-                        showToast(isAuthError ? 'Kredensial tidak valid.' : 'Kegagalan komunikasi server.', 'error'); 
-                    } 
-                    finally { isSubmitting.value = false; }
-                };
-
-                const logoutAdmin = () => {
-                    isAdmin.value = false;
-                    authToken.value = '';
-                    isSidebarOpen.value = false;
-                    showToast('Sesi ditutup dengan aman.', 'info');
-                };
-
-                const openAppForm = (app = null) => {
-                    isEditing.value = !!app;
-                    appForm.value = app ? JSON.parse(JSON.stringify(app)) : { 
-                        id: 'MDL_' + new Date().getTime().toString().slice(-4), title: '', desc: '', url: '', icon: 'box', color: '#3B82F6', isActive: true 
-                    };
-                    showAppModal.value = true;
-                };
-
-                const saveAppForm = async () => {
-                    if (!appForm.value.title || !appForm.value.url) return showToast('Lengkapi data formulir.', 'error');
-                    isSubmitting.value = true;
-                    try {
-                        const action = isEditing.value ? 'UPDATE_APP' : 'CREATE_APP';
-                        await rpcCall(action, appForm.value);
-                        showToast('Data modul tersimpan.', 'success');
-                        showAppModal.value = false;
-                        await loadData();
-                    } catch (error) { 
-                        showToast(error.message.includes('401') ? 'Sesi habis, silakan login ulang.' : 'Gagal menyimpan.', 'error');
-                        if (error.message.includes('401')) logoutAdmin();
-                    } 
-                    finally { isSubmitting.value = false; }
-                };
-
-                const deleteAppPrompt = (app) => {
-                    const safeTitle = DOMPurify.sanitize(app.title);
-                    const styles = getComputedStyle(document.documentElement);
-                    const bgColor = styles.getPropertyValue('--surface').trim();
-                    const textColor = styles.getPropertyValue('--text-main').trim();
-                    const textMuted = styles.getPropertyValue('--text-muted').trim();
-                    const dangerColor = styles.getPropertyValue('--danger').trim();
-
-                    Swal.fire({
-                        title: `<span style="color:${textColor}; font-weight:500; font-size:18px;">Konfirmasi Hapus</span>`,
-                        html: `<p style="color: ${textMuted}; font-size: 14px;">Modul <span style="color:${textColor}; font-weight:500;">${safeTitle}</span> akan dihapus permanen dari sistem.</p>`,
-                        icon: 'warning',
-                        iconColor: dangerColor,
-                        showCancelButton: true,
-                        background: bgColor,
-                        confirmButtonColor: dangerColor, 
-                        cancelButtonColor: 'transparent',
-                        confirmButtonText: '<span style="font-weight:500; font-size: 14px; color:white;">Hapus Permanen</span>', 
-                        cancelButtonText: `<span style="font-weight:500; color: ${textMuted}; font-size: 14px;">Batal</span>`,
-                        customClass: { 
-                            popup: `!border !border-[var(--border)] !rounded-[16px] !shadow-2xl`,
-                            confirmButton: `!rounded-xl px-5 py-2.5 !shadow-sm hover:opacity-90 transition-opacity`,
-                            cancelButton: `!rounded-xl px-5 py-2.5 !border !border-[var(--border)] hover:bg-[var(--surface-hover)] transition-colors`
-                        }
-                    }).then(async (result) => {
-                        if (result.isConfirmed) {
-                            try {
-                                await rpcCall('DELETE_APP', { id: app.id });
-                                showToast('Modul berhasil dihapus.', 'success');
-                                await loadData();
-                            } catch (error) { 
-                                showToast(error.message.includes('401') ? 'Akses ditolak.' : 'Gagal menghapus.', 'error');
-                                if (error.message.includes('401')) logoutAdmin();
-                            }
-                        }
-                    });
-                };
-
-                const toggleAppStatus = async (app) => {
-                    try {
-                        app.isActive = !app.isActive; // Optimistic update
-                        await rpcCall('TOGGLE_APP', { id: app.id });
-                        rpcCall('GET_APPS').then(data => apps.value = data); 
-                    } catch (error) { 
-                        app.isActive = !app.isActive; // Revert
-                        showToast(error.message.includes('401') ? 'Sesi habis, silakan login ulang.' : 'Gagal merubah status.', 'error'); 
-                        if (error.message.includes('401')) logoutAdmin();
-                    }
-                };
-
-                const openApp = (app) => {
-                    activeApp.value = app;
-                    isIframeLoading.value = true;
-                    setTimeout(() => { iframeSrc.value = app.url; }, 400);
-                };
-
-                const closeApp = () => { iframeSrc.value = 'about:blank'; activeApp.value = null; };
-                const onIframeLoad = () => { if (iframeSrc.value !== 'about:blank') isIframeLoading.value = false; };
-
-                // --- CHART.JS LOGIC (Elegant Style) ---
-                const renderChart = () => {
-                    nextTick(() => {
-                        const canvas = document.getElementById('appChart');
-                        if (!canvas) return;
-                        if (chartInstance) chartInstance.destroy();
-                        
-                        const styles = getComputedStyle(document.documentElement);
-                        const labels = apps.value.map(a => a.title);
-                        const data = apps.value.map(() => Math.floor(Math.random() * 80) + 20); 
-                        const colors = apps.value.map(a => a.color || styles.getPropertyValue('--primary').trim());
-
-                        const gridColor = isDarkMode.value ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
-                        const tickColor = styles.getPropertyValue('--text-muted').trim();
-                        const tooltipBg = styles.getPropertyValue('--surface').trim();
-                        const tooltipText = styles.getPropertyValue('--text-main').trim();
-                        const borderColor = styles.getPropertyValue('--border').trim();
-
-                        chartInstance = new Chart(canvas, {
-                            type: 'bar',
-                            data: { 
-                                labels: labels, 
-                                datasets: [{ 
-                                    data: data, 
-                                    backgroundColor: colors.map(c => `${c}CC`), // Add transparency
-                                    borderColor: colors, 
-                                    borderWidth: 1, 
-                                    borderRadius: 6, // Softer radius
-                                    hoverBackgroundColor: colors,
-                                    barPercentage: 0.5
-                                }] 
-                            },
-                            options: {
-                                responsive: true, 
-                                maintainAspectRatio: false, 
-                                plugins: { 
-                                    legend: { display: false },
-                                    tooltip: {
-                                        backgroundColor: tooltipBg,
-                                        titleColor: tooltipText,
-                                        bodyColor: tooltipText,
-                                        borderColor: borderColor,
-                                        borderWidth: 1,
-                                        titleFont: { family: 'Google Sans', size: 13, weight: '500' },
-                                        bodyFont: { family: 'Google Sans', size: 12, weight: '400' },
-                                        padding: 10,
-                                        cornerRadius: 8,
-                                        displayColors: true,
-                                        boxPadding: 4
-                                    }
-                                },
-                                animation: {
-                                    tension: { duration: 1000, easing: 'linear', from: 1, to: 0, loop: true }
-                                },
-                                scales: {
-                                    y: { 
-                                        beginAtZero: true,
-                                        grid: { color: gridColor, lineWidth: 1, drawBorder: false }, 
-                                        ticks: { color: tickColor, font: { weight: '400', family: 'Google Sans', size: 12 }, padding: 8 } 
-                                    },
-                                    x: { 
-                                        grid: { display: false, drawBorder: false }, 
-                                        ticks: { color: tickColor, font: { weight: '400', family: 'Google Sans', size: 12 }, padding: 8 } 
-                                    }
-                                }
-                            }
-                        });
-                    });
-                };
-
-                watch(currentRoute, (newRoute) => { if (newRoute === 'analytics') renderChart(); });
-
-                onMounted(() => {
-                    initTheme();
-                    updateClock();
-                    setInterval(updateClock, 1000);
-                    
-                    setTimeout(() => { 
-                        isInitialLoading.value = false; 
-                        loadData();
-                    }, 1800); 
-                });
-
                 return {
-                    isInitialLoading, isLoadingData, isSyncing, isAdmin, currentRoute, apps, searchQuery, displayedApps,
-                    isSidebarOpen, navigateAdmin, isDarkMode, toggleTheme, currentTime,
-                    showLoginModal, pinInputRef, pinInput, isSubmitting, activeApp, iframeSrc, isIframeLoading,
-                    showAppModal, isEditing, appForm, loadData,
-                    processLogin, logoutAdmin, openAppForm, saveAppForm, deleteAppPrompt, toggleAppStatus,
-                    openApp, closeApp, onIframeLoad
+                    isInitialLoading,
+                    isLoadingData,
+                    isSyncing,
+                    isAdmin,
+                    currentRoute,
+                    apps,
+                    searchQuery,
+                    displayedApps,
+                    isSidebarOpen,
+                    navigateAdmin,
+                    isDarkMode,
+                    toggleTheme,
+                    currentTime,
+                    showLoginModal,
+                    pinInputRef,
+                    pinInput,
+                    isSubmitting,
+                    activeApp,
+                    iframeSrc,
+                    isIframeLoading,
+                    showAppModal,
+                    isEditing,
+                    appForm,
+                    searchInput,
+                    loadData,
+                    processLogin,
+                    logoutAdmin,
+                    openAppForm,
+                    saveAppForm,
+                    deleteAppPrompt,
+                    toggleAppStatus,
+                    openApp,
+                    closeApp,
+                    shareMicrosite,
+                    onIframeLoad
                 };
             }
         });
 
         app.component('l-icon', LucideIcon);
         app.mount('#app');
+
+        app.config.errorHandler = (err, vm, info) => {
+            console.error('Vue Error:', err, info);
+            showToast('Terjadi kesalahan sistem.', 'error');
+        };
     </script>
 </body>
 </html>
