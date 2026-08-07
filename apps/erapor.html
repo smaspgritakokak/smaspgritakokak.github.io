@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
+  <meta name="theme-color" content="#f0f4ff">
+  <meta name="description" content="Portal resmi layanan digital sekolah dalam satu halaman.">
+  <meta name="portal-api" content="https://script.google.com/macros/s/AKfycbwWPmhEmk9QsTRPmdK1cFa2ALLCKXKcfkZPkLWusa3aW-ZEUERNBfVYsPVWMrrGQWvAJw/exec">
+  <meta name="portal-pin" content="5cf313b8e6434391be6a1779edd62e0d002bf8ce">
+  <meta name="portal-jsonp-fallback" content="true">
+  <title>Portal Sekolah</title>
+  <link id="dynamicFavicon" rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231764e8'/%3E%3Cpath d='M12 26 32 15l20 11-20 11L12 26Zm7 8v11c7 5 19 5 26 0V34l-13 7-13-7Z' fill='white'/%3E%3C/svg%3E">
+
+  <!-- Global error prevention -->
+  <script>
+    (function() {
+      window.addEventListener('error', function(e) {
+        if (e.message && (e.message.includes('sessionStorage') || e.message.includes('avatarUrl'))) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }, true);
+      const origError = console.error;
+      console.error = function(...args) {
+        const msg = args.join(' ');
+        if (msg.includes('sessionStorage') || msg.includes('avatarUrl')) return;
+        origError.apply(console, args);
+      };
+    })();
+  </script>
+
+  <!-- Theme detection -->
+  <script>
+    (() => {
+      'use strict';
+      try {
+        const saved = localStorage.getItem('school-portal-theme');
+        const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+      } catch (_) {}
+    })();
+  </script>
+
+  <style>
+    /* ========== ROOT VARIABLES & SCROLLBAR ========== */
+    :root {
+      --bg-primary: #f0f4ff;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-hover: #f5f8ff;
+      --bg-input: #f8faff;
+      --bg-elevated: #ffffff;
+
+      --text-primary: #0a1628;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --text-inverse: #ffffff;
+
+      --border-color: #e2e8f0;
+      --border-hover: #94a3b8;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 32px rgba(23, 100, 232, 0.12);
+      --shadow-xl: 0 12px 48px rgba(23, 100, 232, 0.18);
+
+      --primary: #1764e8;
+      --primary-light: #e8f0fe;
+      --primary-dark: #0d47b7;
+      --primary-soft: rgba(23, 100, 232, 0.08);
+      --primary-glow: rgba(23, 100, 232, 0.15);
+
+      --accent: #10b981;
+      --accent-light: #d1fae5;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+
+      --radius: 16px;
+      --radius-full: 9999px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --max-width: 520px;
+
+      --scrollbar-track: #f0f4ff;
+      --scrollbar-thumb: #cbd5e1;
+      --scrollbar-thumb-hover: #94a3b8;
+    }
+
+    html[data-theme="dark"] {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2236;
+      --bg-hover: #243049;
+      --bg-input: #1a2236;
+      --bg-elevated: #243049;
+
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-inverse: #0a0e1a;
+
+      --border-color: #2d3a52;
+      --border-hover: #4a5a7a;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 32px rgba(23, 100, 232, 0.15);
+      --shadow-xl: 0 12px 48px rgba(23, 100, 232, 0.2);
+
+      --primary-light: #1a2a4a;
+      --primary-soft: rgba(23, 100, 232, 0.15);
+      --primary-glow: rgba(23, 100, 232, 0.2);
+
+      --accent-light: #065f46;
+
+      --scrollbar-track: #0a0e1a;
+      --scrollbar-thumb: #2d3a52;
+      --scrollbar-thumb-hover: #4a5a7a;
+    }
+
+    /* ========== SCROLLBAR ========== */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      background: var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+      border-radius: 12px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 12px;
+      border: 2px solid var(--scrollbar-track);
+      transition: var(--transition);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+
+    /* ========== BASE ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      min-width: 320px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      min-height: 100vh;
+      background: var(--bg-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      padding: 1.25rem 0.75rem 2rem;
+      transition: background 0.3s ease, color 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, var(--primary-glow) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, var(--primary-soft) 0%, transparent 50%);
+      opacity: 0.6;
+      transition: opacity 0.4s;
+    }
+    html[data-theme="dark"] body::before {
+      opacity: 0.3;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ========== CONTAINER ========== */
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 0 0.25rem;
+    }
+
+    /* ========== TOP BAR ========== */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      flex: 0 1 auto;
+    }
+    .status-pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: pulse-dot 2s infinite;
+    }
+    .status-pill[data-state="loading"] .dot { background: var(--warning); }
+    .status-pill[data-state="error"] .dot { background: var(--danger); }
+    .status-pill[data-state="cache"] .dot { background: var(--warning); animation: none; }
+    .status-pill[data-state="live"] .dot { background: var(--accent); }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    .top-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .icon-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-hover);
+    }
+    .icon-btn:active {
+      transform: scale(0.93);
+    }
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .icon-btn .sun-icon,
+    html[data-theme="dark"] .icon-btn .moon-icon { display: none; }
+    html[data-theme="dark"] .icon-btn .sun-icon { display: block; }
+    .icon-btn .moon-icon { display: block; }
+    html[data-theme="dark"] .icon-btn .moon-icon { display: none; }
+
+    /* ========== PROFILE ========== */
+    .profile {
+      text-align: center;
+      padding: 0.25rem 0 1.25rem;
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 0.9rem;
+    }
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 8px 32px var(--primary-glow);
+      border: 3px solid var(--bg-card);
+      transition: var(--transition);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: visible;
+    }
+    .avatar:hover {
+      transform: scale(1.03) rotate(-1deg);
+      box-shadow: 0 12px 48px var(--primary-glow);
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .avatar svg {
+      width: 48px;
+      height: 48px;
+      color: #fff;
+    }
+    .avatar .verified-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid var(--bg-card);
+      display: none;
+      place-items: center;
+      color: #fff;
+      box-shadow: var(--shadow-sm);
+      z-index: 2;
+    }
+    .avatar .verified-badge[data-visible="true"] {
+      display: grid;
+    }
+    .avatar .verified-badge svg {
+      width: 16px;
+      height: 16px;
+      color: #fff;
+    }
+    .profile h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.1rem;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+    .profile .handle {
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .profile .bio {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 400px;
+      margin: 0.3rem auto 0.75rem;
+      line-height: 1.5;
+      padding: 0 0.5rem;
+    }
+    .profile .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .profile .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+    .profile .meta-item .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ========== SECTION ========== */
+    .section {
+      margin-top: 1.5rem;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding: 0 0.25rem;
+    }
+    .section-header h2 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .section-header .count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      background: var(--bg-card);
+      padding: 0.15rem 0.6rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+    }
+
+    /* ========== ANNOUNCEMENT ========== */
+    .announcement-card {
+      display: block;
+      padding: 1rem 1.1rem;
+      border-radius: var(--radius);
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      transition: var(--transition);
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .announcement-card:hover {
+      transform: translateX(5px);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-hover);
+    }
+    html[data-theme="dark"] .announcement-card:hover {
+      background: var(--bg-hover);
+    }
+    .announcement-card .label {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      background: rgba(23, 100, 232, 0.12);
+      padding: 0.1rem 0.7rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 0.25rem;
+    }
+    html[data-theme="dark"] .announcement-card .label {
+      background: rgba(23, 100, 232, 0.2);
+    }
+    .announcement-card .title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .announcement-card .desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-top: 0.1rem;
+    }
+
+    /* ========== LINK CARDS ========== */
+    .link-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .link-card {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--primary-soft), transparent);
+      opacity: 0;
+      transition: var(--transition);
+      border-radius: var(--radius);
+    }
+    .link-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+      background: var(--bg-hover);
+    }
+    .link-card:hover::before {
+      opacity: 1;
+    }
+    .link-card:active {
+      transform: scale(0.98);
+    }
+    .link-card .link-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: var(--primary-light);
+      color: var(--primary);
+      transition: var(--transition);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .link-card:hover .link-icon {
+      background: var(--primary);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .link-card .link-icon svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .link-card .link-content {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .link-card .link-content .link-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+    .link-card .link-content .link-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .link-card .link-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.7rem;
+      border-radius: var(--radius-full);
+      background: var(--primary-light);
+      color: var(--primary);
+      flex-shrink: 0;
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+    .link-card:hover .link-badge {
+      background: var(--primary);
+      color: #fff;
+    }
+    .link-card .link-arrow {
+      color: var(--text-muted);
+      transition: var(--transition);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .link-card:hover .link-arrow {
+      color: var(--primary);
+      transform: translateX(4px);
+    }
+    .link-card .link-arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ========== CONTACTS ========== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.6rem;
+    }
+    .contact-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.8rem 0.5rem;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    .contact-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-hover);
+    }
+    .contact-btn:active {
+      transform: scale(0.95);
+    }
+    .contact-btn svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .contact-btn:hover svg {
+      transform: scale(1.1);
+    }
+
+    /* ========== SOCIALS ========== */
+    .social-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .social-link:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      background: var(--bg-hover);
+    }
+    .social-link svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ========== EMPTY STATE ========== */
+    .empty-state {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      margin-top: 2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .footer p { margin: 0.15rem 0; }
+
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      z-index: 999;
+      max-width: 90vw;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .toast[data-show="true"] {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ========== SKELETON ========== */
+    .skeleton {
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      min-height: 68px;
+    }
+    .skeleton::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.06),
+          transparent);
+      animation: shimmer 1.8s infinite;
+    }
+    html[data-theme="dark"] .skeleton::after {
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.03),
+          transparent);
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 480px) {
+      body { padding: 0.75rem 0.5rem 1.25rem; }
+      .profile h1 { font-size: 1.2rem; }
+      .link-card { padding: 0.75rem 0.85rem; gap: 0.7rem; }
+      .link-card .link-icon { width: 38px; height: 38px; min-width: 38px; }
+      .link-card .link-icon svg { width: 17px; height: 17px; }
+      .contact-grid { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+      .announcement-card { padding: 0.85rem 1rem; }
+      .avatar-wrapper { width: 80px; height: 80px; }
+      .avatar .verified-badge { width: 24px; height: 24px; bottom: -2px; right: -2px; }
+      .avatar .verified-badge svg { width: 14px; height: 14px; }
+      .top-bar { gap: 0.4rem; }
+      .icon-btn { width: 36px; height: 36px; }
+      .icon-btn svg { width: 16px; height: 16px; }
+    }
+    @media (max-width: 380px) {
+      .contact-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-pill .status-label { display: none; }
+      .profile .bio { font-size: 0.82rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    @media (forced-colors: active) {
+      .link-card,
+      .contact-btn,
+      .social-link { border: 1px solid CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ===== TOP BAR ===== -->
+    <div class="top-bar">
+      <div class="status-pill" id="statusPill" data-state="loading" role="status" aria-live="polite">
+        <span class="dot"></span>
+        <span class="status-label" id="statusText">Memuat...</span>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Ganti tema" title="Ganti tema">
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="shareBtn" type="button" aria-label="Bagikan" title="Bagikan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== PROFILE ===== -->
+    <header class="profile">
+      <div class="avatar-wrapper">
+        <div class="avatar" id="avatarWrap">
+          <div id="avatarContent">
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M10 25 32 13l22 12-22 12L10 25Z" fill="currentColor" opacity=".96"/>
+              <path d="M18 34v12c8 6 20 6 28 0V34l-14 8-14-8Z" fill="currentColor" opacity=".76"/>
+              <path d="M53 27v14" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="verified-badge" id="verifiedBadge" data-visible="false" aria-label="Terverifikasi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <h1 id="schoolName">SMAS PGRI TAKOKAK</h1>
+      <p class="handle" id="schoolHandle">@smaspgritakokak</p>
+      <p class="bio" id="schoolBio">Akses cepat seluruh layanan digital satuan pendidikan dalam satu halaman.</p>
+      <div class="meta-row">
+        <span class="meta-item">
+          <span class="badge-dot"></span>
+          <span id="statusLabel">Terakreditasi A</span>
+        </span>
+        <span class="meta-item" id="npsnLabel">NPSN 20252048</span>
+      </div>
+    </header>
+
+    <!-- ===== ANNOUNCEMENTS ===== -->
+    <section class="section" id="announcementSection" hidden>
+      <div class="section-header">
+        <h2>📢 Pengumuman</h2>
+        <span class="count" id="announcementCount"></span>
+      </div>
+      <div id="announcementList"></div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section class="section" id="servicesSection">
+      <div class="section-header">
+        <h2>✨ Layanan Digital</h2>
+        <span class="count" id="serviceCount">Memuat...</span>
+      </div>
+      <div class="link-grid" id="linkGrid">
+        <div class="skeleton" aria-hidden="true"></div>
+        <div class="skeleton" aria-hidden="true"></div>
+        <div class="skeleton" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===== CONTACTS ===== -->
+    <section class="section" id="contactSection">
+      <div class="section-header">
+        <h2>📬 Hubungi Kami</h2>
+      </div>
+      <div class="contact-grid" id="contactGrid"></div>
+      <div class="social-row" id="socialRow"></div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <p id="footerText">Portal resmi layanan digital sekolah.</p>
+      <p id="footerTime"></p>
+    </footer>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      // ============================================================
+      //  SAFE LOCALSTORAGE
+      // ============================================================
+      function safeLocalStorage() {
+        try { return localStorage; } catch (_) { return null; }
+      }
+      const storage = safeLocalStorage();
+
+      // ============================================================
+      //  CONFIG & CONSTANTS
+      // ============================================================
+      const CACHE_KEY = 'school-portal-data-v1';
+      const REQUEST_TIMEOUT = 10000;
+      const JSONP_TIMEOUT = 10000;
+
+      const FALLBACK_DATA = {
+        ok: true,
+        schemaVersion: 1,
+        generatedAt: new Date().toISOString(),
+        school: {
+          name: 'SMAS PGRI TAKOKAK',
+          handle: '@smaspgritakokak',
+          description: 'Akses cepat seluruh layanan digital satuan pendidikan dalam satu halaman.',
+          npsn: '20252048',
+          logoUrl: '',
+          faviconUrl: '',
+          verified: true,
+          statusText: 'Terakreditasi A'
+        },
+        theme: {
+          primary: '#1764e8',
+          accent: '#10b981',
+          defaultMode: 'system',
+          showToggle: true,
+          buttonStyle: 'soft',
+          borderRadius: 16
+        },
+        announcements: [{
+          id: 'demo-announcement',
+          title: 'Penerimaan Peserta Didik Baru',
+          body: 'Informasi jadwal, persyaratan, dan alur pendaftaran tersedia pada laman PPDB.',
+          url: 'https://example.com/ppdb',
+          icon: 'megaphone',
+          badge: 'Penting'
+        }],
+        links: [
+          { id: 'lms', title: 'LMS Pembelajaran', description: 'Kelas daring, materi, dan tugas siswa', url: 'https://example.com/lms', icon: 'book', badge: '' },
+          { id: 'erapor', title: 'e-Rapor', description: 'Nilai, capaian belajar, dan rapor semester', url: 'https://example.com/erapor', icon: 'chart', badge: '' },
+          { id: 'absensi', title: 'Absensi Digital', description: 'Kehadiran siswa dan tenaga pendidik', url: 'https://example.com/absensi', icon: 'check', badge: '' },
+          { id: 'library', title: 'Perpustakaan Digital', description: 'Katalog buku, e-book, dan peminjaman', url: 'https://example.com/perpustakaan', icon: 'library', badge: '' },
+          { id: 'ppdb', title: 'PPDB Online', description: 'Informasi dan pendaftaran peserta didik baru', url: 'https://example.com/ppdb', icon: 'users', badge: 'Baru' },
+          { id: 'admin', title: 'Layanan Administrasi', description: 'Surat, formulir, dan layanan tata usaha', url: 'https://example.com/administrasi', icon: 'document', badge: '' },
+          { id: 'calendar', title: 'Kalender Akademik', description: 'Agenda, ujian, libur, dan kegiatan sekolah', url: 'https://example.com/kalender', icon: 'calendar', badge: '' }
+        ],
+        contacts: {
+          whatsapp: '6285703000011',
+          email: 'info@smapgritakokak.sch.id',
+          address: 'Jl. Pahlawan No. 5, Kab. Cianjur',
+          mapsUrl: 'https://maps.google.com/?q=SMA+PGRI+TAKOKAK'
+        },
+        socials: [
+          { platform: 'instagram', label: 'Instagram', url: 'https://instagram.com/smaspgritakokak', icon: 'instagram' },
+          { platform: 'youtube', label: 'YouTube', url: 'https://youtube.com/@smaspgritakokak', icon: 'youtube' },
+          { platform: 'facebook', label: 'Facebook', url: 'https://facebook.com/smaspgritakokak', icon: 'facebook' }
+        ],
+        footer: { text: 'Portal resmi layanan digital SMAS PGRI TAKOKAK.' }
+      };
+
+      // ============================================================
+      //  ICON SET
+      // ============================================================
+      const ICONS = {
+        book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>`,
+        chart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19V2"/></svg>`,
+        check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>`,
+        library: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h6M9 13h6M9 17h6"/></svg>`,
+        users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+        document: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg>`,
+        calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+        megaphone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.1 13 21H7l-1.4-6"/></svg>`,
+        globe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>`,
+        mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>`,
+        phone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z"/></svg>`,
+        whatsapp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 8.7 3.9 8.38 8.38 0 0 1 12.5 3h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg>`,
+        map: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
+        instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg>`,
+        youtube: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12s0-4-1-6c-.6-1-1.4-1.4-2.5-1.5C16.5 4 12 4 12 4s-4.5 0-6.5.5C4.4 4.6 3.6 5 3 6c-1 2-1 6-1 6s0 4 1 6c.6 1 1.4 1.4 2.5 1.5 2 .5 6.5.5 6.5.5s4.5 0 6.5-.5c1.1-.1 1.9-.5 2.5-1.5 1-2 1-6 1-6Z"/><path d="m10 9 5 3-5 3V9Z"/></svg>`,
+        facebook: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3V2Z"/></svg>`,
+        tiktok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3v10.5a4.5 4.5 0 1 1-4-4.47"/><path d="M15 3c.5 3 2.2 4.7 5 5"/></svg>`,
+        link: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>`
+      };
+
+      const ARROW_ICON =
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
+
+      // ============================================================
+      //  DOM REFS
+      // ============================================================
+      const root = document.documentElement;
+      const themeBtn = document.getElementById('themeBtn');
+      const shareBtn = document.getElementById('shareBtn');
+      const toast = document.getElementById('toast');
+      const statusPill = document.getElementById('statusPill');
+      const statusText = document.getElementById('statusText');
+      const schoolName = document.getElementById('schoolName');
+      const schoolHandle = document.getElementById('schoolHandle');
+      const schoolBio = document.getElementById('schoolBio');
+      const statusLabel = document.getElementById('statusLabel');
+      const npsnLabel = document.getElementById('npsnLabel');
+      const avatarContent = document.getElementById('avatarContent');
+      const verifiedBadge = document.getElementById('verifiedBadge');
+      const announcementSection = document.getElementById('announcementSection');
+      const announcementList = document.getElementById('announcementList');
+      const announcementCount = document.getElementById('announcementCount');
+      const linkGrid = document.getElementById('linkGrid');
+      const serviceCount = document.getElementById('serviceCount');
+      const contactGrid = document.getElementById('contactGrid');
+      const socialRow = document.getElementById('socialRow');
+      const footerText = document.getElementById('footerText');
+      const footerTime = document.getElementById('footerTime');
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      const apiMeta = document.querySelector('meta[name="portal-api"]');
+      const pinMeta = document.querySelector('meta[name="portal-pin"]');
+      const jsonpFallbackMeta = document.querySelector('meta[name="portal-jsonp-fallback"]');
+
+      let toastTimer = null;
+      let portalData = FALLBACK_DATA;
+
+      // ============================================================
+      //  HELPERS
+      // ============================================================
+      function safeText(v, fallback = '') {
+        const t = String(v == null ? '' : v).trim();
+        return t || fallback;
+      }
+
+      function safeUrl(v) {
+        try {
+          const url = new URL(String(v || '').trim(), location.href);
+          return ['https:', 'http:'].includes(url.protocol) ? url.href : '';
+        } catch (_) { return ''; }
+      }
+
+      function validHex(v, fallback) {
+        const t = String(v || '').trim();
+        return /^#[0-9a-f]{6}$/i.test(t) ? t : fallback;
+      }
+
+      function icon(name) {
+        return ICONS[String(name || '').toLowerCase()] || ICONS.link;
+      }
+
+      function showToast(msg) {
+        clearTimeout(toastTimer);
+        toast.textContent = msg;
+        toast.dataset.show = 'true';
+        toastTimer = setTimeout(() => { toast.dataset.show = 'false'; }, 2800);
+      }
+
+      function setStatus(state, label) {
+        statusPill.dataset.state = state;
+        statusText.textContent = label;
+      }
+
+      function configuredApiUrl() {
+        const q = new URLSearchParams(location.search).get('api');
+        const m = safeText(apiMeta && apiMeta.content);
+        const c = q || m;
+        if (!c || c.includes('PASTE_APPS_SCRIPT')) return '';
+        try {
+          const url = new URL(c);
+          return url.protocol === 'https:' && /(^|\.)script\.google\.com$/i.test(url.hostname) ? url.href : '';
+        } catch (_) { return ''; }
+      }
+
+      function configuredPortalPin() {
+        const q = new URLSearchParams(location.search).get('pin');
+        const m = safeText(pinMeta && pinMeta.content);
+        const c = q || m;
+        if (!c || c.includes('PASTE_PORTAL_PIN')) return '';
+        return c.slice(0, 160);
+      }
+
+      function unwrapApiEnvelope(res) {
+        if (!res || typeof res !== 'object') throw new Error('Format respons API tidak valid.');
+        if (res.ok === true && res.school) return res;
+        if (res.success !== true) {
+          const msg = res.error && res.error.message ? res.error.message : 'API mengembalikan kesalahan.';
+          throw new Error(msg);
+        }
+        if (!res.data || typeof res.data !== 'object') throw new Error('Data portal tidak tersedia pada respons API.');
+        return res.data;
+      }
+
+      function saveCache(data) {
+        if (!storage) return;
+        try {
+          storage.setItem(CACHE_KEY, JSON.stringify(data));
+        } catch (_) {}
+      }
+
+      function loadCache() {
+        if (!storage) return null;
+        try {
+          const raw = storage.getItem(CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (_) { return null; }
+      }
+
+      // ============================================================
+      //  API LOADERS
+      // ============================================================
+      async function loadPost(apiUrl, pin) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), REQUEST_TIMEOUT);
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body: JSON.stringify({
+              action: 'portal.read',
+              pin,
+              schemaVersion: '2.1.0',
+              timestamp: new Date().toISOString()
+            }),
+            redirect: 'follow',
+            cache: 'no-store',
+            credentials: 'omit',
+            referrerPolicy: 'no-referrer',
+            signal: ctrl.signal
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return unwrapApiEnvelope(await res.json());
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function loadJsonp(apiUrl, pin) {
+        return new Promise((resolve, reject) => {
+          const cb = `__schoolPortal_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+          const script = document.createElement('script');
+          let timer;
+          const cleanup = () => {
+            clearTimeout(timer);
+            delete window[cb];
+            script.remove();
+          };
+          window[cb] = (res) => {
+            cleanup();
+            try { resolve(unwrapApiEnvelope(res)); } catch (e) { reject(e); }
+          };
+          script.onerror = () => {
+            cleanup();
+            reject(new Error('Endpoint spreadsheet tidak dapat dijangkau.'));
+          };
+          const url = new URL(apiUrl);
+          url.searchParams.set('action', 'portal.read');
+          url.searchParams.set('pin', pin);
+          url.searchParams.set('callback', cb);
+          url.searchParams.set('_', String(Date.now()));
+          script.src = url.href;
+          script.async = true;
+          script.referrerPolicy = 'no-referrer';
+          document.head.append(script);
+          timer = setTimeout(() => {
+            cleanup();
+            reject(new Error('Waktu pemuatan spreadsheet habis.'));
+          }, JSONP_TIMEOUT);
+        });
+      }
+
+      async function loadProtectedPortalData(apiUrl, pin) {
+        try {
+          return await loadPost(apiUrl, pin);
+        } catch (e) {
+          const allow = safeText(jsonpFallbackMeta && jsonpFallbackMeta.content, 'true').toLowerCase() !== 'false';
+          if (!allow) throw e;
+          console.info('POST tidak tersedia; menggunakan fallback JSONP.', e);
+          return loadJsonp(apiUrl, pin);
+        }
+      }
+
+      // ============================================================
+      //  OPEN LINK – langsung ke tab baru (tanpa iframe)
+      // ============================================================
+      function openLink(link) {
+        if (!link) return;
+        const url = safeUrl(link.url);
+        if (!url) {
+          showToast('Alamat layanan tidak valid.');
+          return;
+        }
+        // Buka di tab baru dengan atribut keamanan
+        const win = window.open(url, '_blank', 'noopener,noreferrer');
+        if (!win) {
+          showToast('Izinkan pop-up untuk membuka layanan.');
+        }
+      }
+
+      // ============================================================
+      //  RENDER
+      // ============================================================
+      function render(data, source) {
+        if (!data || typeof data !== 'object') throw new Error('Format data tidak valid.');
+        portalData = data;
+        const school = data.school || {};
+        const theme = data.theme || {};
+
+        const primary = validHex(theme.primary, '#1764e8');
+        const primaryDark = validHex(theme.primaryStrong || theme.primary, '#0d47b7');
+        root.style.setProperty('--primary', primary);
+        root.style.setProperty('--primary-dark', primaryDark);
+        root.style.setProperty('--primary-light', validHex(theme.primaryLight || '#e8f0fe', '#e8f0fe'));
+
+        if (theme.showToggle === false) themeBtn.hidden = true;
+
+        const savedTheme = storage ? storage.getItem('school-portal-theme') : null;
+        if (!savedTheme) {
+          const mode = ['light', 'dark', 'system'].includes(theme.defaultMode) ? theme.defaultMode : 'system';
+          root.dataset.theme = mode === 'system' ?
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') :
+            mode;
+        }
+        syncThemeUI();
+
+        const logoUrl = safeUrl(school.logoUrl);
+        avatarContent.replaceChildren();
+        if (logoUrl) {
+          const img = document.createElement('img');
+          img.alt = `Logo ${safeText(school.name, 'sekolah')}`;
+          img.decoding = 'async';
+          img.referrerPolicy = 'no-referrer';
+          img.src = logoUrl;
+          img.onerror = () => renderFallbackAvatar(avatarContent);
+          avatarContent.append(img);
+        } else {
+          renderFallbackAvatar(avatarContent);
+        }
+
+        verifiedBadge.dataset.visible = school.verified !== false ? 'true' : 'false';
+
+        const name = safeText(school.name, 'Portal Sekolah');
+        document.title = `${name} | Portal Digital`;
+        schoolName.textContent = name;
+        schoolHandle.textContent = safeText(school.handle, 'Portal resmi sekolah');
+        schoolBio.textContent = safeText(school.description, 'Akses cepat seluruh layanan digital sekolah dalam satu halaman.');
+        statusLabel.textContent = safeText(school.statusText, 'Terakreditasi A');
+        npsnLabel.textContent = school.npsn ? `NPSN ${safeText(school.npsn)}` : 'Portal resmi';
+
+        const fav = safeUrl(school.faviconUrl || school.logoUrl);
+        if (fav) document.getElementById('dynamicFavicon').href = fav;
+
+        // Announcements
+        const anns = Array.isArray(data.announcements) ? data.announcements : [];
+        const validAnns = anns.filter(a => safeUrl(a.url) && safeText(a.title));
+        announcementSection.hidden = validAnns.length === 0;
+        announcementCount.textContent = validAnns.length > 1 ? `${validAnns.length} info` : '';
+        announcementList.replaceChildren();
+        validAnns.forEach(a => {
+          const card = document.createElement('a');
+          card.className = 'announcement-card';
+          card.href = safeUrl(a.url);
+          card.target = '_blank';
+          card.rel = 'noopener noreferrer';
+          if (a.badge) {
+            const label = document.createElement('span');
+            label.className = 'label';
+            label.textContent = safeText(a.badge).slice(0, 18);
+            card.append(label);
+          }
+          const title = document.createElement('div');
+          title.className = 'title';
+          title.textContent = safeText(a.title, 'Pengumuman');
+          card.append(title);
+          if (a.body) {
+            const desc = document.createElement('div');
+            desc.className = 'desc';
+            desc.textContent = safeText(a.body);
+            card.append(desc);
+          }
+          announcementList.append(card);
+        });
+
+        // Links – semua akan dibuka di tab baru
+        const links = Array.isArray(data.links) ? data.links : [];
+        const validLinks = links.filter(l => safeUrl(l.url) && safeText(l.title));
+        serviceCount.textContent = `${validLinks.length} layanan`;
+        linkGrid.replaceChildren();
+        if (!validLinks.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty-state';
+          empty.textContent = 'Belum ada layanan yang tersedia.';
+          linkGrid.append(empty);
+        } else {
+          validLinks.forEach(l => {
+            const card = document.createElement('a');
+            card.className = 'link-card';
+            card.href = safeUrl(l.url);
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+            card.setAttribute('aria-label', `${safeText(l.title)}${l.description ? ` — ${safeText(l.description)}` : ''}`);
+
+            const iconWrap = document.createElement('span');
+            iconWrap.className = 'link-icon';
+            iconWrap.setAttribute('aria-hidden', 'true');
+            iconWrap.innerHTML = icon(l.icon || 'link');
+
+            const content = document.createElement('span');
+            content.className = 'link-content';
+            const title = document.createElement('div');
+            title.className = 'link-title';
+            title.textContent = safeText(l.title);
+            content.append(title);
+            if (l.description) {
+              const desc = document.createElement('div');
+              desc.className = 'link-desc';
+              desc.textContent = safeText(l.description);
+              content.append(desc);
+            }
+
+            card.append(iconWrap, content);
+
+            if (l.badge) {
+              const badge = document.createElement('span');
+              badge.className = 'link-badge';
+              badge.textContent = safeText(l.badge).slice(0, 12);
+              card.append(badge);
+            }
+
+            const arrow = document.createElement('span');
+            arrow.className = 'link-arrow';
+            arrow.innerHTML = ARROW_ICON;
+            card.append(arrow);
+
+            linkGrid.append(card);
+          });
+        }
+
+        // Contacts
+        const contacts = data.contacts || {};
+        const whatsapp = String(contacts.whatsapp || '').replace(/\D/g, '');
+        const email = safeText(contacts.email);
+        const mapsUrl = safeUrl(contacts.mapsUrl || (contacts.address ? `https://maps.google.com/?q=${encodeURIComponent(contacts.address)}` : ''));
+
+        contactGrid.replaceChildren();
+        if (whatsapp) {
+          contactGrid.append(createContactBtn(`https://wa.me/${whatsapp}`, 'WhatsApp', 'whatsapp'));
+        }
+        if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          contactGrid.append(createContactBtn(`mailto:${email}`, 'Email', 'mail'));
+        }
+        if (mapsUrl) {
+          contactGrid.append(createContactBtn(mapsUrl, 'Lokasi', 'map'));
+        }
+
+        // Socials
+        const socials = Array.isArray(data.socials) ? data.socials : [];
+        socialRow.replaceChildren();
+        socials.forEach(s => {
+          const url = safeUrl(s.url);
+          if (!url || !s.label) return;
+          const link = document.createElement('a');
+          link.className = 'social-link';
+          link.href = url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.innerHTML = `${icon(s.icon || s.platform)} ${safeText(s.label)}`;
+          socialRow.append(link);
+        });
+
+        // Footer
+        footerText.textContent = safeText(data.footer && data.footer.text, `Portal resmi layanan digital ${name}.`);
+        const generated = data.generatedAt ? new Date(data.generatedAt) : null;
+        footerTime.textContent = generated && !isNaN(generated.getTime()) ?
+          `Diperbarui ${new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(generated)}` :
+          '';
+
+        if (source === 'live') setStatus('live', 'Live');
+        else if (source === 'cache') setStatus('cache', 'Data tersimpan');
+        else setStatus('loading', 'Demo');
+      }
+
+      function renderFallbackAvatar(container) {
+        container.innerHTML =
+          `<svg viewBox="0 0 64 64" fill="none"><path d="M10 25 32 13l22 12-22 12L10 25Z" fill="currentColor" opacity=".96"/><path d="M18 34v12c8 6 20 6 28 0V34l-14 8-14-8Z" fill="currentColor" opacity=".76"/><path d="M53 27v14" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`;
+      }
+
+      function createContactBtn(href, label, iconName) {
+        const btn = document.createElement('a');
+        btn.className = 'contact-btn';
+        btn.href = href;
+        if (/^https?:/i.test(href)) {
+          btn.target = '_blank';
+          btn.rel = 'noopener noreferrer';
+        }
+        btn.setAttribute('aria-label', label);
+        btn.innerHTML = `${icon(iconName)} ${label}`;
+        return btn;
+      }
+
+      function syncThemeUI() {
+        const dark = root.dataset.theme === 'dark';
+        themeBtn.setAttribute('aria-label', dark ? 'Mode terang' : 'Mode gelap');
+        themeBtn.setAttribute('title', dark ? 'Mode terang' : 'Mode gelap');
+        metaTheme.setAttribute('content', dark ? '#0a0e1a' : '#f0f4ff');
+      }
+
+      // ============================================================
+      //  INIT
+      // ============================================================
+      async function init() {
+        const apiUrl = configuredApiUrl();
+        if (!apiUrl) {
+          render(FALLBACK_DATA, 'demo');
+          return;
+        }
+
+        const pin = configuredPortalPin();
+        const cache = loadCache();
+        if (cache) render(cache, 'cache');
+
+        if (!pin) {
+          if (!cache) render(FALLBACK_DATA, 'demo');
+          setStatus('error', 'PIN tidak dikonfigurasi');
+          showToast('Jalankan generatePortalPin() lalu isi meta portal-pin.');
+          return;
+        }
+
+        try {
+          setStatus('loading', 'Memuat...');
+          const data = await loadProtectedPortalData(apiUrl, pin);
+          render(data, 'live');
+          saveCache(data);
+        } catch (err) {
+          console.error(err);
+          if (cache) {
+            render(cache, 'cache');
+            showToast('Koneksi gagal. Memakai data terakhir.');
+          } else {
+            render(FALLBACK_DATA, 'demo');
+            setStatus('error', 'Gagal memuat');
+            showToast('Periksa URL Apps Script dan izin deployment.');
+          }
+        }
+      }
+
+      // ============================================================
+      //  EVENT LISTENERS
+      // ============================================================
+      themeBtn.addEventListener('click', () => {
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        if (storage) {
+          try { storage.setItem('school-portal-theme', next); } catch (_) {}
+        }
+        syncThemeUI();
+      });
+
+      shareBtn.addEventListener('click', async () => {
+        const data = {
+          title: document.title,
+          text: safeText(portalData.school && portalData.school.description, 'Portal layanan digital sekolah'),
+          url: location.href.split('?')[0]
+        };
+        try {
+          if (navigator.share) await navigator.share(data);
+          else {
+            await navigator.clipboard.writeText(data.url);
+            showToast('Tautan portal telah disalin.');
+          }
+        } catch (e) {
+          if (e && e.name !== 'AbortError') showToast('Tautan belum dapat dibagikan.');
+        }
+      });
+
+      matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', (e) => {
+        if (storage && !storage.getItem('school-portal-theme')) {
+          root.dataset.theme = e.matches ? 'dark' : 'light';
+          syncThemeUI();
+        }
+      });
+
+      init();
+    })();
+  </script>
+</body>
+</html>
