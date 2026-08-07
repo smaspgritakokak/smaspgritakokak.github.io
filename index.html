@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
   <meta name="theme-color" content="#f0f4ff">
-  <meta name="description" content="Portal resmi layanan digital sekolah dalam satu halaman.">
+  <meta name="description" content="Portal resmi layanan digital sekolah dengan navigasi langsung tanpa iframe.">
   <meta name="portal-api" content="https://script.google.com/macros/s/AKfycbzFwF123YTEZJ7kokqzugtgq0VbRxju3aSREEBX-_EUGwD5tyg2rFx3-R6pauz77UjIiQ/exec">
   <meta name="portal-pin" content="d356ee240872469b9829956acfbed088c85153e0">
   <meta name="portal-jsonp-fallback" content="true">
@@ -749,373 +749,286 @@
       100% { transform: translateX(100%); }
     }
 
-    /* ================================================================
-       IFRAME VIEWER – GABUNGAN KEUNGGULAN KEDUA VERSI
-       ================================================================ */
-    .iframe-overlay {
-      --iframe-toolbar-height: 58px;
+    /* ========== PAGE START LOADER — PREMIUM ========== */
+    .page-loader {
       position: fixed;
       inset: 0;
-      z-index: 8500;
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      background: var(--bg-primary);
-      outline: none;
+      z-index: 12000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
       overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 38%, var(--primary-glow), transparent 30%),
+        radial-gradient(circle at 18% 78%, var(--primary-soft), transparent 32%),
+        var(--bg-primary);
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.58s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.58s ease;
+      overscroll-behavior: contain;
+      isolation: isolate;
+    }
+
+    .page-loader::before,
+    .page-loader::after {
+      content: '';
+      position: absolute;
+      width: min(52vw, 520px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(48px);
+      opacity: 0.18;
+      z-index: -1;
+      will-change: transform;
+    }
+
+    .page-loader::before {
+      top: -18%;
+      right: -15%;
+      background: var(--primary);
+      animation: page-loader-blob-a 5.6s ease-in-out infinite alternate;
+    }
+
+    .page-loader::after {
+      bottom: -22%;
+      left: -18%;
+      background: var(--accent);
+      animation: page-loader-blob-b 6.4s ease-in-out infinite alternate;
+    }
+
+    .page-loader.is-hidden {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.25s ease, visibility 0.25s ease;
-      will-change: opacity;
-      overscroll-behavior: contain;
     }
 
-    .iframe-overlay[data-visible="true"] {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
+    .page-loader.is-hidden .page-loader-card {
+      transform: translateY(-8px) scale(0.985);
+      opacity: 0;
+      filter: blur(2px);
     }
 
-    /* ===== TOOLBAR ===== */
-    .iframe-toolbar {
-      position: absolute;
-      inset: 0 0 auto 0;
-      z-index: 6;
-      min-height: calc(var(--iframe-toolbar-height) + env(safe-area-inset-top));
-      padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left));
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      background: color-mix(in srgb, var(--bg-card) 96%, transparent);
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
+    .page-loader[hidden] { display: none !important; }
 
-    .iframe-toolbar-info {
-      min-width: 0;
-      flex: 1;
-      align-self: center;
-      padding-left: 2px;
-    }
-
-    .iframe-toolbar-title {
-      display: block;
+    .page-loader-card {
+      position: relative;
+      width: min(330px, 88vw);
+      text-align: center;
+      padding: 28px 22px 22px;
+      backdrop-filter: blur(22px) saturate(135%);
+      -webkit-backdrop-filter: blur(22px) saturate(135%);
+      animation: page-loader-enter 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+      transition: opacity 0.42s ease, transform 0.42s ease, filter 0.42s ease;
       overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font-size: 0.84rem;
-      line-height: 1.25;
-      font-weight: 700;
+    }
+
+    .page-loader-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,.14) 45%, transparent 64%);
+      transform: translateX(-130%);
+      animation: page-loader-shine 2.8s ease-in-out 0.45s infinite;
+    }
+
+    html[data-theme="dark"] .page-loader-card::before {
+      background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,.055) 45%, transparent 64%);
+    }
+
+    .page-loader-visual {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 17px;
+      display: grid;
+      place-items: center;
+    }
+
+    .page-loader-ring,
+    .page-loader-ring::before,
+    .page-loader-ring::after {
+      position: absolute;
+      border-radius: 50%;
+      content: '';
+    }
+
+    .page-loader-ring {
+      inset: 0;
+      border: 2px solid color-mix(in srgb, var(--primary) 14%, var(--border-color));
+      border-top-color: var(--primary);
+      border-right-color: var(--accent);
+      animation: page-loader-spin 1.05s linear infinite;
+      filter: drop-shadow(0 0 7px var(--primary-glow));
+    }
+
+    .page-loader-ring::before {
+      inset: 7px;
+      border: 2px dashed color-mix(in srgb, var(--primary) 28%, transparent);
+      animation: page-loader-spin-reverse 2.4s linear infinite;
+    }
+
+    .page-loader-ring::after {
+      inset: -6px;
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+      animation: page-loader-pulse-ring 1.8s ease-in-out infinite;
+    }
+
+    .page-loader-mark {
+      position: relative;
+      width: 68px;
+      height: 68px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow:
+        0 12px 30px var(--primary-glow),
+        0 0 0 5px color-mix(in srgb, var(--bg-card) 70%, transparent);
+      animation: page-loader-logo-pulse 1.7s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .page-loader-mark::after {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: inherit;
+      background: linear-gradient(145deg, rgba(255,255,255,.20), transparent 52%);
+      pointer-events: none;
+    }
+
+    .page-loader-mark svg {
+      width: 36px;
+      height: 36px;
+      position: relative;
+      z-index: 2;
+      animation: page-loader-icon-float 1.7s ease-in-out infinite;
+    }
+
+    .page-loader-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 9px;
+      height: 7px;
+    }
+
+    .page-loader-dots span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: .32;
+      animation: page-loader-dot 1.05s ease-in-out infinite;
+    }
+
+    .page-loader-dots span:nth-child(2) { animation-delay: .14s; }
+    .page-loader-dots span:nth-child(3) { animation-delay: .28s; }
+
+    .page-loader-title {
+      font-size: 1rem;
+      line-height: 1.3;
+      font-weight: 760;
+      letter-spacing: -0.015em;
       color: var(--text-primary);
     }
 
-    .iframe-toolbar-url {
-      display: block;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      margin-top: 2px;
-      font-size: 0.64rem;
-      line-height: 1.2;
+    .page-loader-sub {
+      min-height: 1.25em;
+      margin-top: 5px;
+      font-size: 0.76rem;
       color: var(--text-muted);
+      transition: opacity .2s ease, transform .2s ease;
     }
 
-    .iframe-toolbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .iframe-action-btn {
-      width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-full);
-      background: var(--bg-card);
-      color: var(--text-secondary);
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .iframe-action-btn:hover {
-      color: var(--primary);
-      border-color: var(--primary);
-      background: var(--bg-hover);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .iframe-action-btn:active { transform: scale(0.94); }
-
-    .iframe-action-btn:focus-visible {
-      outline: 3px solid var(--primary-glow);
-      outline-offset: 2px;
-    }
-
-    .iframe-action-btn svg {
-      width: 18px;
-      height: 18px;
-      pointer-events: none;
-    }
-
-    .iframe-close-btn:hover {
-      color: var(--danger);
-      border-color: var(--danger);
-    }
-
-    /* ===== STAGE / FRAME ===== */
-    .iframe-stage {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: calc(var(--iframe-toolbar-height) + env(safe-area-inset-top));
-      bottom: 0;
-      background: var(--bg-card);
+    .page-loader-line {
+      position: relative;
+      height: 5px;
+      margin-top: 19px;
       overflow: hidden;
-      contain: layout paint;
+      border-radius: var(--radius-full);
+      background: color-mix(in srgb, var(--border-color) 82%, transparent);
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, .06);
     }
 
-    .iframe-stage iframe {
+    .page-loader-line .bar {
       position: absolute;
-      inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: var(--bg-card);
-      color-scheme: light dark;
-      tabindex: -1;
+      inset: 0 auto 0 0;
+      width: 7%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary));
+      background-size: 180% 100%;
+      box-shadow: 0 0 12px var(--primary-glow);
+      transition: width .34s cubic-bezier(.22, .61, .36, 1);
+      animation: page-loader-bar-glow 1.2s linear infinite;
     }
 
-    /* ===== LOADER – dengan card dan tombol retry ===== */
-    .iframe-loading {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: color-mix(in srgb, var(--bg-primary) 94%, transparent);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      will-change: opacity;
+    .page-loader-percent {
+      margin-top: 8px;
+      font-size: .66rem;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-muted);
+      opacity: .8;
     }
 
-    .iframe-loading.is-hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
+    @keyframes page-loader-enter {
+      0% { opacity: 0; transform: translateY(18px) scale(.96); filter: blur(4px); }
+      60% { opacity: 1; }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     }
 
-    .iframe-loading-content {
-      width: min(340px, 88vw);
-      text-align: center;
-      padding: 20px 16px;
-      background: var(--bg-card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .iframe-loading-content .spinner {
-      width: 44px;
-      height: 44px;
-      border: 3.5px solid var(--border-color);
-      border-top-color: var(--primary);
-      border-radius: 999px;
-      animation: spin 0.75s linear infinite;
-      margin: 0 auto 14px;
-    }
-
-    @keyframes spin {
+    @keyframes page-loader-spin {
       to { transform: rotate(360deg); }
     }
 
-    .iframe-loading-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-primary);
+    @keyframes page-loader-spin-reverse {
+      to { transform: rotate(-360deg); }
     }
 
-    .iframe-loading-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
+    @keyframes page-loader-pulse-ring {
+      0%, 100% { transform: scale(.96); opacity: .25; }
+      50% { transform: scale(1.055); opacity: .8; }
     }
 
-    .iframe-loading-progress {
-      margin-top: 16px;
-      width: 100%;
-      height: 4px;
-      border-radius: var(--radius-full);
-      background: var(--border-color);
-      overflow: hidden;
-      position: relative;
+    @keyframes page-loader-logo-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 12px 30px var(--primary-glow), 0 0 0 5px color-mix(in srgb, var(--bg-card) 70%, transparent); }
+      50% { transform: scale(1.035); box-shadow: 0 15px 38px var(--primary-glow), 0 0 0 7px color-mix(in srgb, var(--bg-card) 58%, transparent); }
     }
 
-    .iframe-loading-progress .bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: inherit;
-      transition: width 0.3s ease;
+    @keyframes page-loader-icon-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
     }
 
-    .iframe-loading-retry {
-      margin-top: 14px;
-      padding: 0.5rem 1.2rem;
-      border-radius: var(--radius-full);
-      background: var(--primary);
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.75rem;
-      transition: var(--transition);
-      border: none;
-      display: none;
-    }
-    .iframe-loading-retry:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-    }
-    .iframe-loading-retry[data-visible="true"] {
-      display: inline-flex;
+    @keyframes page-loader-dot {
+      0%, 70%, 100% { transform: translateY(0) scale(.82); opacity: .28; }
+      35% { transform: translateY(-3px) scale(1); opacity: .95; }
     }
 
-    /* ===== FALLBACK – dengan dua tombol ===== */
-    .iframe-fallback {
-      position: absolute;
-      left: 50%;
-      bottom: max(20px, env(safe-area-inset-bottom));
-      z-index: 4;
-      width: min(560px, calc(100% - 28px));
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 14px 16px;
-      background: color-mix(in srgb, var(--bg-card) 97%, transparent);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    @keyframes page-loader-bar-glow {
+      from { background-position: 100% 0; }
+      to { background-position: -80% 0; }
     }
 
-    .iframe-fallback[hidden] {
-      display: none !important;
+    @keyframes page-loader-shine {
+      0%, 52% { transform: translateX(-135%); opacity: 0; }
+      62% { opacity: 1; }
+      82%, 100% { transform: translateX(135%); opacity: 0; }
     }
 
-    .iframe-fallback-copy {
-      min-width: 0;
-      font-size: 0.72rem;
-      line-height: 1.45;
-      color: var(--text-muted);
+    @keyframes page-loader-blob-a {
+      from { transform: translate3d(0, 0, 0) scale(.92); }
+      to { transform: translate3d(-8%, 10%, 0) scale(1.08); }
     }
 
-    .iframe-fallback-copy strong {
-      display: block;
-      color: var(--text-primary);
-      font-size: 0.78rem;
-      margin-bottom: 2px;
-    }
-
-    .iframe-fallback .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.55rem 1rem;
-      border-radius: var(--radius-full);
-      background: var(--primary);
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.72rem;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: var(--transition);
-      border: none;
-      cursor: pointer;
-    }
-
-    .iframe-fallback .btn-secondary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-    }
-
-    .iframe-fallback .btn-secondary:active {
-      transform: scale(0.96);
-    }
-
-    .iframe-fallback .btn-secondary svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .iframe-fallback .btn-ghost {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color);
-    }
-    .iframe-fallback .btn-ghost:hover {
-      background: var(--bg-hover);
-      color: var(--primary);
-      border-color: var(--primary);
-    }
-
-    .iframe-fallback-actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-shrink: 0;
-    }
-
-    @media (max-width: 640px) {
-      .iframe-overlay {
-        --iframe-toolbar-height: 54px;
-      }
-      .iframe-toolbar {
-        gap: 6px;
-      }
-      .iframe-toolbar-url {
-        display: none;
-      }
-      .iframe-action-btn {
-        width: 38px;
-        height: 38px;
-      }
-      .iframe-fallback {
-        align-items: stretch;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .iframe-fallback-actions {
-        width: 100%;
-      }
-      .iframe-fallback .btn-secondary {
-        flex: 1;
-        justify-content: center;
-      }
-    }
-
-    @media (max-width: 390px) {
-      .iframe-toolbar-title {
-        font-size: 0.78rem;
-      }
-      .iframe-action-btn {
-        width: 36px;
-        height: 36px;
-      }
+    @keyframes page-loader-blob-b {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(12%, -8%, 0) scale(.9); }
     }
 
     /* ========== RESPONSIVE ========== */
@@ -1156,6 +1069,26 @@
   </style>
 </head>
 <body>
+  <!-- ===== PAGE START LOADER ===== -->
+  <div id="pageLoader" class="page-loader" role="status" aria-live="polite" aria-hidden="false">
+    <div class="page-loader-card">
+      <div class="page-loader-visual" aria-hidden="true">
+        <div class="page-loader-ring"></div>
+        <div class="page-loader-mark">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M10 25 32 13l22 12-22 12L10 25Z" fill="currentColor" opacity=".96"/>
+            <path d="M18 34v12c8 6 20 6 28 0V34l-14 8-14-8Z" fill="currentColor" opacity=".76"/>
+            <path d="M53 27v14" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="page-loader-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="page-loader-title">Memuat Portal Sekolah</div>
+      <div class="page-loader-sub" id="pageLoaderSub">Menyiapkan layanan digital untuk Anda...</div>
+      <div class="page-loader-line" aria-hidden="true"><div class="bar" id="pageLoaderBar"></div></div>
+      <div class="page-loader-percent" id="pageLoaderPercent" aria-hidden="true">7%</div>
+    </div>
+  </div>
   <div class="container">
     <!-- ===== TOP BAR ===== -->
     <div class="top-bar">
@@ -1252,72 +1185,6 @@
     </footer>
   </div>
 
-  <!-- ================================================================
-       IFRAME VIEWER – GABUNGAN TERBAIK
-       ================================================================ -->
-  <div id="iframeOverlay" class="iframe-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="iframeViewerTitle" tabindex="-1" data-visible="false">
-    <h2 id="iframeViewerTitle" class="sr-only">Layanan</h2>
-
-    <div class="iframe-toolbar" role="toolbar" aria-label="Kontrol layanan">
-      <div class="iframe-toolbar-info">
-        <span class="iframe-toolbar-title" id="iframeServiceTitle">Layanan</span>
-        <span class="iframe-toolbar-url" id="iframeServiceUrl"></span>
-      </div>
-      <div class="iframe-toolbar-actions">
-        <button id="iframeReloadBtn" class="iframe-action-btn" type="button" aria-label="Muat ulang layanan" title="Muat ulang">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg>
-        </button>
-        <button id="iframeExternalBtn" class="iframe-action-btn" type="button" aria-label="Buka layanan di tab baru" title="Buka di tab baru">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </button>
-        <button id="iframeCloseBtn" class="iframe-action-btn iframe-close-btn" type="button" aria-label="Tutup layanan" title="Tutup layanan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="iframe-stage">
-      <!-- Loader dengan card dan tombol retry -->
-      <div id="iframeLoading" class="iframe-loading" role="status" aria-live="polite" aria-hidden="true">
-        <div class="iframe-loading-content">
-          <div class="spinner" aria-hidden="true"></div>
-          <div class="iframe-loading-title" id="iframeLoadingTitle">Menghubungkan ke layanan</div>
-          <div class="iframe-loading-sub" id="iframeLoadingSub">Tunggu sebentar, konten sedang dimuat.</div>
-          <div class="iframe-loading-progress" aria-hidden="true">
-            <div class="bar" id="iframeProgressBar"></div>
-          </div>
-          <button id="iframeLoadingRetry" class="iframe-loading-retry" type="button" data-visible="false">
-            Coba lagi
-          </button>
-        </div>
-      </div>
-
-      <!-- Iframe dengan sandbox permisif (dari laman.html) -->
-      <iframe id="iframeViewer" src="about:blank" title="Layanan"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads allow-modals allow-presentation"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allow="fullscreen; clipboard-read; clipboard-write"
-              allowfullscreen loading="eager"></iframe>
-
-      <!-- Fallback dengan dua tombol -->
-      <div id="iframeFallback" class="iframe-fallback" role="alert" hidden>
-        <div class="iframe-fallback-copy">
-          <strong id="fallbackTitle">Layanan tidak dapat dimuat</strong>
-          <span id="fallbackMessage">Koneksi terputus atau situs tidak mengizinkan tampilan dalam bingkai.</span>
-        </div>
-        <div class="iframe-fallback-actions">
-          <button id="iframeFallbackRetry" class="btn-secondary" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg>
-            Muat ulang
-          </button>
-          <button id="iframeFallbackExternal" class="btn-secondary btn-ghost" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Buka tab baru
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1372,13 +1239,13 @@
           badge: 'Penting'
         }],
         links: [
-          { id: 'lms', title: 'LMS Pembelajaran', description: 'Kelas daring, materi, dan tugas siswa', url: 'https://example.com/lms', icon: 'book', badge: '', openMode: 'iframe' },
-          { id: 'erapor', title: 'e-Rapor', description: 'Nilai, capaian belajar, dan rapor semester', url: 'https://example.com/erapor', icon: 'chart', badge: '', openMode: 'iframe' },
-          { id: 'absensi', title: 'Absensi Digital', description: 'Kehadiran siswa dan tenaga pendidik', url: 'https://example.com/absensi', icon: 'check', badge: '', openMode: 'iframe' },
-          { id: 'library', title: 'Perpustakaan Digital', description: 'Katalog buku, e-book, dan peminjaman', url: 'https://example.com/perpustakaan', icon: 'library', badge: '', openMode: 'iframe' },
-          { id: 'ppdb', title: 'PPDB Online', description: 'Informasi dan pendaftaran peserta didik baru', url: 'https://example.com/ppdb', icon: 'users', badge: 'Baru', openMode: 'iframe' },
-          { id: 'admin', title: 'Layanan Administrasi', description: 'Surat, formulir, dan layanan tata usaha', url: 'https://example.com/administrasi', icon: 'document', badge: '', openMode: 'iframe' },
-          { id: 'calendar', title: 'Kalender Akademik', description: 'Agenda, ujian, libur, dan kegiatan sekolah', url: 'https://example.com/kalender', icon: 'calendar', badge: '', openMode: 'iframe' }
+          { id: 'lms', title: 'LMS Pembelajaran', description: 'Kelas daring, materi, dan tugas siswa', url: 'https://example.com/lms', icon: 'book', badge: '', openMode: 'same_tab' },
+          { id: 'erapor', title: 'e-Rapor', description: 'Nilai, capaian belajar, dan rapor semester', url: 'https://example.com/erapor', icon: 'chart', badge: '', openMode: 'same_tab' },
+          { id: 'absensi', title: 'Absensi Digital', description: 'Kehadiran siswa dan tenaga pendidik', url: 'https://example.com/absensi', icon: 'check', badge: '', openMode: 'same_tab' },
+          { id: 'library', title: 'Perpustakaan Digital', description: 'Katalog buku, e-book, dan peminjaman', url: 'https://example.com/perpustakaan', icon: 'library', badge: '', openMode: 'same_tab' },
+          { id: 'ppdb', title: 'PPDB Online', description: 'Informasi dan pendaftaran peserta didik baru', url: 'https://example.com/ppdb', icon: 'users', badge: 'Baru', openMode: 'same_tab' },
+          { id: 'admin', title: 'Layanan Administrasi', description: 'Surat, formulir, dan layanan tata usaha', url: 'https://example.com/administrasi', icon: 'document', badge: '', openMode: 'same_tab' },
+          { id: 'calendar', title: 'Kalender Akademik', description: 'Agenda, ujian, libur, dan kegiatan sekolah', url: 'https://example.com/kalender', icon: 'calendar', badge: '', openMode: 'same_tab' }
         ],
         contacts: {
           whatsapp: '6285703000011',
@@ -1425,6 +1292,13 @@
       //  DOM REFS
       // ============================================================
       const root = document.documentElement;
+      const pageLoader = document.getElementById('pageLoader');
+      const pageLoaderSub = document.getElementById('pageLoaderSub');
+      const pageLoaderBar = document.getElementById('pageLoaderBar');
+      const pageLoaderPercent = document.getElementById('pageLoaderPercent');
+      const pageLoaderStartedAt = performance.now();
+      let pageLoaderProgress = 7;
+      let pageLoaderProgressTimer = null;
       const themeBtn = document.getElementById('themeBtn');
       const shareBtn = document.getElementById('shareBtn');
       const toast = document.getElementById('toast');
@@ -1451,38 +1325,10 @@
       const pinMeta = document.querySelector('meta[name="portal-pin"]');
       const jsonpFallbackMeta = document.querySelector('meta[name="portal-jsonp-fallback"]');
 
-      // Iframe refs
-      const iframeOverlay = document.getElementById('iframeOverlay');
-      const iframeCloseBtn = document.getElementById('iframeCloseBtn');
-      const iframeViewer = document.getElementById('iframeViewer');
-      const iframeLoading = document.getElementById('iframeLoading');
-      const iframeLoadingTitle = document.getElementById('iframeLoadingTitle');
-      const iframeLoadingSub = document.getElementById('iframeLoadingSub');
-      const iframeProgressBar = document.getElementById('iframeProgressBar');
-      const iframeLoadingRetry = document.getElementById('iframeLoadingRetry');
-      const iframeFallback = document.getElementById('iframeFallback');
-      const iframeFallbackRetry = document.getElementById('iframeFallbackRetry');
-      const iframeFallbackExternal = document.getElementById('iframeFallbackExternal');
-      const fallbackTitle = document.getElementById('fallbackTitle');
-      const fallbackMessage = document.getElementById('fallbackMessage');
-      const iframeViewerTitle = document.getElementById('iframeViewerTitle');
-      const iframeServiceTitle = document.getElementById('iframeServiceTitle');
-      const iframeServiceUrl = document.getElementById('iframeServiceUrl');
-      const iframeReloadBtn = document.getElementById('iframeReloadBtn');
-      const iframeExternalBtn = document.getElementById('iframeExternalBtn');
 
       let toastTimer = null;
       let portalData = FALLBACK_DATA;
 
-      // Iframe state
-      let activeLink = null;
-      let iframeLoadTimer = null;
-      let iframeHideLoaderTimer = null;
-      let iframeProgressTimer = null;
-      let previousFocus = null;
-      let isIframeLoading = false;
-      let iframeRetryCount = 0;
-      const MAX_IFRAME_RETRIES = 2;
 
       // ============================================================
       //  HELPERS
@@ -1642,269 +1488,61 @@
       }
 
       // ============================================================
-      //  IFRAME VIEWER LOGIC – GABUNGAN
+      //  PAGE START LOADER
       // ============================================================
-      function clearIframeTimers() {
-        if (iframeLoadTimer) {
-          clearTimeout(iframeLoadTimer);
-          iframeLoadTimer = null;
-        }
-        if (iframeHideLoaderTimer) {
-          clearTimeout(iframeHideLoaderTimer);
-          iframeHideLoaderTimer = null;
-        }
-        if (iframeProgressTimer) {
-          clearInterval(iframeProgressTimer);
-          iframeProgressTimer = null;
-        }
+      function setPageLoaderProgress(value, message) {
+        pageLoaderProgress = Math.max(pageLoaderProgress, Math.min(100, Number(value) || 0));
+        if (pageLoaderBar) pageLoaderBar.style.width = `${pageLoaderProgress}%`;
+        if (pageLoaderPercent) pageLoaderPercent.textContent = `${Math.round(pageLoaderProgress)}%`;
+        if (message && pageLoaderSub) pageLoaderSub.textContent = message;
       }
 
-      function hideLoader(immediate = false) {
-        if (!iframeLoading) return;
-        iframeLoading.setAttribute('aria-hidden', 'true');
-        if (immediate) {
-          iframeLoading.classList.add('is-hidden');
-          return;
-        }
-        iframeLoading.classList.add('is-hidden');
-      }
-
-      function showLoader() {
-        if (!iframeLoading) return;
-        iframeLoading.classList.remove('is-hidden');
-        iframeLoading.setAttribute('aria-hidden', 'false');
-        iframeLoadingRetry.dataset.visible = 'false';
-        if (iframeProgressBar) iframeProgressBar.style.width = '4%';
-        iframeLoadingTitle.textContent = 'Menghubungkan ke layanan';
-        iframeLoadingSub.textContent = 'Tunggu sebentar, konten sedang dimuat.';
-      }
-
-      function startProgressAnimation() {
-        if (!iframeProgressBar) return;
-        if (iframeProgressTimer) clearInterval(iframeProgressTimer);
-        let progress = 4;
-        iframeProgressBar.style.width = `${progress}%`;
-        iframeProgressTimer = setInterval(() => {
-          if (progress >= 90) return;
-          const remaining = 90 - progress;
-          progress += Math.max(0.6, Math.min(5, remaining * 0.12));
-          iframeProgressBar.style.width = `${Math.min(progress, 90).toFixed(1)}%`;
-        }, 360);
-      }
-
-      function finishProgress() {
-        if (iframeProgressTimer) {
-          clearInterval(iframeProgressTimer);
-          iframeProgressTimer = null;
-        }
-        if (iframeProgressBar) iframeProgressBar.style.width = '100%';
-      }
-
-      function setIframeToolbar(link) {
-        const title = safeText(link && link.title, 'Layanan');
-        const url = safeUrl(link && link.url);
-        iframeViewer.title = `Layanan ${title}`;
-        iframeViewerTitle.textContent = title;
-        iframeServiceTitle.textContent = title;
-        try {
-          const parsed = new URL(url);
-          iframeServiceUrl.textContent = parsed.hostname.replace(/^www\./i, '');
-          iframeServiceUrl.title = url;
-        } catch (_) {
-          iframeServiceUrl.textContent = '';
-          iframeServiceUrl.removeAttribute('title');
-        }
-      }
-
-      function showIframeError(message, title) {
-        iframeFallback.hidden = false;
-        fallbackTitle.textContent = title || 'Layanan tidak dapat dimuat';
-        fallbackMessage.textContent = message || 'Koneksi terputus atau situs tidak mengizinkan tampilan dalam bingkai.';
-        hideLoader();
-        isIframeLoading = false;
-      }
-
-      function startIframeLoad(url, title, isRetry = false) {
-        const target = safeUrl(url);
-        if (!target) {
-          showToast('Alamat layanan tidak valid.');
-          return;
-        }
-
-        clearIframeTimers();
-        isIframeLoading = true;
-        iframeFallback.hidden = true;
-        iframeLoadingTitle.textContent = `Menghubungkan ke ${safeText(title, 'layanan')}`;
-        iframeLoadingSub.textContent = isRetry ? 'Mencoba kembali...' : 'Tunggu sebentar, konten sedang dimuat.';
-        iframeLoadingRetry.dataset.visible = 'false';
-        showLoader();
-        startProgressAnimation();
-
-        iframeViewer.dataset.requestedUrl = target;
-        iframeViewer.src = target;
-
-        // Timeout 14 detik, lalu tampilkan fallback
-        iframeLoadTimer = setTimeout(() => {
-          iframeLoadTimer = null;
-          if (iframeOverlay.dataset.visible !== 'true' || !activeLink) return;
-          isIframeLoading = false;
-          finishProgress();
-          hideLoader();
-
-          // Coba retry jika masih dalam batas
-          if (iframeRetryCount < MAX_IFRAME_RETRIES) {
-            iframeRetryCount++;
-            iframeLoadingTitle.textContent = 'Gagal memuat, mencoba lagi...';
-            iframeLoadingSub.textContent = `Percobaan ${iframeRetryCount} dari ${MAX_IFRAME_RETRIES}`;
-            iframeLoadingRetry.dataset.visible = 'true';
-            iframeLoadingRetry.textContent = `Coba lagi (${iframeRetryCount}/${MAX_IFRAME_RETRIES})`;
-            showLoader();
-            startProgressAnimation();
-            setTimeout(() => {
-              if (iframeOverlay.dataset.visible === 'true' && activeLink) {
-                startIframeLoad(activeLink.url, activeLink.title, true);
-              }
-            }, 1200);
-          } else {
-            showIframeError(
-              'Layanan tidak merespons setelah beberapa percobaan. Pastikan koneksi internet Anda stabil.',
-              'Waktu muat habis'
-            );
+      function startPageLoaderProgress() {
+        if (!pageLoader || pageLoader.hidden) return;
+        if (pageLoaderProgressTimer) clearInterval(pageLoaderProgressTimer);
+        setPageLoaderProgress(7, 'Menyiapkan layanan digital untuk Anda...');
+        pageLoaderProgressTimer = setInterval(() => {
+          if (pageLoaderProgress >= 91) return;
+          const remaining = 91 - pageLoaderProgress;
+          const step = Math.max(.55, Math.min(4.8, remaining * .095));
+          const jitter = .68 + Math.random() * .58;
+          setPageLoaderProgress(pageLoaderProgress + step * jitter);
+          if (pageLoaderProgress > 68 && pageLoaderSub) {
+            pageLoaderSub.textContent = 'Menyelesaikan tampilan portal...';
+          } else if (pageLoaderProgress > 34 && pageLoaderSub) {
+            pageLoaderSub.textContent = 'Memuat data dan layanan sekolah...';
           }
-        }, 14000);
+        }, 180);
       }
 
-      function onIframeLoad() {
-        if (iframeOverlay.dataset.visible !== 'true' || !activeLink) return;
-        if (iframeViewer.src === 'about:blank') return;
-
-        iframeRetryCount = 0;
-        clearIframeTimers();
-        isIframeLoading = false;
-        finishProgress();
-        iframeFallback.hidden = true;
-        iframeLoadingRetry.dataset.visible = 'false';
-
-        iframeHideLoaderTimer = setTimeout(() => {
-          iframeHideLoaderTimer = null;
-          hideLoader();
-          iframeViewer.focus({ preventScroll: true });
-        }, 150);
-      }
-
-      function onIframeError() {
-        if (iframeOverlay.dataset.visible !== 'true' || !activeLink) return;
-        clearIframeTimers();
-        isIframeLoading = false;
-        finishProgress();
-
-        if (iframeRetryCount < MAX_IFRAME_RETRIES) {
-          iframeRetryCount++;
-          iframeLoadingTitle.textContent = 'Gagal memuat, mencoba lagi...';
-          iframeLoadingSub.textContent = `Percobaan ${iframeRetryCount} dari ${MAX_IFRAME_RETRIES}`;
-          iframeLoadingRetry.dataset.visible = 'true';
-          iframeLoadingRetry.textContent = `Coba lagi (${iframeRetryCount}/${MAX_IFRAME_RETRIES})`;
-          showLoader();
-          startProgressAnimation();
-          setTimeout(() => {
-            if (iframeOverlay.dataset.visible === 'true' && activeLink) {
-              startIframeLoad(activeLink.url, activeLink.title, true);
-            }
-          }, 1200);
-        } else {
-          hideLoader();
-          showIframeError(
-            'Gagal memuat layanan. Periksa koneksi internet atau coba buka di tab baru.',
-            'Terjadi kesalahan'
-          );
+      function hidePageLoader() {
+        if (!pageLoader || pageLoader.hidden || pageLoader.classList.contains('is-hidden')) return;
+        if (pageLoaderProgressTimer) {
+          clearInterval(pageLoaderProgressTimer);
+          pageLoaderProgressTimer = null;
         }
-      }
 
-      function openIframeExternally() {
-        if (!activeLink) return;
-        const url = safeUrl(activeLink.url);
-        if (!url) return;
-        const opened = window.open(url, '_blank', 'noopener,noreferrer');
-        if (!opened) showToast('Izinkan pop-up untuk membuka layanan di tab baru.');
-      }
-
-      function reloadIframe() {
-        if (!activeLink) return;
-        const url = safeUrl(activeLink.url);
-        if (!url) return;
-        iframeRetryCount = 0;
-        startIframeLoad(url, activeLink.title);
-      }
-
-      function setPortalInert(value) {
-        const portal = document.querySelector('.container');
-        if (!portal) return;
-        try { portal.inert = Boolean(value); } catch (_) {}
-        if (value) portal.setAttribute('aria-hidden', 'true');
-        else portal.removeAttribute('aria-hidden');
-      }
-
-      function closeIframe() {
-        const wasVisible = iframeOverlay.dataset.visible === 'true';
-        clearIframeTimers();
-        isIframeLoading = false;
-        iframeRetryCount = 0;
-        iframeOverlay.dataset.visible = 'false';
-        iframeOverlay.setAttribute('aria-hidden', 'true');
-        iframeFallback.hidden = true;
-        iframeLoadingRetry.dataset.visible = 'false';
-        finishProgress();
-        hideLoader(true);
-        setPortalInert(false);
-        document.body.style.overflow = '';
-
-        try {
-          if (iframeViewer.contentWindow && iframeViewer.contentWindow.stop) {
-            iframeViewer.contentWindow.stop();
-          }
-        } catch (_) {}
+        const minimumVisible = 900;
+        const elapsed = performance.now() - pageLoaderStartedAt;
+        const delay = Math.max(0, minimumVisible - elapsed);
 
         setTimeout(() => {
-          if (iframeOverlay.dataset.visible !== 'true') {
-            iframeViewer.src = 'about:blank';
-            delete iframeViewer.dataset.requestedUrl;
-            if (iframeProgressBar) iframeProgressBar.style.width = '0%';
-          }
-        }, 260);
-
-        activeLink = null;
-        if (wasVisible && previousFocus && previousFocus.isConnected) {
-          previousFocus.focus({ preventScroll: true });
-        }
-        previousFocus = null;
+          if (!pageLoader) return;
+          setPageLoaderProgress(100, 'Portal siap dibuka');
+          setTimeout(() => {
+            pageLoader.classList.add('is-hidden');
+            pageLoader.setAttribute('aria-hidden', 'true');
+            setTimeout(() => {
+              if (pageLoader.classList.contains('is-hidden')) pageLoader.hidden = true;
+            }, 620);
+          }, 240);
+        }, delay);
       }
 
-      function launchIframe(link) {
-        if (!link) return;
-        const url = safeUrl(link.url);
-        if (!url) {
-          showToast('Alamat layanan tidak valid.');
-          return;
-        }
-
-        const normalizedLink = { ...link, url };
-        previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-        activeLink = normalizedLink;
-        iframeRetryCount = 0;
-        setIframeToolbar(normalizedLink);
-        setPortalInert(true);
-        document.body.style.overflow = 'hidden';
-        iframeOverlay.setAttribute('aria-hidden', 'false');
-        iframeOverlay.dataset.visible = 'true';
-        startIframeLoad(url, normalizedLink.title);
-
-        requestAnimationFrame(() => {
-          iframeCloseBtn.focus({ preventScroll: true });
-        });
-      }
-
-      function trackLinkClick(link) { /* opsional */ }
-
+      startPageLoaderProgress();
+      // ============================================================
+      //  DIRECT LINK NAVIGATION (TANPA IFRAME)
+      // ============================================================
       function openLink(link) {
         if (!link) return;
         const url = safeUrl(link.url);
@@ -1912,17 +1550,10 @@
           showToast('Alamat layanan tidak valid.');
           return;
         }
-        const normalized = { ...link, url };
-        trackLinkClick(normalized);
-        const mode = normalized.openMode || 'iframe';
-        if (mode === 'iframe') {
-          launchIframe(normalized);
-        } else if (mode === 'same_tab') {
-          location.assign(url);
-        } else {
-          window.open(url, '_blank', 'noopener,noreferrer');
-        }
+        location.assign(url);
       }
+
+
 
       // ============================================================
       //  RENDER
@@ -1987,8 +1618,6 @@
           const card = document.createElement('a');
           card.className = 'announcement-card';
           card.href = safeUrl(a.url);
-          card.target = '_blank';
-          card.rel = 'noopener noreferrer';
           if (a.badge) {
             const label = document.createElement('span');
             label.className = 'label';
@@ -2022,13 +1651,8 @@
           validLinks.forEach(l => {
             const card = document.createElement('a');
             card.className = 'link-card';
-            card.href = '#';
-            card.setAttribute('role', 'button');
+            card.href = safeUrl(l.url);
             card.setAttribute('aria-label', `${safeText(l.title)}${l.description ? ` — ${safeText(l.description)}` : ''}`);
-            card.addEventListener('click', (e) => {
-              e.preventDefault();
-              openLink(l);
-            });
 
             const iconWrap = document.createElement('span');
             iconWrap.className = 'link-icon';
@@ -2139,42 +1763,43 @@
       //  INIT
       // ============================================================
       async function init() {
-        const apiUrl = configuredApiUrl();
-        if (!apiUrl) {
-          render(FALLBACK_DATA, 'demo');
-          closeIframe();
-          return;
-        }
-
-        const pin = configuredPortalPin();
-        const cache = loadCache();
-        if (cache) render(cache, 'cache');
-
-        if (!pin) {
-          if (!cache) render(FALLBACK_DATA, 'demo');
-          setStatus('error', 'PIN tidak dikonfigurasi');
-          showToast('Jalankan generatePortalPin() lalu isi meta portal-pin.');
-          closeIframe();
-          return;
-        }
-
         try {
-          setStatus('loading', 'Memuat...');
-          const data = await loadProtectedPortalData(apiUrl, pin);
-          render(data, 'live');
-          saveCache(data);
-        } catch (err) {
-          console.error(err);
-          if (cache) {
-            render(cache, 'cache');
-            showToast('Koneksi gagal. Memakai data terakhir.');
-          } else {
+          const apiUrl = configuredApiUrl();
+          if (!apiUrl) {
             render(FALLBACK_DATA, 'demo');
-            setStatus('error', 'Gagal memuat');
-            showToast('Periksa URL Apps Script dan izin deployment.');
+            return;
           }
+
+          const pin = configuredPortalPin();
+          const cache = loadCache();
+          if (cache) render(cache, 'cache');
+
+          if (!pin) {
+            if (!cache) render(FALLBACK_DATA, 'demo');
+            setStatus('error', 'PIN tidak dikonfigurasi');
+            showToast('Jalankan generatePortalPin() lalu isi meta portal-pin.');
+            return;
+          }
+
+          try {
+            setStatus('loading', 'Memuat...');
+            const data = await loadProtectedPortalData(apiUrl, pin);
+            render(data, 'live');
+            saveCache(data);
+          } catch (err) {
+            console.error(err);
+            if (cache) {
+              render(cache, 'cache');
+              showToast('Koneksi gagal. Memakai data terakhir.');
+            } else {
+              render(FALLBACK_DATA, 'demo');
+              setStatus('error', 'Gagal memuat');
+              showToast('Periksa URL Apps Script dan izin deployment.');
+            }
+          }
+        } finally {
+          hidePageLoader();
         }
-        closeIframe();
       }
 
       // ============================================================
@@ -2205,41 +1830,6 @@
           if (e && e.name !== 'AbortError') showToast('Tautan belum dapat dibagikan.');
         }
       });
-
-      iframeCloseBtn.addEventListener('click', closeIframe);
-      iframeReloadBtn.addEventListener('click', reloadIframe);
-      iframeExternalBtn.addEventListener('click', openIframeExternally);
-      iframeFallbackRetry.addEventListener('click', reloadIframe);
-      iframeFallbackExternal.addEventListener('click', openIframeExternally);
-      iframeLoadingRetry.addEventListener('click', reloadIframe);
-
-      document.addEventListener('keydown', (e) => {
-        if (iframeOverlay.dataset.visible !== 'true') return;
-
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          closeIframe();
-          return;
-        }
-
-        if (e.key === 'Tab') {
-          const focusables = [iframeReloadBtn, iframeExternalBtn, iframeCloseBtn, iframeViewer]
-            .filter(el => el && !el.disabled && el.offsetParent !== null);
-          if (!focusables.length) return;
-          const current = document.activeElement;
-          const index = focusables.indexOf(current);
-          if (e.shiftKey && (index <= 0)) {
-            e.preventDefault();
-            focusables[focusables.length - 1].focus();
-          } else if (!e.shiftKey && index === focusables.length - 1) {
-            e.preventDefault();
-            focusables[0].focus();
-          }
-        }
-      });
-
-      iframeViewer.addEventListener('load', onIframeLoad);
-      iframeViewer.addEventListener('error', onIframeError);
 
       matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', (e) => {
         if (storage && !storage.getItem('school-portal-theme')) {
