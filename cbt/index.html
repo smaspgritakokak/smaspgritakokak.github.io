@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Enterprise Secured | Computer Based Test v4.2.1</title>
-           
+    <title>Enterprise Secured | Computer Based Test v4.2.2</title>
+
+    <link rel="icon" href="https://www.google.com/s2/favicons?domain=google.com&sz=128" type="image/png">           
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&amp;family=Google&#43;Sans:wght@400;500;700&amp;family=Noto&#43;Sans&#43;JP:wght@400;700&amp;family=Noto&#43;Sans&#43;Sundanese:wght@400;700&amp;display=swap" rel="stylesheet">
@@ -78,7 +79,7 @@
         <transition name="fade">
             <div v-if="globalUiState === 'loading'" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 text-center">
                 <i class="ph ph-spinner-gap animate-spin text-5xl text-primary-600 mb-4"></i>
-                <h2 class="text-xl font-bold tracking-tight">Enterprise Secured System v4.2.1</h2>
+                <h2 class="text-xl font-bold tracking-tight">Enterprise Secured System v4.2.2</h2>
                 <p class="text-sm text-slate-500 mt-2">{{ loadingSubtitle }}</p>
             </div>
         </transition>
@@ -238,7 +239,7 @@
                             <div class="absolute inset-0 bg-[url('data:image/svg&#43;xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI&#43;PHBhdGggZD0iTTM2IDM0djI2aDJWMzRoLTJ6bTAtMzRWMEgzNHYyNmgyek0wIDM0aDI2di0ySDB2MnptMzQtMmgzMHYtMmgtMzB2MnoiLz48L2c&#43;PC9nPjwvc3ZnPg==')]"></div>
                             <div class="relative z-10">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 sm:mb-8 text-xs sm:text-sm font-medium tracking-wide">
-                                    <i class="ph ph-shield-check text-green-400"></i> Serverless Edge Engine v4.2.1
+                                    <i class="ph ph-shield-check text-green-400"></i> Serverless Edge Engine v4.2.2
                                 </div>
             
                                 <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight">{{ examInfo.name }}</h1>
@@ -262,24 +263,26 @@
                                     <div class="mb-6 sm:mb-8 text-center sm:text-left">
                                         <div class="flex items-center justify-between mb-1">
                                             <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Otentikasi Peserta</h2>
-                                            <button v-if="isStandaloneMode" @click="showEndpointModal = !showEndpointModal" type="button" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-primary-50 hover:text-primary-600 transition-colors flex items-center gap-1" title="Konfigurasi Endpoint Server GAS">
-                                                <i class="ph-bold ph-plugs-connected"></i>
-                                                <span>{{ primaryGasUrl ? 'CDN Aktif' : 'Set Server' }}</span>
-                                            </button>
+                                            <span v-if="isStandaloneMode &amp;&amp; hasEmbeddedPrimaryUrl" class="text-[11px] px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-semibold flex items-center gap-1" title="Terhubung langsung ke Server Ujian">
+                                                <i class="ph-fill ph-check-circle text-emerald-500"></i> Server Terhubung
+                                            </span>
                                         </div>
                                         <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">Masukkan Nomor Peserta dan Token Akses.</p>
                                     </div>
 
                                     
-                                    <div v-if="isStandaloneMode &amp;&amp; (showEndpointModal || !primaryGasUrl)" class="mb-5 p-3.5 rounded-2xl bg-blue-50/80 dark:bg-slate-900 border border-blue-200 dark:border-slate-700 text-xs space-y-2">
-                                        <div class="font-bold text-blue-800 dark:text-blue-300 flex items-center justify-between">
-                                            <span><i class="ph-fill ph-cloud-check"></i> Endpoint Server GAS (/exec)</span>
+                                    <div v-if="isStandaloneMode &amp;&amp; !hasEmbeddedPrimaryUrl &amp;&amp; (showEndpointModal || !primaryGasUrl)" class="mb-5 p-3.5 rounded-2xl bg-amber-50/90 dark:bg-slate-900 border border-amber-200 dark:border-slate-700 text-xs space-y-2">
+                                        <div class="font-bold text-amber-800 dark:text-amber-300 flex items-center justify-between">
+                                            <span><i class="ph-fill ph-warning-circle"></i> URL Server (/exec) Belum Ditanam dari Setup Admin</span>
                                             <button v-if="primaryGasUrl" @click="showEndpointModal = false" type="button" class="text-slate-400 hover:text-slate-600"><i class="ph-bold ph-x"></i></button>
                                         </div>
-                                        <input type="url" v-model="customEndpointInput" class="w-full px-3 py-2 rounded-lg border border-blue-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono text-[11px] outline-none focus:border-primary-500" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+                                        <p class="text-[11px] text-amber-700 dark:text-amber-400 leading-relaxed">
+                                            Unduh file <b>index.html</b> melalui tombol <b>"Simpan &amp; Unduh index.html Siap GitHub Pages"</b> di menu Setup Admin agar kotak ini tidak muncul di layar peserta.
+                                        </p>
+                                        <input type="url" v-model="customEndpointInput" class="w-full px-3 py-2 rounded-lg border border-amber-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-mono text-[11px] outline-none focus:border-primary-500" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
                                         <div class="flex justify-end gap-2">
                                             <button @click="saveCustomEndpoint" type="button" class="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg transition-colors">
-                                                Simpan Endpoint
+                                                Hubungkan Sementara
                                             </button>
                                         </div>
                                     </div>
@@ -856,21 +859,19 @@
     </div>
 
     <script>
-         
         const STANDALONE_GAS_CONFIG = {
-            
-            
-            PRIMARY_EXEC_URL: '',
-            WORKER_URLS: [],
-            DEFAULT_EXAM_INFO: {
-                name: 'Ujian Sekolah Berbasis Komputer',
-                duration: 90,
-                defaultTheme: 'light',
-                showResult: true,
-                workerUrls: []
-            }
-        };
-         
+    "WORKER_URLS": [],
+    "PRIMARY_EXEC_URL": "https:\/\/script.google.com\/macros\/s\/AKfycbwwjyIGWLJisED20blp7k0LRC3g5kYQeUZVh2zP3OU2EYwTZR44Tw6SSL57Jz-_iAzU\/exec",
+    "DEFAULT_EXAM_INFO": {
+        "duration": 60,
+        "name": "ASAT 2025\/2026",
+        "workerUrls": [],
+        "defaultTheme": "light",
+        "frontendUrl": "https:\/\/smaspgritakokak.github.io\/cbt\/",
+        "showResult": false
+    },
+    "FRONTEND_URL": "https:\/\/smaspgritakokak.github.io\/cbt\/"
+};
 
         const { createApp, ref, reactive, computed, onMounted, onUnmounted, watch } = Vue;
 
@@ -1133,8 +1134,10 @@
                 
                 const hasNativeGasBridge = (typeof google !== 'undefined' && google.script && google.script.run);
                 const isStandaloneMode = ref(!hasNativeGasBridge);
-                const primaryGasUrl = ref(STANDALONE_GAS_CONFIG.PRIMARY_EXEC_URL || '');
-                const customEndpointInput = ref('');
+                const embeddedPrimaryUrl = String((STANDALONE_GAS_CONFIG && STANDALONE_GAS_CONFIG.PRIMARY_EXEC_URL) || '').trim();
+                const hasEmbeddedPrimaryUrl = ref(embeddedPrimaryUrl.startsWith(GAS_HOST_PREFIX));
+                const primaryGasUrl = ref(embeddedPrimaryUrl);
+                const customEndpointInput = ref(embeddedPrimaryUrl);
                 const showEndpointModal = ref(false);
                 const workerPoolUrls = ref(Array.isArray(STANDALONE_GAS_CONFIG.WORKER_URLS) ? [...STANDALONE_GAS_CONFIG.WORKER_URLS] : []);
                 const retryStatusText = ref('');
@@ -1142,6 +1145,19 @@
 
                 const initStandaloneEndpoint = () => {
                     try {
+                        
+                        const bakedUrl = String((STANDALONE_GAS_CONFIG && STANDALONE_GAS_CONFIG.PRIMARY_EXEC_URL) || '').trim();
+                        if (bakedUrl && bakedUrl.startsWith(GAS_HOST_PREFIX)) {
+                            primaryGasUrl.value = bakedUrl;
+                            hasEmbeddedPrimaryUrl.value = true;
+                            customEndpointInput.value = bakedUrl;
+                            if (typeof localStorage !== 'undefined') {
+                                localStorage.setItem(LS_ENDPOINT_KEY, bakedUrl);
+                            }
+                            return;
+                        }
+
+                        
                         const urlParams = new URLSearchParams(window.location.search);
                         const apiParam = urlParams.get('api') || urlParams.get('exec');
                         if (apiParam && apiParam.startsWith(GAS_HOST_PREFIX)) {
@@ -2312,7 +2328,7 @@
 
                 return {
                     isOffline,
-                    isStandaloneMode, primaryGasUrl, customEndpointInput, showEndpointModal, saveCustomEndpoint,
+                    isStandaloneMode, hasEmbeddedPrimaryUrl, primaryGasUrl, customEndpointInput, showEndpointModal, saveCustomEndpoint,
                     resolveCdnMediaUrl, handleImageErrorFallback,
                     retryStatusText, loadingSubtitle, syncStatusTooltip,
                     sessionGuardModal, confirmResumeCandidateSession, switchToNewParticipant,
