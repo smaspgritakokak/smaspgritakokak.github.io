@@ -2,8 +2,8 @@
 <html lang="id" class="antialiased">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Enterprise Secured | Computer Based Test v4.4 — Kurikulum Nasional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Secured | Computer Based Test v4.5.0 — Kurikulum Nasional</title>
            
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,11 +17,11 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js"></script>
   
     
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
     <script src="https://unpkg.com/vue@3.3.4/dist/vue.global.prod.js"></script>
 
     
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
   
     
@@ -87,7 +87,7 @@
         <transition name="fade">
             <div v-if="globalUiState === 'loading'" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 text-center">
                 <i class="ph ph-spinner-gap animate-spin text-5xl text-primary-600 mb-4"></i>
-                <h2 class="text-xl font-bold tracking-tight">Enterprise Secured System v4.4</h2>
+                <h2 class="text-xl font-bold tracking-tight">Enterprise Secured System v4.5.0</h2>
                 <p class="text-sm text-slate-500 mt-2">{{ loadingSubtitle }}</p>
             </div>
         </transition>
@@ -247,7 +247,7 @@
                             <div class="absolute inset-0 bg-[url('data:image/svg&#43;xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI&#43;PHBhdGggZD0iTTM2IDM0djI2aDJWMzRoLTJ6bTAtMzRWMEgzNHYyNmgyek0wIDM0aDI2di0ySDB2MnptMzQtMmgzMHYtMmgtMzB2MnoiLz48L2c&#43;PC9nPjwvc3ZnPg==')]"></div>
                             <div class="relative z-10">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 sm:mb-8 text-xs sm:text-sm font-medium tracking-wide">
-                                    <i class="ph ph-shield-check text-green-400"></i> Kurikulum Nasional • Deep Learning v4.4
+                                    <i class="ph ph-shield-check text-green-400"></i> Kurikulum Nasional • Deep Learning v4.5.0
                                 </div>
             
                                 <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight">{{ examInfo.name }}</h1>
@@ -1024,8 +1024,8 @@
 
     <script>
         const STANDALONE_GAS_CONFIG = {
-    "PRIMARY_EXEC_URL": "https:\/\/script.google.com\/macros\/s\/AKfycbzAYIa07UWeK4oXpt0gUdNbH0i003gFgHYGKngeaId8KuXS17AH6MaKAgoUDIhN0cKn\/exec",
     "WORKER_URLS": [],
+    "PRIMARY_EXEC_URL": "https:\/\/script.google.com\/macros\/s\/AKfycbyM7-SjnciyxxBrl2V_GIwyLVuVk3WXLO0DaBUaa35-oFWg5TJ_adBrVd5wCwfF3KQJ\/exec",
     "DEFAULT_EXAM_INFO": {
         "duration": 60,
         "defaultTheme": "light",
@@ -1034,8 +1034,8 @@
         "name": "Asesmen Berbasis Komputer (Kurikulum Nasional)",
         "enableReflection": true,
         "workerUrls": [],
-        "assessmentMode": "SUMATIF_LINGKUP_MATERI",
-        "showResult": false
+        "showResult": false,
+        "assessmentMode": "SUMATIF_AKHIR_SEMESTER"
     },
     "FRONTEND_URL": "https:\/\/smaspgritakokak.github.io\/cbt\/"
 };
@@ -2374,7 +2374,7 @@
                     if (!reportNote.value.trim()) return;
                     isReporting.value = true;
                     try {
-                        await runServer('apiReportQuestion', userSession.value.id, currentQuestion.value.id, reportNote.value.trim());
+                        await runServer('apiReportQuestion', userSession.value.id, currentQuestion.value.id, reportNote.value.trim(), userSession.value.sessionToken, userSession.value.subject);
                         showReportModal.value = false;
                         showSystemNotice("Laporan Terkirim", "Terima kasih. Laporan Anda mengenai soal ini telah diteruskan ke pengawas.", "success");
                     } catch (e) {
@@ -2532,7 +2532,7 @@
                                 displayMode: Boolean(displayMode),
                                 throwOnError: false,
                                 strict: false,
-                                trust: true,
+                                trust: false,
                                 errorColor: '#ef4444'
                             });
                         } catch (e) {
