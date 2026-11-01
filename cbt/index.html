@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Secured | Computer Based Test v4.5.0 — Kurikulum Nasional</title>
+    <title>Enterprise Secured | Computer Based Test v4.6.0 — Kurikulum Nasional</title>
+    <link rel="icon" href="https://www.google.com/s2/favicons?domain=google.com&amp;sz=128" type="image/png" />
            
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,7 +88,7 @@
         <transition name="fade">
             <div v-if="globalUiState === 'loading'" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 text-center">
                 <i class="ph ph-spinner-gap animate-spin text-5xl text-primary-600 mb-4"></i>
-                <h2 class="text-xl font-bold tracking-tight">Enterprise Secured System v4.5.0</h2>
+                <h2 class="text-xl font-bold tracking-tight">Enterprise Secured System v4.6.0</h2>
                 <p class="text-sm text-slate-500 mt-2">{{ loadingSubtitle }}</p>
             </div>
         </transition>
@@ -247,7 +248,7 @@
                             <div class="absolute inset-0 bg-[url('data:image/svg&#43;xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI&#43;PHBhdGggZD0iTTM2IDM0djI2aDJWMzRoLTJ6bTAtMzRWMEgzNHYyNmgyek0wIDM0aDI2di0ySDB2MnptMzQtMmgzMHYtMmgtMzB2MnoiLz48L2c&#43;PC9nPjwvc3ZnPg==')]"></div>
                             <div class="relative z-10">
                                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6 sm:mb-8 text-xs sm:text-sm font-medium tracking-wide">
-                                    <i class="ph ph-shield-check text-green-400"></i> Kurikulum Nasional • Deep Learning v4.5.0
+                                    <i class="ph ph-shield-check text-green-400"></i> Kurikulum Nasional • Deep Learning v4.6.0
                                 </div>
             
                                 <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight tracking-tight">{{ examInfo.name }}</h1>
@@ -1025,11 +1026,11 @@
     <script>
         const STANDALONE_GAS_CONFIG = {
     "WORKER_URLS": [],
-    "PRIMARY_EXEC_URL": "https:\/\/script.google.com\/macros\/s\/AKfycbyM7-SjnciyxxBrl2V_GIwyLVuVk3WXLO0DaBUaa35-oFWg5TJ_adBrVd5wCwfF3KQJ\/exec",
+    "PRIMARY_EXEC_URL": "https:\/\/script.google.com\/macros\/s\/AKfycbzM4w2SKrBZMPfoQSUL2mtbg3BaumY-akAV7lEgjOMlCiy0UoatGKfk0Y9vMggPcVMS\/exec",
     "DEFAULT_EXAM_INFO": {
         "duration": 60,
-        "defaultTheme": "light",
         "kktpThreshold": 75,
+        "defaultTheme": "light",
         "frontendUrl": "https:\/\/smaspgritakokak.github.io\/cbt\/",
         "name": "Asesmen Berbasis Komputer (Kurikulum Nasional)",
         "enableReflection": true,
@@ -1491,11 +1492,15 @@
                         try {
                             let res = null;
                             const pool = workerPoolUrls.value || [];
-                            const shardableActions = ['apiAutoSave', 'apiLogCheat', 'apiGetQuestions'];
+                            
+                            const shardableActions = ['apiLogin', 'apiGetQuestions', 'apiAutoSave', 'apiLogCheat', 'apiReportQuestion', 'apiSubmitExam'];
 
                             if (pool.length > 0 && (shardableActions.includes(functionName) || (!hasNativeGasBridge && !primaryGasUrl.value))) {
-                                const uidSeed = (userSession.value && userSession.value.id) ? userSession.value.id : String(Date.now());
-                                const shardIdx = (hashStringSeed(uidSeed) + attempt) % pool.length;
+                                const argUid = (args && args.length > 0 && args[0]) ? String(args[0]).trim() : '';
+                                const uidSeed = argUid || ((userSession.value && userSession.value.id) ? String(userSession.value.id).trim() : ((loginData.value && loginData.value.id) ? String(loginData.value.id).trim() : 'default'));
+                                
+                                const stickyIdx = hashStringSeed(uidSeed) % pool.length;
+                                const shardIdx = attempt < 2 ? stickyIdx : ((stickyIdx + attempt - 1) % pool.length);
                                 const targetWorkerUrl = pool[shardIdx];
                                 try {
                                     res = await invokeWorkerEndpoint(targetWorkerUrl, functionName, args);
@@ -2413,7 +2418,7 @@
                         return;
                     }
 
-                    const slotSec = (hashStringSeed(userSession.value.id) % 14) + Math.floor(Math.random() * 5) + 1;
+                    const slotSec = (hashStringSeed(userSession.value.id + '|' + (userSession.value.subject || '')) % 165) + Math.floor(Math.random() * 11) + 5;
                     drainState.totalSec = slotSec;
                     drainState.remainingSec = slotSec;
                     drainState.active = true;
