@@ -2,85 +2,155 @@
 <html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
-  <title>Dapodik - SMA PGRI Takokak</title>
-  <link rel="icon" href="https://www.google.com/s2/favicons?domain=google.com&sz=128" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0369a1">
+  <title>Dapodik - SMA PGRI Takokak | DB EduCore</title>
+  <link rel="icon" href="https://www.google.com/s2/favicons?domain=kemendikdasmen.go.id&sz=128" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          },
+          colors: {
+            edu: Object.fromEntries(
+              [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map(function (n) {
+                return [n, 'rgb(var(--edu-' + n + '-rgb) / <alpha-value>)'];
+              })
+            )
+          }
+        }
+      }
+    };
+  </script>
 
   <style>
+    /* ==================================================
+       1. ARSITEKTUR TOKEN WARNA (Samudra Cianjur - Default)
+    ================================================== */
     :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-glow: rgba(37, 99, 235, .28);
-      --primary-soft: rgba(37, 99, 235, .10);
-      --accent: #06b6d4;
+      --edu-50-rgb: 240 247 255;
+      --edu-100-rgb: 224 242 254;
+      --edu-200-rgb: 186 230 253;
+      --edu-300-rgb: 125 211 252;
+      --edu-400-rgb: 56 189 248;
+      --edu-500-rgb: 14 165 233;
+      --edu-600-rgb: 3 105 161;
+      --edu-700-rgb: 7 89 133;
+      --edu-800-rgb: 12 74 110;
+      --edu-900-rgb: 8 47 73;
+
+      --color-primary: #0369a1;
+      --primary: #0369a1;
+      --color-primary-dark: #0c4a6e;
+      --primary-dark: #0c4a6e;
+      --color-secondary: #f59e0b;
+      --accent: #f59e0b;
+      --emerald-accent: #10b981;
+
+      --primary-glow: rgb(var(--edu-600-rgb) / 0.18);
+      --primary-soft: rgb(var(--edu-600-rgb) / 0.10);
+
       --bg-primary: #f8fafc;
-      --bg-card: rgba(255,255,255,.72);
-      --border-color: #e2e8f0;
+      --bg-card: rgba(255, 255, 255, 0.92);
+      --bg-card-solid: #ffffff;
+      --border-color: rgb(var(--edu-200-rgb) / 0.85);
       --text-primary: #0f172a;
-      --text-muted: #64748b;
+      --text-muted: #475569;
       --radius-full: 999px;
+      --topbar-height: 44px;
     }
 
+    /* ==================================================
+       2. TIPOGRAFI & DASAR TATA LETAK (100dvh Mobile-Safe)
+    ================================================== */
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
-      font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    html, body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.65;
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
     }
 
-    body {
+    .font-display {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      letter-spacing: -0.025em;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==================================================
+       3. WADAH IFRAME DAPODIK
+    ================================================== */
+    .edu-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
       background: var(--bg-primary);
     }
 
-    iframe {
+    .edu-frame-stage {
+      position: relative;
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-primary);
+    }
+
+    iframe#dapoFrame {
       display: block;
       border: none;
       width: 100%;
       height: 100%;
+      background: transparent;
     }
 
     /* ==================================================
-       PAGE START LOADER
+       4. PAGE START LOADER
     ================================================== */
-
     .page-loader {
       position: fixed;
       inset: 0;
-      z-index: 12000;
+      z-index: 9999;
       display: grid;
       place-items: center;
       padding: 24px;
       overflow: hidden;
-
       background:
-        radial-gradient(
-          circle at 50% 38%,
-          var(--primary-glow),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 18% 78%,
-          var(--primary-soft),
-          transparent 32%
-        ),
+        radial-gradient(60% 50% at 20% 15%, var(--primary-glow), transparent 70%),
+        radial-gradient(50% 45% at 85% 25%, var(--primary-soft), transparent 70%),
+        radial-gradient(55% 50% at 50% 100%, rgba(245, 158, 11, 0.14), transparent 70%),
         var(--bg-primary);
-
       opacity: 1;
       visibility: visible;
-      transition:
-        opacity .58s cubic-bezier(.4,0,.2,1),
-        visibility .58s ease;
-
+      transform: scale(1);
+      transition: opacity 520ms ease, transform 520ms ease, visibility 520ms ease;
       overscroll-behavior: contain;
       isolation: isolate;
     }
@@ -94,7 +164,7 @@
       border-radius: 50%;
       pointer-events: none;
       filter: blur(48px);
-      opacity: .18;
+      opacity: 0.18;
       z-index: -1;
       will-change: transform;
     }
@@ -116,13 +186,8 @@
     .page-loader.is-hidden {
       opacity: 0;
       visibility: hidden;
+      transform: scale(1.02);
       pointer-events: none;
-    }
-
-    .page-loader.is-hidden .page-loader-card {
-      transform: translateY(-8px) scale(.985);
-      opacity: 0;
-      filter: blur(2px);
     }
 
     .page-loader[hidden] {
@@ -131,23 +196,33 @@
 
     .page-loader-card {
       position: relative;
-      width: min(330px, 88vw);
+      z-index: 2;
+      width: min(365px, 92vw);
+      border-radius: 1.5rem;
+      padding: 1.75rem 1.5rem;
       text-align: center;
-      padding: 28px 22px 22px;
-
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 50px -12px var(--primary-glow), 0 4px 16px -4px rgba(15, 23, 42, 0.06);
       backdrop-filter: blur(22px) saturate(135%);
       -webkit-backdrop-filter: blur(22px) saturate(135%);
+      animation: page-loader-enter 0.68s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
 
-      animation:
-        page-loader-enter
-        .72s cubic-bezier(.16,1,.3,1) both;
+    @supports not (backdrop-filter: blur(1px)) {
+      .page-loader-card {
+        background: var(--bg-card-solid);
+      }
+    }
 
-      transition:
-        opacity .42s ease,
-        transform .42s ease,
-        filter .42s ease;
-
-      overflow: hidden;
+    .page-loader-card::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), #f59e0b, #10b981);
+      z-index: 5;
     }
 
     .page-loader-card::before {
@@ -155,31 +230,55 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-
-      background:
-        linear-gradient(
-          115deg,
-          transparent 25%,
-          rgba(255,255,255,.14) 45%,
-          transparent 64%
-        );
-
+      background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.16) 45%, transparent 64%);
       transform: translateX(-130%);
-      animation: page-loader-shine 2.8s ease-in-out .45s infinite;
+      animation: page-loader-shine 2.8s ease-in-out 0.45s infinite;
+    }
+
+    .page-loader-pattern {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96' fill='none' stroke='%230369a1' stroke-opacity='0.065' stroke-width='1.2'><path d='M48 6 90 48 48 90 6 48Z'/><path d='M48 24 72 48 48 72 24 48Z'/><circle cx='48' cy='48' r='10'/><circle cx='48' cy='48' r='20'/></svg>");
+      background-size: 96px 96px;
+    }
+
+    .page-loader-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.3rem 0.75rem;
+      margin-bottom: 1.15rem;
+      border-radius: var(--radius-full);
+      background: rgb(var(--edu-50-rgb));
+      border: 1px solid var(--border-color);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .page-loader-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
+      flex-shrink: 0;
     }
 
     .page-loader-visual {
       position: relative;
       width: 92px;
       height: 92px;
-      margin: 0 auto 17px;
+      margin: 0 auto 1.05rem;
       display: grid;
       place-items: center;
     }
 
-    .page-loader-ring,
-    .page-loader-ring::before,
-    .page-loader-ring::after {
+    .page-loader-ring, .page-loader-ring::before, .page-loader-ring::after {
       position: absolute;
       border-radius: 50%;
       content: '';
@@ -187,7 +286,7 @@
 
     .page-loader-ring {
       inset: 0;
-      border: 2px solid rgba(37,99,235,.14);
+      border: 2px solid var(--primary-soft);
       border-top-color: var(--primary);
       border-right-color: var(--accent);
       animation: page-loader-spin 1.05s linear infinite;
@@ -196,37 +295,28 @@
 
     .page-loader-ring::before {
       inset: 7px;
-      border: 2px dashed rgba(37,99,235,.28);
+      border: 2px dashed var(--primary);
+      opacity: 0.35;
       animation: page-loader-spin-reverse 2.4s linear infinite;
     }
 
     .page-loader-ring::after {
       inset: -6px;
-      border: 1px solid rgba(6,182,212,.20);
+      border: 1px solid var(--accent);
+      opacity: 0.3;
       animation: page-loader-pulse-ring 1.8s ease-in-out infinite;
     }
 
     .page-loader-mark {
       position: relative;
-      width: 68px;
-      height: 68px;
+      width: 66px;
+      height: 66px;
       display: grid;
       place-items: center;
       border-radius: 50%;
-
-      background:
-        linear-gradient(
-          145deg,
-          var(--primary),
-          var(--primary-dark)
-        );
-
-      color: #fff;
-
-      box-shadow:
-        0 12px 30px var(--primary-glow),
-        0 0 0 5px rgba(255,255,255,.70);
-
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      color: #ffffff;
+      box-shadow: 0 12px 28px var(--primary-glow), 0 0 0 4px var(--bg-card);
       animation: page-loader-logo-pulse 1.7s ease-in-out infinite;
       z-index: 2;
     }
@@ -234,22 +324,15 @@
     .page-loader-mark::after {
       content: '';
       position: absolute;
-      inset: 8px;
+      inset: 7px;
       border-radius: inherit;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.20),
-          transparent 52%
-        );
-
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), transparent 52%);
       pointer-events: none;
     }
 
     .page-loader-mark svg {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       position: relative;
       z-index: 2;
       animation: page-loader-icon-float 1.7s ease-in-out infinite;
@@ -260,7 +343,7 @@
       justify-content: center;
       align-items: center;
       gap: 5px;
-      margin-bottom: 9px;
+      margin-bottom: 0.55rem;
       height: 7px;
     }
 
@@ -269,45 +352,45 @@
       height: 5px;
       border-radius: 50%;
       background: var(--primary);
-      opacity: .32;
+      opacity: 0.32;
       animation: page-loader-dot 1.05s ease-in-out infinite;
     }
 
-    .page-loader-dots span:nth-child(2) {
-      animation-delay: .14s;
-    }
-
-    .page-loader-dots span:nth-child(3) {
-      animation-delay: .28s;
-    }
+    .page-loader-dots span:nth-child(2) { animation-delay: 0.14s; }
+    .page-loader-dots span:nth-child(3) { animation-delay: 0.28s; }
 
     .page-loader-title {
-      font-size: 1rem;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 1.0625rem;
       line-height: 1.3;
-      font-weight: 760;
-      letter-spacing: -.015em;
+      font-weight: 800;
       color: var(--text-primary);
+      margin: 0;
     }
 
     .page-loader-sub {
-      min-height: 1.25em;
-      margin-top: 5px;
-      font-size: .76rem;
+      min-height: 2.5em;
+      margin-top: 0.35rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
       color: var(--text-muted);
-      transition:
-        opacity .2s ease,
-        transform .2s ease;
+    }
+
+    .page-loader-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: 1rem;
     }
 
     .page-loader-line {
       position: relative;
-      height: 5px;
-      margin-top: 19px;
+      flex: 1 1 auto;
+      height: 6px;
       overflow: hidden;
       border-radius: var(--radius-full);
-      background: rgba(226,232,240,.82);
-      box-shadow:
-        inset 0 1px 2px rgba(15,23,42,.06);
+      background: rgb(var(--edu-100-rgb));
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
     .page-loader-line .bar {
@@ -315,476 +398,335 @@
       inset: 0 auto 0 0;
       width: 7%;
       border-radius: inherit;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--primary),
-          var(--accent),
-          var(--primary)
-        );
-
+      background: linear-gradient(90deg, var(--primary), var(--accent), #10b981);
       background-size: 180% 100%;
-
-      box-shadow:
-        0 0 12px var(--primary-glow);
-
-      transition:
-        width .34s cubic-bezier(.22,.61,.36,1);
-
-      animation:
-        page-loader-bar-glow
-        1.2s linear infinite;
+      box-shadow: 0 0 12px var(--primary-glow);
+      transition: width 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+      animation: page-loader-bar-glow 1.2s linear infinite;
     }
 
     .page-loader-percent {
-      margin-top: 8px;
-      font-size: .66rem;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      min-width: 3.1ch;
+      text-align: right;
+    }
+
+    .page-loader-actions {
+      display: none;
+      margin-top: 0.9rem;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .page-loader-actions.is-visible {
+      display: flex;
+    }
+
+    .page-loader-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.42rem 0.8rem;
+      border-radius: 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .page-loader-btn--primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: 1px solid var(--primary);
+    }
+
+    .page-loader-btn--primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .page-loader-btn--secondary {
+      background: rgb(var(--edu-50-rgb));
+      color: var(--primary-dark);
+      border: 1px solid var(--border-color);
+    }
+
+    .page-loader-btn--secondary:hover {
+      background: rgb(var(--edu-100-rgb));
+    }
+
+    .page-loader-meta {
+      margin-top: 0.85rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.6875rem;
+      font-weight: 600;
       color: var(--text-muted);
-      opacity: .8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
 
-    /* ==================================================
-       ANIMATIONS
-    ================================================== */
-
+    /* Keyframes Loader */
     @keyframes page-loader-enter {
-      0% {
-        opacity: 0;
-        transform: translateY(18px) scale(.96);
-        filter: blur(4px);
-      }
-
-      60% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-      }
+      0% { opacity: 0; transform: translateY(16px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-
-    @keyframes page-loader-spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes page-loader-spin-reverse {
-      to {
-        transform: rotate(-360deg);
-      }
-    }
-
+    @keyframes page-loader-spin { to { transform: rotate(360deg); } }
+    @keyframes page-loader-spin-reverse { to { transform: rotate(-360deg); } }
     @keyframes page-loader-pulse-ring {
-      0%, 100% {
-        transform: scale(.96);
-        opacity: .25;
-      }
-
-      50% {
-        transform: scale(1.055);
-        opacity: .8;
-      }
+      0%, 100% { transform: scale(0.96); opacity: 0.25; }
+      50% { transform: scale(1.055); opacity: 0.8; }
     }
-
     @keyframes page-loader-logo-pulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.035);
-      }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.035); }
     }
-
     @keyframes page-loader-icon-float {
-      0%, 100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-2px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
     }
-
     @keyframes page-loader-dot {
-      0%, 70%, 100% {
-        transform: translateY(0) scale(.82);
-        opacity: .28;
-      }
-
-      35% {
-        transform: translateY(-3px) scale(1);
-        opacity: .95;
-      }
+      0%, 70%, 100% { transform: translateY(0) scale(0.82); opacity: 0.28; }
+      35% { transform: translateY(-3px) scale(1); opacity: 0.95; }
     }
-
     @keyframes page-loader-bar-glow {
-      from {
-        background-position: 100% 0;
-      }
-
-      to {
-        background-position: -80% 0;
-      }
+      from { background-position: 100% 0; }
+      to { background-position: -80% 0; }
     }
-
     @keyframes page-loader-shine {
-      0%, 52% {
-        transform: translateX(-135%);
-        opacity: 0;
-      }
-
-      62% {
-        opacity: 1;
-      }
-
-      82%, 100% {
-        transform: translateX(135%);
-        opacity: 0;
-      }
+      0%, 52% { transform: translateX(-135%); opacity: 0; }
+      62% { opacity: 1; }
+      82%, 100% { transform: translateX(135%); opacity: 0; }
     }
-
     @keyframes page-loader-blob-a {
-      from {
-        transform: translate3d(0,0,0) scale(.92);
-      }
-
-      to {
-        transform: translate3d(-8%,10%,0) scale(1.08);
-      }
+      from { transform: translate3d(0, 0, 0) scale(0.92); }
+      to { transform: translate3d(-8%, 10%, 0) scale(1.08); }
     }
-
     @keyframes page-loader-blob-b {
-      from {
-        transform: translate3d(0,0,0) scale(1);
-      }
-
-      to {
-        transform: translate3d(12%,-8%,0) scale(.9);
-      }
-    }
-
-    /* Menghormati preferensi pengguna untuk mengurangi animasi */
-    @media (prefers-reduced-motion: reduce) {
-      .page-loader *,
-      .page-loader::before,
-      .page-loader::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-      }
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(12%, -8%, 0) scale(0.9); }
     }
   </style>
 </head>
 
 <body>
-
   <!-- ==================================================
        PAGE START LOADER
   ================================================== -->
-  <div
-    id="pageLoader"
-    class="page-loader"
-    role="status"
-    aria-live="polite"
-    aria-hidden="false"
-  >
+  <div id="pageLoader" class="page-loader" aria-hidden="false">
+    <div class="page-loader-pattern" aria-hidden="true"></div>
+
     <div class="page-loader-card">
+      <div class="page-loader-badge">
+        <span class="page-loader-badge-dot" aria-hidden="true"></span>
+        <span>SMA PGRI TAKOKAK • NPSN <span class="font-mono">20252048</span></span>
+      </div>
 
-      <div
-        class="page-loader-visual"
-        aria-hidden="true"
-      >
+      <div class="page-loader-visual" aria-hidden="true">
         <div class="page-loader-ring"></div>
-
         <div class="page-loader-mark">
-          <svg viewBox="0 0 64 64" fill="none">
-            <path
-              d="M10 25 32 13l22 12-22 12L10 25Z"
-              fill="currentColor"
-              opacity=".96"
-            />
-
-            <path
-              d="M18 34v12c8 6 20 6 28 0V34l-14 8-14-8Z"
-              fill="currentColor"
-              opacity=".76"
-            />
-
-            <path
-              d="M53 27v14"
-              stroke="currentColor"
-              stroke-width="4"
-              stroke-linecap="round"
-            />
+          <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <path d="M10 25 32 13l22 12-22 12L10 25Z" fill="currentColor" opacity=".96" />
+            <path d="M18 34v12c8 6 20 6 28 0V34l-14 8-14-8Z" fill="currentColor" opacity=".76" />
+            <path d="M53 27v14" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
           </svg>
         </div>
       </div>
 
       <div class="page-loader-dots" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </div>
 
-      <div class="page-loader-title">
-        Memuat Portal Dapodik Kelas 10
-      </div>
+      <h1 class="page-loader-title">
+        Memuat Portal Dapodik
+      </h1>
 
-      <div
-        class="page-loader-sub"
-        id="pageLoaderSub"
-      >
+      <div class="page-loader-sub" id="pageLoaderSub" role="status" aria-live="polite">
         Menyiapkan layanan digital untuk Anda...
       </div>
 
-      <div
-        class="page-loader-line"
-        aria-hidden="true"
-      >
-        <div
-          class="bar"
-          id="pageLoaderBar"
-        ></div>
+      <div class="page-loader-progress-wrap">
+        <div class="page-loader-line" aria-hidden="true">
+          <div class="bar" id="pageLoaderBar"></div>
+        </div>
+        <div class="page-loader-percent" id="pageLoaderPercent" aria-hidden="true">
+          7%
+        </div>
       </div>
 
-      <div
-        class="page-loader-percent"
-        id="pageLoaderPercent"
-        aria-hidden="true"
-      >
-        7%
+      <div id="pageLoaderActions" class="page-loader-actions">
+        <button type="button" id="reloadFrameBtn" class="page-loader-btn page-loader-btn--secondary">
+          Muat Ulang
+        </button>
+        <a
+          id="openDirectLink"
+          href="https://script.google.com/macros/s/AKfycbxNQ1YlUB87Yq90CwoZejjEAKeoWemG35hlwIglwVnqU7bPFdpw0VDe-_HHolRfkh6P/exec"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="page-loader-btn page-loader-btn--primary"
+        >
+          Buka Tab Penuh
+        </a>
       </div>
 
+      <div class="page-loader-meta">
+        <span>Powered by: DB EduCore</span>
+        <span id="frameStatusLabel" class="font-mono text-[10px] text-sky-700">Menghubungkan...</span>
+      </div>
     </div>
   </div>
 
+  <!-- ==================================================
+       ANTARMUKA PORTAL IFRAME
+  ================================================== -->
+  <div class="edu-shell">
+    <main class="edu-frame-stage" role="main">
+      <iframe
+        id="dapoFrame"
+        src="https://script.google.com/macros/s/AKfycbxNQ1YlUB87Yq90CwoZejjEAKeoWemG35hlwIglwVnqU7bPFdpw0VDe-_HHolRfkh6P/exec"
+        title="Dapodik SMA PGRI Takokak"
+        allow="fullscreen; clipboard-read; clipboard-write"
+        allowfullscreen
+        loading="eager"
+      ></iframe>
+    </main>
+  </div>
 
   <!-- ==================================================
-       DAPODIK
+       SKRIP PAGE LOADER
   ================================================== -->
-  <iframe
-    id="dapoFrame"
-    src="https://script.google.com/macros/s/AKfycbzQXvxEUHUYvJnirMlhiDQ_LRfG1W_TF4nSRySidfE4KZj9Dan1TyBqI8W2yZb_OZhI/exec"
-    title="Dapodik SMA PGRI Takokak"
-    allow="fullscreen"
-  ></iframe>
-
-
   <script>
     (() => {
-      const pageLoader =
-        document.getElementById('pageLoader');
-
-      const pageLoaderSub =
-        document.getElementById('pageLoaderSub');
-
-      const pageLoaderBar =
-        document.getElementById('pageLoaderBar');
-
-      const pageLoaderPercent =
-        document.getElementById('pageLoaderPercent');
-
-      const dapoFrame =
-        document.getElementById('dapoFrame');
-
-      const pageLoaderStartedAt =
-        performance.now();
+      const GAS_DEPLOY_URL = 'https://script.google.com/macros/s/AKfycbxNQ1YlUB87Yq90CwoZejjEAKeoWemG35hlwIglwVnqU7bPFdpw0VDe-_HHolRfkh6P/exec';
+      const pageLoader = document.getElementById('pageLoader');
+      const pageLoaderSub = document.getElementById('pageLoaderSub');
+      const pageLoaderBar = document.getElementById('pageLoaderBar');
+      const pageLoaderPercent = document.getElementById('pageLoaderPercent');
+      const pageLoaderActions = document.getElementById('pageLoaderActions');
+      const reloadFrameBtn = document.getElementById('reloadFrameBtn');
+      const dapoFrame = document.getElementById('dapoFrame');
+      const frameStatusLabel = document.getElementById('frameStatusLabel');
 
       let pageLoaderProgress = 7;
-      let pageLoaderProgressTimer = null;
-      let loaderHidden = false;
+      let loaderFinished = false;
+      let stageTimers = [];
+      let closeTimers = [];
+      let slowNoticeTimer = null;
+      let watchdogTimer = null;
 
+      function clearAllLoaderTimers() {
+        stageTimers.forEach((id) => clearTimeout(id));
+        closeTimers.forEach((id) => clearTimeout(id));
+        stageTimers = [];
+        closeTimers = [];
+        if (slowNoticeTimer) {
+          clearTimeout(slowNoticeTimer);
+          slowNoticeTimer = null;
+        }
+        if (watchdogTimer) {
+          clearTimeout(watchdogTimer);
+          watchdogTimer = null;
+        }
+      }
 
       function setPageLoaderProgress(value, message) {
-        pageLoaderProgress = Math.max(
-          pageLoaderProgress,
-          Math.min(100, Number(value) || 0)
-        );
-
-        if (pageLoaderBar) {
-          pageLoaderBar.style.width =
-            `${pageLoaderProgress}%`;
-        }
-
-        if (pageLoaderPercent) {
-          pageLoaderPercent.textContent =
-            `${Math.round(pageLoaderProgress)}%`;
-        }
-
-        if (message && pageLoaderSub) {
-          pageLoaderSub.textContent = message;
-        }
+        pageLoaderProgress = Math.max(pageLoaderProgress, Math.min(100, Number(value) || 0));
+        if (pageLoaderBar) pageLoaderBar.style.width = `${pageLoaderProgress}%`;
+        if (pageLoaderPercent) pageLoaderPercent.textContent = `${Math.round(pageLoaderProgress)}%`;
+        if (message && pageLoaderSub) pageLoaderSub.textContent = message;
       }
 
+      function startPageLoaderSequence() {
+        if (!pageLoader) return;
 
-      function startPageLoaderProgress() {
-        if (!pageLoader || pageLoader.hidden) {
-          return;
-        }
+        clearAllLoaderTimers();
+        loaderFinished = false;
+        pageLoaderProgress = 0;
 
-        if (pageLoaderProgressTimer) {
-          clearInterval(pageLoaderProgressTimer);
-        }
+        pageLoader.hidden = false;
+        pageLoader.classList.remove('is-hidden');
+        pageLoader.setAttribute('aria-hidden', 'false');
+        if (pageLoaderActions) pageLoaderActions.classList.remove('is-visible');
+        if (frameStatusLabel) frameStatusLabel.textContent = 'Menghubungkan...';
 
-        setPageLoaderProgress(
-          7,
-          'Menyiapkan layanan digital untuk Anda...'
-        );
+        setPageLoaderProgress(7, 'Menyiapkan layanan digital untuk Anda...');
 
-        pageLoaderProgressTimer = setInterval(() => {
+        stageTimers.push(setTimeout(() => {
+          if (!loaderFinished) setPageLoaderProgress(28, 'Memuat komponen DB EduCore...');
+        }, 220));
 
-          if (pageLoaderProgress >= 91) {
-            return;
+        stageTimers.push(setTimeout(() => {
+          if (!loaderFinished) setPageLoaderProgress(54, 'Menghubungkan ke basis data terpadu...');
+        }, 650));
+
+        stageTimers.push(setTimeout(() => {
+          if (!loaderFinished) setPageLoaderProgress(76, 'Menyiapkan halaman portal & akademik...');
+        }, 1350));
+
+        stageTimers.push(setTimeout(() => {
+          if (!loaderFinished) setPageLoaderProgress(90, 'Menyinkronkan tampilan portal Dapodik...');
+        }, 2300));
+
+        // Jika cold-start GAS lebih dari 4,2 detik, tampilkan tombol bantu tanpa menutup paksa di atas layar putih
+        slowNoticeTimer = setTimeout(() => {
+          if (!loaderFinished) {
+            setPageLoaderProgress(94, 'Menunggu respons server Google Apps Script...');
+            if (pageLoaderActions) pageLoaderActions.classList.add('is-visible');
           }
+        }, 4200);
 
-          const remaining =
-            91 - pageLoaderProgress;
-
-          const step = Math.max(
-            .55,
-            Math.min(4.8, remaining * .095)
-          );
-
-          const jitter =
-            .68 + Math.random() * .58;
-
-          setPageLoaderProgress(
-            pageLoaderProgress + step * jitter
-          );
-
-          if (
-            pageLoaderProgress > 68 &&
-            pageLoaderSub
-          ) {
-            pageLoaderSub.textContent =
-              'Menyelesaikan tampilan portal...';
-
-          } else if (
-            pageLoaderProgress > 34 &&
-            pageLoaderSub
-          ) {
-            pageLoaderSub.textContent =
-              'Memuat data dan layanan sekolah...';
-          }
-
-        }, 180);
+        // Watchdog Timeout disesuaikan dengan cold-start wajar GAS (7,5 detik)
+        watchdogTimer = setTimeout(() => {
+          if (!loaderFinished) finishPageLoader();
+        }, 7500);
       }
 
+      function finishPageLoader() {
+        if (loaderFinished || !pageLoader || pageLoader.hidden) return;
 
-      function hidePageLoader() {
+        loaderFinished = true;
+        clearAllLoaderTimers();
 
-        if (
-          loaderHidden ||
-          !pageLoader ||
-          pageLoader.hidden
-        ) {
-          return;
-        }
+        setPageLoaderProgress(100, 'Portal Resmi siap diakses.');
+        if (frameStatusLabel) frameStatusLabel.textContent = 'Aktif • Siap Diakses';
 
-        loaderHidden = true;
+        closeTimers.push(setTimeout(() => {
+          if (!pageLoader) return;
+          pageLoader.classList.add('is-hidden');
+          pageLoader.setAttribute('aria-hidden', 'true');
 
-        if (pageLoaderProgressTimer) {
-          clearInterval(pageLoaderProgressTimer);
-          pageLoaderProgressTimer = null;
-        }
-
-        const minimumVisible = 900;
-
-        const elapsed =
-          performance.now() -
-          pageLoaderStartedAt;
-
-        const delay =
-          Math.max(
-            0,
-            minimumVisible - elapsed
-          );
-
-        setTimeout(() => {
-
-          if (!pageLoader) {
-            return;
-          }
-
-          setPageLoaderProgress(
-            100,
-            'Portal siap dibuka'
-          );
-
-          setTimeout(() => {
-
-            pageLoader.classList.add(
-              'is-hidden'
-            );
-
-            pageLoader.setAttribute(
-              'aria-hidden',
-              'true'
-            );
-
-            setTimeout(() => {
-
-              if (
-                pageLoader.classList.contains(
-                  'is-hidden'
-                )
-              ) {
-                pageLoader.hidden = true;
-              }
-
-            }, 620);
-
-          }, 240);
-
-        }, delay);
+          closeTimers.push(setTimeout(() => {
+            if (pageLoader.classList.contains('is-hidden')) {
+              pageLoader.hidden = true;
+            }
+          }, 520));
+        }, 180));
       }
 
+      if (reloadFrameBtn && dapoFrame) {
+        reloadFrameBtn.addEventListener('click', () => {
+          startPageLoaderSequence();
+          const sep = GAS_DEPLOY_URL.includes('?') ? '&' : '?';
+          dapoFrame.src = `${GAS_DEPLOY_URL}${sep}_t=${Date.now()}`;
+        });
+      }
 
-      /* Mulai progress loader */
-      startPageLoaderProgress();
+      // Memulai urutan loader
+      startPageLoaderSequence();
 
-
-      /*
-       * Loader akan ditutup setelah iframe
-       * Google Apps Script selesai melakukan load.
-       */
+      // Mendeteksi ketika Iframe Dapodik selesai dimuat
       if (dapoFrame) {
-        dapoFrame.addEventListener(
-          'load',
-          () => {
-            hidePageLoader();
-          },
-          { once: true }
-        );
+        dapoFrame.addEventListener('load', () => {
+          finishPageLoader();
+        });
       }
-
-
-      /*
-       * Fallback:
-       * Jika iframe terlalu lama merespons,
-       * loader tetap dilepas setelah 15 detik.
-       */
-      setTimeout(() => {
-
-        if (!loaderHidden) {
-          if (pageLoaderSub) {
-            pageLoaderSub.textContent =
-              'Portal sedang dibuka...';
-          }
-
-          hidePageLoader();
-        }
-
-      }, 15000);
-
     })();
   </script>
-
 </body>
 </html>
